@@ -11,15 +11,16 @@ AUTHOR = "Jesús Rivas"
 # =======================
 # GUI Settings
 # =======================
-WINDOW_TITLE = "Concretus - Diseño de Mezclas de Concreto"
+WINDOW_TITLE = "Concretus - Diseño y Dosificación de Mezclas de Concreto"
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 WINDOW_ICON = os.path.join(os.path.dirname(__file__), 'assets', 'icon.png')  # Path to the application icon
 
+
 # =======================
 # Application Styles
 # =======================
-STYLE_FILE = os.path.join(os.path.dirname(__file__), 'assets', 'style.qss')  # PyQt style file
+# STYLE_FILE = os.path.join(os.path.dirname(__file__), 'assets', 'style.qss')  # PyQt style file
 
 # =======================
 # Concrete Mix Design Settings
@@ -37,4 +38,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Project base route
 # =======================
 # Log Settings
 # =======================
-LOG_FILE = os.path.join(BASE_DIR, 'logs', 'app.log')  # Log file path
+LOG_FILE_CORE = os.path.join(BASE_DIR, 'logs', 'app.log')  # Log file path
+print(BASE_DIR)
+print(LOG_FILE_CORE)
+print(__file__)
+print(os.path.abspath(__file__))
+print(os.path.dirname(os.path.abspath(__file__)))

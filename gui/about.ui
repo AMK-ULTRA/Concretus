@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dialog_about</class>
+ <widget class="QDialog" name="dialog_about">
+  <property name="windowModality">
+   <enum>Qt::WindowModality::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>640</width>
+    <height>420</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>640</width>
+    <height>420</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Info</string>
+  </property>
+  <property name="locale">
+   <locale language="Spanish" country="Venezuela"/>
+  </property>
+  <widget class="QLabel" name="label_logo">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>140</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>images/concrete-mixer.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_about">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>10</y>
+     <width>440</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Acerca de &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Concretus&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Versión: 1.0.0 &lt;/p&gt;&lt;p&gt;Fecha: 2025-02-20 &lt;/p&gt;&lt;p&gt;Copyright © 2025 Jesús Rivas &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; font-style:italic;&quot;&gt;Concretus&lt;/span&gt; es un software especializado en el diseño y dosificación de mezclas de concreto. Actualmente incorpora tres métodos:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método MCE&lt;/span&gt;: Basado en el libro &lt;span style=&quot; font-style:italic;&quot;&gt;Manual del Concreto Estructural&lt;/span&gt; de Porrero, Ramos, Grases y Velazco (2009)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método ACI&lt;/span&gt;: Basado en el manual &lt;span style=&quot; font-style:italic;&quot;&gt;ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and High-Density Concrete – Guide &lt;/span&gt;del Comité 211 del Instituto Americano del Concreto (2022)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método DoE&lt;/span&gt;: Basado en el libro &lt;span style=&quot; font-style:italic;&quot;&gt;Design of Normal Concrete Mixes&lt;/span&gt; de Teychenné, Franklin y Erntroy (1997)&lt;/p&gt;&lt;p&gt;Desarrollado por: Jesús Alejandro Rivas Simancas&lt;/p&gt;&lt;p&gt;Correo electrónico: rivas601@gmail.com &lt;/p&gt;&lt;p&gt;Licencia: General Public License (GPL) &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::TextFormat::AutoText</enum>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
