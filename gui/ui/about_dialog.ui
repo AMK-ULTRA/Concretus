@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dialog_about</class>
- <widget class="QDialog" name="dialog_about">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
   <property name="windowModality">
    <enum>Qt::WindowModality::ApplicationModal</enum>
   </property>
@@ -50,7 +50,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>images/concrete-mixer.png</pixmap>
+    <pixmap>../../assets/images/about_logo.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>

@@ -1,0 +1,1590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RegularConcreteWidget</class>
+ <widget class="QWidget" name="RegularConcreteWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>457</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>457</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="locale">
+   <locale language="Spanish" country="Venezuela"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_8">
+   <item>
+    <widget class="QComboBox" name="comboBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>Información general</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Condiciones de la obra</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Materiales cementantes</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Agregado fino</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Agregado grueso</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Agua</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Aditivos</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="general_info">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_name">
+         <property name="text">
+          <string>Nombre del proyecto</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_name</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEdit_name"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_location">
+         <property name="text">
+          <string>Ubicación</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_location</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_location"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_method">
+         <property name="text">
+          <string>Metodología</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBox_method</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBox_method">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>MCE</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ACI</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DoE</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_purchaser">
+         <property name="text">
+          <string>Solicitante</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_purchaser</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEdit_purchaser"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_date">
+         <property name="text">
+          <string>Fecha</string>
+         </property>
+         <property name="buddy">
+          <cstring>dateEdit_date</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDateEdit" name="dateEdit_date">
+         <property name="currentSection">
+          <enum>QDateTimeEdit::Section::DaySection</enum>
+         </property>
+         <property name="displayFormat">
+          <string>d/M/yyyy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+         <property name="date">
+          <date>
+           <year>2025</year>
+           <month>1</month>
+           <day>1</day>
+          </date>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="field_requirements">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1">
+       <item>
+        <layout class="QFormLayout" name="formLayout_7">
+         <property name="formAlignment">
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+         <property name="verticalSpacing">
+          <number>6</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_slump">
+           <property name="text">
+            <string>Asentamiento (mm)</string>
+           </property>
+           <property name="buddy">
+            <cstring>spinBox_slump</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="spinBox_slump">
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>210</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_exposure">
+           <property name="text">
+            <string>Clase de exposición</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_exposure</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBox_exposure">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="editable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_air">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Contenido de aire incorporado</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QFormLayout" name="formLayout_6">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="radioButton_user_defined">
+            <property name="text">
+             <string>Definido por el usuario (%)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_user_defined">
+            <property name="minimum">
+             <double>3.500000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>7.500000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="radioButton_exposure_defined">
+            <property name="text">
+             <string>Estimado debido a la exposición</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_exposure_defined">
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Sunken</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_strength">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="title">
+          <string>Resistencia promedio a la compresión requerida</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1">
+          <item>
+           <layout class="QFormLayout" name="formLayout_5">
+            <property name="sizeConstraint">
+             <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+            </property>
+            <property name="labelAlignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="horizontalSpacing">
+             <number>6</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_spec_strength">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistencia de cálculo especificada (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="buddy">
+               <cstring>spinBox_spec_strength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spinBox_spec_strength">
+              <property name="minimum">
+               <number>180</number>
+              </property>
+              <property name="maximum">
+               <number>450</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>210</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+            <item>
+             <widget class="QGroupBox" name="groupBox_std_dev_known">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Desviación estándar conocida</string>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <layout class="QFormLayout" name="formLayout_3">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_value">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valor (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>doubleSpinBox_value</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_value">
+                 <property name="minimum">
+                  <double>0.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_test_nro">
+                 <property name="text">
+                  <string>Número de ensayos</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>spinBox_test_nro</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox_test_nro">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_defective_level">
+                 <property name="text">
+                  <string>Fracción defectiva (%)</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_defective_level</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="comboBox_defective_level">
+                 <property name="currentIndex">
+                  <number>10</number>
+                 </property>
+                 <property name="maxVisibleItems">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>0,5</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2,5</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>5</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>6</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>7</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>8</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>9</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>15</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>20</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>25</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_std_dev_unknown">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Desviación estándar desconocida</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <layout class="QFormLayout" name="formLayout_4">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_qual_control">
+                 <property name="text">
+                  <string>Control de calidad</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_qual_control</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_qual_control">
+                 <item>
+                  <property name="text">
+                   <string>Excelente</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Aceptable</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Sin control</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_margin">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Margen (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>spinBox_margin</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox_margin">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="cementitous_materials">
+      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,1">
+       <item>
+        <layout class="QFormLayout" name="formLayout_9">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_cement_type">
+           <property name="text">
+            <string>Tipo de cemento</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_cement_type</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBox_cement_type"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_cement_class">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Clase de resistencia</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_cement_class</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboBox_cement_class">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>52.5 [Cemento portland de endurecimiento rápido]</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_cement_relative_density">
+           <property name="text">
+            <string>Densidad relativa</string>
+           </property>
+           <property name="buddy">
+            <cstring>doubleSpinBox_cement_relative_density</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_cement_relative_density">
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>3.330000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_cement_seller">
+           <property name="text">
+            <string>Marca de cemento</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_cement_seller</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_cement_seller"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_SCM">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Material cementante suplementario (SCM)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QFormLayout" name="formLayout_8">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_SCM_type">
+            <property name="text">
+             <string>Tipo</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboBox_SCM_type</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboBox_SCM_type"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_SCM_content">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Expresado en porcentaje (%) de material por peso con respecto al total de material cementante.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Contenido (%)</string>
+            </property>
+            <property name="buddy">
+             <cstring>spinBox_SCM_content</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="spinBox_SCM_content">
+            <property name="maximum">
+             <number>50</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_SCM_relative_density">
+            <property name="text">
+             <string>Densidad relativa</string>
+            </property>
+            <property name="buddy">
+             <cstring>doubleSpinBox_SCM_relative_density</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_SCM_relative_density">
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="fine_aggregate">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,1">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QGroupBox" name="groupBox_fine_info">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Información general</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_fine_name">
+              <property name="text">
+               <string>Nombre</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_fine_name</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_fine_name"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_fine_source">
+              <property name="text">
+               <string>Lugar</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_fine_source</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_fine_source"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_fine_type">
+              <property name="text">
+               <string>Tipo</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_fine_type</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboBox_fine_type"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QGroupBox" name="groupBox_fine_physical_prop">
+           <property name="title">
+            <string>Propiedades físicas</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_13">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_fine_relative_density">
+              <property name="text">
+               <string>Densidad relativa, SSD</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_relative_density</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_relative_density"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_fine_pus">
+              <property name="text">
+               <string>Peso unitario suelto (kg/m3)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_pus</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_pus"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_fine_puc">
+              <property name="text">
+               <string>Peso unitario compactado (kg/m3)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_puc</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_puc"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QGroupBox" name="groupBox_fine_moisture">
+           <property name="title">
+            <string>Humedad</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_14">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_fine_mc">
+              <property name="text">
+               <string>Contenido de humedad (%)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_mc</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_mc">
+              <property name="wrapping">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_fine_abs">
+              <property name="text">
+               <string>Capacidad de absorción (%)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_abs</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_abs"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_gradation">
+         <property name="title">
+          <string>Granulometría</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QRadioButton" name="radioButton_fine_retained">
+            <property name="text">
+             <string>Usar porcentaje retenido</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableWidget_fine">
+            <property name="showGrid">
+             <bool>true</bool>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::PenStyle::SolidLine</enum>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="rowCount">
+             <number>0</number>
+            </property>
+            <property name="columnCount">
+             <number>3</number>
+            </property>
+            <attribute name="horizontalHeaderVisible">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>150</number>
+            </attribute>
+            <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Tamiz, pulg (mm)</string>
+             </property>
+             <property name="font">
+              <font>
+               <bold>false</bold>
+               <kerning>true</kerning>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Porcentaje pasante, %</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Porcentaje retenido, %</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="coarse_aggregate">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,1,1">
+         <item row="0" column="0">
+          <widget class="QGroupBox" name="groupBox_coarse_info">
+           <property name="title">
+            <string>Información general</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_10">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_coarse_name">
+              <property name="text">
+               <string>Nombre</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_coarse_name</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_coarse_name"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_coarse_source">
+              <property name="text">
+               <string>Lugar</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_coarse_source</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_coarse_source"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_coarse_type">
+              <property name="text">
+               <string>Tipo</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_coarse_type</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboBox_coarse_type"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QGroupBox" name="groupBox_coarse_physical_prop">
+           <property name="title">
+            <string>Propiedades físicas</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_16">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_coarse_relative_density">
+              <property name="text">
+               <string>Densidad relativa, SSD</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_relative_density</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_relative_density"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_coarse_pus">
+              <property name="text">
+               <string>Peso unitario suelto (kg/m3)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_pus</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_pus"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_coarse_puc">
+              <property name="text">
+               <string>Peso unitario compactado (kg/m3)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_puc</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_puc"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QGroupBox" name="groupBox_coarse_moisture">
+           <property name="title">
+            <string>Humedad</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_15">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_coarse_mc">
+              <property name="text">
+               <string>Contenido de humedad (%)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_mc</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_mc">
+              <property name="wrapping">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_coarse_abs">
+              <property name="text">
+               <string>Capacidad de absorción (%)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_abs</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_abs"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_gradation_2">
+         <property name="title">
+          <string>Granulometría</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QRadioButton" name="radioButton_coarse_retained">
+            <property name="text">
+             <string>Usar porcentaje retenido</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableWidget_coarse">
+            <property name="showGrid">
+             <bool>true</bool>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::PenStyle::SolidLine</enum>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="rowCount">
+             <number>0</number>
+            </property>
+            <property name="columnCount">
+             <number>3</number>
+            </property>
+            <attribute name="horizontalHeaderVisible">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>150</number>
+            </attribute>
+            <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Tamiz, pulg (mm)</string>
+             </property>
+             <property name="font">
+              <font>
+               <bold>false</bold>
+               <kerning>true</kerning>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Porcentaje pasante, %</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Porcentaje retenido, %</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="water">
+      <layout class="QFormLayout" name="formLayout_11">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_water_type">
+         <property name="text">
+          <string>Tipo</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBox_water_type</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_water_type">
+         <item>
+          <property name="text">
+           <string>Agua potable</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Aguas naturales</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Aguas residuales tratadas</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Agua de lluvia</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_water_source">
+         <property name="text">
+          <string>Lugar</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_water_source</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_water_source"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_water_density">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Densidad (kg/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="buddy">
+          <cstring>doubleSpinBox_water_density</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_water_density">
+         <property name="minimum">
+          <double>917.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>1001.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>1000.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="chemical_admixtures">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <layout class="QFormLayout" name="formLayout_12">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_admixture_type">
+         <property name="text">
+          <string>Tipo</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBox_admixture_type</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_admixture_type">
+         <item>
+          <property name="text">
+           <string>Incorporador de aire</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_admixture_name">
+         <property name="text">
+          <string>Nombre</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_admixture_name</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_admixture_name"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_admixture_relative_density">
+         <property name="text">
+          <string>Densidad relativa</string>
+         </property>
+         <property name="buddy">
+          <cstring>doubleSpinBox_admixture_relative_density</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_relative_density"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_admixture_dosage">
+         <property name="text">
+          <string>Dosis (mL/kg)</string>
+         </property>
+         <property name="buddy">
+          <cstring>doubleSpinBox_admixture_dosage</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_dosage"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_admixture_effectiveness">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Efectividad (%)</string>
+         </property>
+         <property name="buddy">
+          <cstring>spinBox_admixture_effectiveness</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSpinBox" name="spinBox_admixture_effectiveness">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>comboBox</tabstop>
+  <tabstop>lineEdit_name</tabstop>
+  <tabstop>lineEdit_location</tabstop>
+  <tabstop>comboBox_method</tabstop>
+  <tabstop>lineEdit_purchaser</tabstop>
+  <tabstop>dateEdit_date</tabstop>
+  <tabstop>spinBox_slump</tabstop>
+  <tabstop>comboBox_exposure</tabstop>
+  <tabstop>groupBox_air</tabstop>
+  <tabstop>radioButton_user_defined</tabstop>
+  <tabstop>doubleSpinBox_user_defined</tabstop>
+  <tabstop>radioButton_exposure_defined</tabstop>
+  <tabstop>spinBox_spec_strength</tabstop>
+  <tabstop>groupBox_std_dev_known</tabstop>
+  <tabstop>doubleSpinBox_value</tabstop>
+  <tabstop>spinBox_test_nro</tabstop>
+  <tabstop>comboBox_defective_level</tabstop>
+  <tabstop>comboBox_qual_control</tabstop>
+  <tabstop>spinBox_margin</tabstop>
+  <tabstop>lineEdit_cement_seller</tabstop>
+  <tabstop>comboBox_cement_type</tabstop>
+  <tabstop>comboBox_cement_class</tabstop>
+  <tabstop>doubleSpinBox_cement_relative_density</tabstop>
+  <tabstop>groupBox_SCM</tabstop>
+  <tabstop>comboBox_SCM_type</tabstop>
+  <tabstop>spinBox_SCM_content</tabstop>
+  <tabstop>doubleSpinBox_SCM_relative_density</tabstop>
+  <tabstop>lineEdit_fine_name</tabstop>
+  <tabstop>lineEdit_fine_source</tabstop>
+  <tabstop>comboBox_fine_type</tabstop>
+  <tabstop>doubleSpinBox_fine_relative_density</tabstop>
+  <tabstop>doubleSpinBox_fine_pus</tabstop>
+  <tabstop>doubleSpinBox_fine_puc</tabstop>
+  <tabstop>doubleSpinBox_fine_mc</tabstop>
+  <tabstop>doubleSpinBox_fine_abs</tabstop>
+  <tabstop>radioButton_fine_retained</tabstop>
+  <tabstop>tableWidget_fine</tabstop>
+  <tabstop>lineEdit_coarse_name</tabstop>
+  <tabstop>lineEdit_coarse_source</tabstop>
+  <tabstop>comboBox_coarse_type</tabstop>
+  <tabstop>doubleSpinBox_coarse_relative_density</tabstop>
+  <tabstop>doubleSpinBox_coarse_pus</tabstop>
+  <tabstop>doubleSpinBox_coarse_puc</tabstop>
+  <tabstop>doubleSpinBox_coarse_mc</tabstop>
+  <tabstop>doubleSpinBox_coarse_abs</tabstop>
+  <tabstop>radioButton_coarse_retained</tabstop>
+  <tabstop>tableWidget_coarse</tabstop>
+  <tabstop>comboBox_water_type</tabstop>
+  <tabstop>lineEdit_water_source</tabstop>
+  <tabstop>doubleSpinBox_water_density</tabstop>
+  <tabstop>comboBox_admixture_type</tabstop>
+  <tabstop>lineEdit_admixture_name</tabstop>
+  <tabstop>doubleSpinBox_admixture_relative_density</tabstop>
+  <tabstop>doubleSpinBox_admixture_dosage</tabstop>
+  <tabstop>spinBox_admixture_effectiveness</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>comboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>stackedWidget</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBox_std_dev_known</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_std_dev_unknown</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>306</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>608</x>
+     <y>380</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_exposure_defined</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>doubleSpinBox_user_defined</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>193</x>
+     <y>175</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>610</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboBox_exposure</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>label_exposure_defined</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

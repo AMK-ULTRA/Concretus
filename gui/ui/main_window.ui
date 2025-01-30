@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+    <item>
+     <widget class="QLabel" name="label_welcome">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;Bienvenido a &lt;/span&gt;&lt;span style=&quot; font-size:24pt; font-weight:700;&quot;&gt;Concretus&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-style:italic;&quot;&gt;Diseño y dosificación de mezclas de concreto&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_logo">
+         <property name="maximumSize">
+          <size>
+           <width>250</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap>../../assets/images/about_logo.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_powerd_by">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>221</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Desarrollo de interfaz gráfica de usuario en Python con PyQt6&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_pyqt_logo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>63</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>63</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>../../assets/images/pyqt_logo.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>650</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_start">
+    <property name="title">
+     <string>Inicio</string>
+    </property>
+    <addaction name="action_config"/>
+    <addaction name="action_report"/>
+    <addaction name="separator"/>
+    <addaction name="action_quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_design">
+    <property name="title">
+     <string>Diseño</string>
+    </property>
+    <widget class="QMenu" name="menu_regular_concrete">
+     <property name="title">
+      <string>Concreto Normal</string>
+     </property>
+     <addaction name="action_MCE"/>
+     <addaction name="action_ACI"/>
+     <addaction name="action_DoE"/>
+    </widget>
+    <addaction name="menu_regular_concrete"/>
+   </widget>
+   <widget class="QMenu" name="menu_verification">
+    <property name="title">
+     <string>Verificación</string>
+    </property>
+    <addaction name="action_check_design"/>
+   </widget>
+   <widget class="QMenu" name="menu_proportioning">
+    <property name="title">
+     <string>Dosificación</string>
+    </property>
+    <addaction name="action_trial_mix"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>Ayuda</string>
+    </property>
+    <addaction name="action_manual"/>
+    <addaction name="action_about"/>
+   </widget>
+   <addaction name="menu_start"/>
+   <addaction name="menu_design"/>
+   <addaction name="menu_verification"/>
+   <addaction name="menu_proportioning"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_config">
+   <property name="text">
+    <string>Configuración</string>
+   </property>
+  </action>
+  <action name="action_report">
+   <property name="text">
+    <string>Imprimir Reporte</string>
+   </property>
+  </action>
+  <action name="action_quit">
+   <property name="text">
+    <string>Salir</string>
+   </property>
+  </action>
+  <action name="action_MCE">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>MCE</string>
+   </property>
+  </action>
+  <action name="action_ACI">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>ACI</string>
+   </property>
+  </action>
+  <action name="action_DoE">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DoE</string>
+   </property>
+  </action>
+  <action name="action_check_design">
+   <property name="text">
+    <string>Revisión del Diseño</string>
+   </property>
+  </action>
+  <action name="action_trial_mix">
+   <property name="text">
+    <string>Mezcla de Prueba</string>
+   </property>
+  </action>
+  <action name="action_manual">
+   <property name="text">
+    <string>Manual de Usuario</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>Acerca de Concretus</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

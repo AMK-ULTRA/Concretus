@@ -1,0 +1,31 @@
+2025-01-30 18:12:26,049 - App - INFO - The application has just started
+2025-01-30 18:12:26,158 - MainWindow - INFO - The main window has been created
+2025-01-30 18:20:02,284 - MainWindow - INFO - Exit dialog has been opened
+2025-01-30 18:20:03,423 - MainWindow - INFO - Exit dialog has been accepted
+2025-01-30 18:21:12,956 - App - INFO - The application has just started
+2025-01-30 18:21:13,109 - MainWindow - INFO - The main window has been created
+2025-01-30 18:21:15,525 - MainWindow - INFO - Exit dialog has been opened
+2025-01-30 18:21:17,538 - MainWindow - INFO - Exit dialog has been accepted
+2025-01-30 18:21:37,184 - App - INFO - The application has just started
+2025-01-30 18:21:37,334 - MainWindow - INFO - The main window has been created
+2025-01-30 18:21:38,830 - MainWindow - INFO - Exit dialog has been opened
+2025-01-30 18:21:39,591 - MainWindow - INFO - Exit dialog has been accepted
+2025-01-30 18:21:54,343 - App - INFO - The application has just started
+2025-01-30 18:22:35,488 - App - INFO - The application has just started
+2025-01-30 18:22:35,669 - MainWindow - INFO - The main window has been created
+2025-01-30 18:22:37,033 - MainWindow - INFO - Exit dialog has been opened
+2025-01-30 18:22:37,876 - MainWindow - INFO - Exit dialog has been accepted
+2025-01-30 18:23:05,208 - App - INFO - The application has just started
+2025-01-30 18:23:05,318 - MainWindow - INFO - The main window has been created
+2025-01-30 18:23:55,798 - MainWindow - INFO - The configuration dialog has been selected
+2025-01-30 18:23:55,831 - ConfigDialog - INFO - The configuration dialog has been created
+2025-01-30 18:24:18,408 - MainWindow - INFO - The Regular Concrete design has been selected
+2025-01-30 18:24:18,408 - MainWindow - INFO - The MCE units has been selected
+2025-01-30 18:24:18,466 - RegularConcrete - INFO - The regular concrete widget has been created
+2025-01-30 18:24:18,470 - RegularConcrete - INFO - QRadioButton for fine table is active: False
+2025-01-30 18:24:18,470 - RegularConcrete - INFO - QRadioButton for coarse table is active: False
+2025-01-30 18:24:18,471 - RegularConcrete - INFO - The set of sieves for the MCE method has been generated
+2025-01-30 18:24:18,474 - RegularConcrete - INFO - The .update_methods() method has executed successfully
+2025-01-30 18:24:18,475 - RegularConcrete - INFO - The .update_units() method has executed successfully
+2025-01-30 18:27:35,521 - MainWindow - INFO - Exit dialog has been opened
+2025-01-30 18:27:36,362 - MainWindow - INFO - Exit dialog has been accepted
