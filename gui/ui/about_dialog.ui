@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>420</height>
+    <width>655</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,14 +21,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>640</width>
-    <height>420</height>
+    <width>655</width>
+    <height>570</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>640</width>
-    <height>420</height>
+    <width>655</width>
+    <height>570</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -37,44 +37,256 @@
   <property name="locale">
    <locale language="Spanish" country="Venezuela"/>
   </property>
-  <widget class="QLabel" name="label_logo">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>0</y>
-     <width>140</width>
-     <height>140</height>
-    </rect>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <property name="spacing">
+    <number>0</number>
    </property>
-   <property name="text">
-    <string/>
+   <property name="bottomMargin">
+    <number>0</number>
    </property>
-   <property name="pixmap">
-    <pixmap>../../assets/images/about_logo.png</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_about">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>10</y>
-     <width>440</width>
-     <height>391</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Acerca de &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Concretus&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Versión: 1.0.0 &lt;/p&gt;&lt;p&gt;Fecha: 2025-02-20 &lt;/p&gt;&lt;p&gt;Copyright © 2025 Jesús Rivas &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; font-style:italic;&quot;&gt;Concretus&lt;/span&gt; es un software especializado en el diseño y dosificación de mezclas de concreto. Actualmente incorpora tres métodos:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método MCE&lt;/span&gt;: Basado en el libro &lt;span style=&quot; font-style:italic;&quot;&gt;Manual del Concreto Estructural&lt;/span&gt; de Porrero, Ramos, Grases y Velazco (2009)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método ACI&lt;/span&gt;: Basado en el manual &lt;span style=&quot; font-style:italic;&quot;&gt;ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and High-Density Concrete – Guide &lt;/span&gt;del Comité 211 del Instituto Americano del Concreto (2022)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Método DoE&lt;/span&gt;: Basado en el libro &lt;span style=&quot; font-style:italic;&quot;&gt;Design of Normal Concrete Mixes&lt;/span&gt; de Teychenné, Franklin y Erntroy (1997)&lt;/p&gt;&lt;p&gt;Desarrollado por: Jesús Alejandro Rivas Simancas&lt;/p&gt;&lt;p&gt;Correo electrónico: rivas601@gmail.com &lt;/p&gt;&lt;p&gt;Licencia: General Public License (GPL) &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::TextFormat::AutoText</enum>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="title">
+       <property name="text">
+        <string>&lt;html&gt;
+
+&lt;head&gt;
+&lt;meta http-equiv=Content-Type content=&quot;text/html; charset=windows-1252&quot;&gt;
+&lt;meta name=Generator content=&quot;Microsoft Word 15 (filtered)&quot;&gt;
+&lt;style&gt;
+&lt;!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:&quot;Cambria Math&quot;;
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Aptos;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:&quot;Aptos&quot;,sans-serif;}
+.MsoChpDefault
+	{font-family:&quot;Aptos&quot;,sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+--&gt;
+&lt;/style&gt;
+
+&lt;/head&gt;
+
+&lt;body lang=ES-VE link=&quot;#467886&quot; vlink=&quot;#96607D&quot; style='word-wrap:break-word'&gt;
+
+&lt;div class=WordSection1&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-size:14.0pt;line-height:107%;
+font-family:&quot;Calibri&quot;,sans-serif'&gt;Acerca de &lt;i&gt;Concretus&lt;/i&gt;&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Versión:&lt;/span&gt;&lt;/b&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&amp;nbsp;1.0.0 (March 2025)&lt;br&gt;
+&lt;b&gt;Licencia:&lt;/b&gt;&amp;nbsp;GNU General Public License (GPL v3)&lt;/span&gt;&lt;/p&gt;
+
+&lt;div class=MsoNormal align=center style='text-align:center'&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;
+
+&lt;hr size=1 width=&quot;100%&quot; noshade style='color:black' align=center&gt;
+
+&lt;/span&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_logo">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>../../assets/images/about_logo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="body">
+     <property name="text">
+      <string>&lt;html&gt;
+
+&lt;head&gt;
+&lt;meta http-equiv=Content-Type content=&quot;text/html; charset=windows-1252&quot;&gt;
+&lt;meta name=Generator content=&quot;Microsoft Word 15 (filtered)&quot;&gt;
+&lt;style&gt;
+&lt;!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:&quot;Cambria Math&quot;;
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Aptos;}
+@font-face
+	{font-family:&quot;Segoe UI Emoji&quot;;
+	panose-1:2 11 5 2 4 2 4 2 2 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:&quot;Aptos&quot;,sans-serif;}
+a:link, span.MsoHyperlink
+	{color:#467886;
+	text-decoration:underline;}
+.MsoChpDefault
+	{font-family:&quot;Aptos&quot;,sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+--&gt;
+&lt;/style&gt;
+
+&lt;/head&gt;
+
+&lt;body lang=ES-VE link=&quot;#467886&quot; vlink=&quot;#96607D&quot; style='word-wrap:break-word'&gt;
+
+&lt;div class=WordSection1&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;© 2025
+Jesús Alejandro Rivas Simancas&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Descripción:&lt;/span&gt;&lt;/b&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&lt;br&gt;
+Software especializado en diseño y dosificación de mezclas de concreto.
+Actualmente soporta solo el diseño de concreto normal mediante 3 métodos:&lt;/span&gt;&lt;/p&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Métodos
+implementados:&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
+
+&lt;ol style='margin-top:0in' start=1 type=1&gt;
+ &lt;li class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Método
+     MCE&lt;/span&gt;&lt;/b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&lt;br&gt;
+     Basado en:&lt;br&gt;
+     &lt;i&gt;&amp;quot;Manual del Concreto Estructural&amp;quot;&lt;/i&gt;&lt;br&gt;
+     Porrero, Ramos, Grases y Velazco (2009)&lt;/span&gt;&lt;/li&gt;
+ &lt;li class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Método
+     ACI&lt;/span&gt;&lt;/b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&lt;br&gt;
+     Basado en:&lt;br&gt;
+     &lt;i&gt;&amp;quot;ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and
+     High-Density Concrete – Guide&amp;quot;&lt;/i&gt;&lt;br&gt;
+     Comité 211 del American Concrete Institute (2022)&lt;/span&gt;&lt;/li&gt;
+ &lt;li class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Método
+     DoE&lt;/span&gt;&lt;/b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&lt;br&gt;
+     Basado en:&lt;br&gt;
+     &lt;i&gt;&amp;quot;Design of Normal Concrete Mixes&amp;quot;&lt;/i&gt;&lt;br&gt;
+     Teychenné, Franklin y Erntroy (1997)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=MsoNormal align=center style='text-align:center'&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;
+
+&lt;hr size=1 width=&quot;100%&quot; noshade style='color:black' align=center&gt;
+
+&lt;/span&gt;&lt;/div&gt;
+
+&lt;p class=MsoNormal&gt;&lt;b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Desarrollo
+y contacto:&lt;/span&gt;&lt;/b&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&lt;br&gt;
+&lt;/span&gt;&lt;span style='font-family:&quot;Segoe UI Emoji&quot;,sans-serif'&gt;&amp;#9993;&amp;#65039;&lt;/span&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;&amp;nbsp;&lt;/span&gt;&lt;a
+href=&quot;mailto:rivas601@gmail.com&quot; target=&quot;_blank&quot;&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;rivas601@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=MsoNormal align=center style='text-align:center'&gt;&lt;span
+style='font-family:&quot;Calibri&quot;,sans-serif'&gt;
+
+&lt;hr size=1 width=&quot;100%&quot; noshade style='color:black' align=center&gt;
+
+&lt;/span&gt;&lt;/div&gt;
+
+&lt;p class=MsoNormal&gt;&lt;i&gt;&lt;span style='font-family:&quot;Calibri&quot;,sans-serif'&gt;Este
+programa es software libre: puede redistribuirlo y/o modificarlo bajo los
+términos de la Licencia Pública General GNU publicada por la Free Software
+Foundation (versión 3 de la Licencia o cualquier versión posterior).&lt;/span&gt;&lt;/i&gt;&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

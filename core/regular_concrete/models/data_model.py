@@ -1,0 +1,301 @@
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from Concretus.settings import DEFAULT_UNITS_KEY, DEFAULT_LANGUAGE_KEY, INITIAL_STEP, LANGUAGES, UNIT_SYSTEM
+from Concretus.logger import Logger
+
+class RegularConcreteDataModel(QObject):
+    """
+    Central data model for the concrete regular procedure
+    Manages all workflow and notifies components of changes.
+    """
+
+    # Create the main custom signals
+    data_updated = pyqtSignal()  # Emit when any data changes
+    language_changed = pyqtSignal(str)  # Emit when the system language changes
+    units_changed = pyqtSignal(str)  # Emit when the system of units changes
+    method_changed = pyqtSignal(str) # Emit when the method for the specific regular procedure changes
+    validation_updated = pyqtSignal(list)  # Errors list
+    step_changed = pyqtSignal(int)  # Current step value in the workflow
+
+    def __init__(self):
+        super().__init__()
+
+        # Default state
+        self._current_step = INITIAL_STEP
+        self._language = DEFAULT_LANGUAGE_KEY # Underlying variable
+        self._units = DEFAULT_UNITS_KEY # Underlying variable
+        self._method = None # Underlying variable
+
+        # Data structure
+        self._design_data = self.create_empty_design_data() # data model
+        self.validation_errors: dict[str, str] = {} # dictionary with all the errors
+        self._trial_mix_results: dict[str, float] = {}
+
+        self.logger = Logger(__name__)
+        self.logger.info("Data model initialized")
+
+    # ----------------------------------- Principal properties -----------------------------------
+    @property
+    def language(self) -> str:
+        return self._language # Access the underlying variable
+
+    @language.setter
+    def language(self, lang: str):
+        if lang not in LANGUAGES.keys():
+            raise ValueError("Unsupported language")
+        if lang != self._language:
+            self._language = lang # Modify the underlying variable
+            self.language_changed.emit(lang)
+            self.logger.info(f"Language changed to: {lang}")
+
+    @property
+    def units(self) -> str:
+        return self._units # Access the underlying variable
+
+    @units.setter
+    def units(self, unit: str):
+        if unit not in UNIT_SYSTEM.keys():
+            raise ValueError("Invalid unit system")
+        if unit != self._units:
+            self._units = unit # Modify the underlying variable
+            self.units_changed.emit(unit)
+            self.logger.info(f"Unit system changed to: {unit}")
+
+    @property
+    def method(self) -> str:
+        return self._method # Access the underlying variable
+
+    @method.setter
+    def method(self, method: str):
+        if method != self._method:
+            self._method = method # Modify the underlying variable
+            self.method_changed.emit(method)
+            self.logger.info(f"Regular concrete method changed to: {method}")
+
+    @property
+    def current_step(self) -> int:
+        return self._current_step # Access the underlying variable
+
+    @current_step.setter
+    def current_step(self, step: int):
+        if step != self._current_step:
+            self._current_step = step # Modify the underlying variable
+            self.step_changed.emit(step)
+            self.logger.info(f"The current step changed to: {step}")
+
+    # ----------------------------------- Design data -----------------------------------
+    @staticmethod
+    def create_empty_design_data():
+        """Create the empty design data."""
+
+        return {
+            'general_info': {
+                'project_name': None,
+                'location': None,
+                'method': None,
+                'purchaser': None,
+                'date': None
+            },
+            'field_requirements': {
+                'slump': None,
+                'exposure_class': {
+                    'group_1': None,
+                    "items_1": None,
+                    'group_2': None,
+                    "items_2": None,
+                    'group_3': None,
+                    "items_3": None,
+                    'group_4': None,
+                    "items_4": None,
+                },
+                'air_content': {
+                    'air_content_checked': None,
+                    'user_defined': None,
+                    'exposure_defined': None
+                },
+                'strength': {
+                    'spec_strength': None,
+                    'std_dev_known': {
+                        'value': None,
+                        'test_nro': None,
+                        'defective_level': None
+                    },
+                    'std_dev_unknown': {
+                        'qual_control': None,
+                        'margin': None
+                    }
+                }
+
+            },
+            'cementitious_materials': {
+                'cement_seller': None,
+                'cement_type': None,
+                'cement_class': None,
+                'relative_density': None,
+                'SCM': {
+                    'SCM_checked': None,
+                    'SCM_type': None,
+                    'SCM_content': None,
+                    'SCM_relative_density': None
+                }
+            },
+            'fine_aggregate': {
+                'info': {
+                    'name': None,
+                    'source': None,
+                    'type': None
+                },
+                'physical_prop': {
+                    'relative_density_SSD': None,
+                    'PUS': None,
+                    'PUC': None
+                },
+                'moisture': {
+                    'moisture_content': None,
+                    'absorption_content': None
+                },
+                'gradation': {
+                    'passing_checked': None,
+                    'passing': None,
+                    'retained_checked': None,
+                    'retained': None,
+                    'cumulative_retained': None
+                }
+            },
+            'coarse_aggregate': {
+                'info': {
+                    'name': None,
+                    'source': None,
+                    'type': None
+                },
+                'physical_prop': {
+                    'relative_density_SSD': None,
+                    'PUS': None,
+                    'PUC': None
+                },
+                'moisture': {
+                    'moisture_content': None,
+                    'absorption_content': None
+                },
+                'gradation': {
+                    'passing_checked': None,
+                    'passing': None,
+                    'retained_checked': None,
+                    'retained': None,
+                    'cumulative_retained': None
+                }
+            },
+            'water': {
+                'water_type': None,
+                'water_source': None,
+                'water_density': None
+            },
+            'chemical_admixtures': {
+                'admixture_type': None,
+                'admixture_name': None,
+                'admixture_relative_density': None,
+                'admixture_dosage': None,
+                'effectiveness': None
+            },
+            'validation': {
+                'coarse_category': None,
+                'coarse_scores': None,
+                'fine_category': None,
+                'fine_scores': None,
+                'NMS': None,
+                'fineness_modulus': None,
+                'exposure_classes': None,
+            },
+            'trial_mix': {
+                'water': None,
+                'cement': None,
+                'scm_1': None,
+                'fine_aggregate': None,
+                'coarse-aggregate': None,
+                'air_content': None,
+                'air-entraining_admixture': None
+            }
+        }
+
+    def update_design_data(self, key_path, value):
+        """
+        Update a specific value using dot notation to access nested keys.
+
+        :param str key_path: The key path to update, e.g. 'cementitious_materials.SCM.SCM_type'.
+        :param any value: The new value to update.
+        """
+
+        keys = key_path.split('.')
+        data = self._design_data
+
+        try:
+            for key in keys[:-1]:
+                data = data[key]
+            data[keys[-1]] = value
+            self.data_updated.emit()
+            self.logger.info(f"Updated {key_path} -> {value}")
+        except KeyError as e:
+            self.logger.error(f"Invalid key path: {key_path} ({str(e)})")
+            raise
+
+    def get_design_value(self, key_path):
+        """
+        Get the design value using dot notation (as key).
+
+        :param str key_path: The key path to retrieve the value associated.
+        :returns: Return the desired value.
+        :rtype: any
+        """
+
+        keys = key_path.split('.')
+        data = self._design_data
+        try:
+            for key in keys:
+                data = data[key]
+            return data
+        except KeyError as e:
+            self.logger.error(f"Invalid key path: {key_path} ({str(e)})")
+            raise
+
+    # ----------------------------------- Validation methods -----------------------------------
+    def add_validation_error(self, section, message):
+        """
+        Add a validation error with context.
+
+        :param str section: Name of the section that failed.
+        :param str message: Description of validation failure.
+        """
+
+        key = section.upper()
+        # Only add the error if it is not already present
+        if key not in self.validation_errors:
+            self.validation_errors[key] = message
+            self.logger.info(f"Validation error: {key} -> {message}")
+            self.validation_updated.emit(self.validation_errors)
+
+    def clear_validation_errors(self, section = None):
+        """
+        Clear validation errors. If a section is provided, only the error associated with that section is cleared.
+
+        :param section: If provided, only the error associated with that section is cleared.
+        """
+
+        if section:
+            key = section.upper()
+            # Remove the error for the specified section if it exists.
+            self.validation_errors.pop(key, None)
+        else:
+            # Clear all errors.
+            self.validation_errors = {}
+        self.validation_updated.emit(self.validation_errors)
+
+    # ----------------------------------- Reset method -----------------------------------
+    def reset(self):
+        """Reset all data while maintaining the structure."""
+
+        self._design_data = self.create_empty_design_data()
+        self.validation_errors = []
+        self._trial_mix_results = {}
+        self.current_step = 0
+        self.logger.info("All data has been restored")
+        self.data_updated.emit()

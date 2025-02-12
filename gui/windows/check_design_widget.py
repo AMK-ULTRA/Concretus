@@ -1,0 +1,321 @@
+from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import pyqtSignal
+
+from Concretus.core.regular_concrete.models.validation import Validation
+from Concretus.gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
+from Concretus.logger import Logger
+from Concretus.settings import VALID_STYLE, INVALID_STYLE, FM_MINIMUM, FM_MAXIMUM
+
+
+class CheckDesign(QWidget):
+    # Define custom signal
+    regular_concrete_widget_requested = pyqtSignal()
+
+    def __init__(self, data_model, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_CheckDesignWidget()
+        # Run the .setupUi() method to show the GUI
+        self.ui.setupUi(self)
+        # Connect to the data model
+        self.data_model = data_model
+
+        # Create an instance of the main class in validation.py
+        self.validation = Validation(self.data_model)
+        # Minimum GUI update every time units change
+        self.data_model.units_changed.connect(lambda units: self.update_units(units))
+
+        # Connect the click signal to the method that emits the custom signal
+        self.ui.pushButton_review_design.clicked.connect(self.handle_button_clicked)
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+        self.logger.info('Check design widget initialized')
+
+    def on_enter(self):
+        """Logic when entering the widget."""
+
+        self.validation.calculate_grading_percentages()
+        self.grading_requirements()
+        self.show_nms()
+        self.allowed_fineness_modulus()
+        self.minimum_spec_strength()
+
+        # Check if necessary calculations should be performed
+        if self.data_model.method != 'MCE':
+            if self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'):
+                self.ui.groupBox_SCM.setEnabled(True)
+                self.maximum_scm_content()
+            if self.data_model.get_design_value(
+                    'field_requirements.air_content.air_content_checked') and not self.data_model.get_design_value(
+                    'field_requirements.air_content.exposure_defined'):
+                self.ui.groupBox_air_content.setEnabled(True)
+                self.minimum_entrained_air()
+
+        # Update the progress bar
+        self.update_progress_bar()
+
+    def on_exit(self):
+        """Logic when exiting the widget."""
+
+        self.data_model.clear_validation_errors()
+        self.clean_up_fields()
+
+        # Disable these fields
+        self.ui.groupBox_SCM.setEnabled(False)
+        self.ui.groupBox_air_content.setEnabled(False)
+
+    @staticmethod
+    def load_style(style_file):
+        """
+        Loads the contents of a CSS file.
+
+        :param str style_file: The path to the CSS file.
+        :returns: The sheet style.
+        :rtype: str
+        """
+
+        with open(style_file, 'r') as f:
+            return f.read()
+
+    def apply_validation_style(self, line_edit, is_valid):
+        """
+        Apply a sheet style for validation fields.
+
+        :param any line_edit: The QLineEdit widget to apply the sheet style (e.g. self.ui.lineEdit_SCM_max).
+        :param bool | None is_valid: Is True, a valid sheet style is applied;
+        is False, an invalid sheet style is applied; is None, clear any sheet style previously applied.
+        """
+
+        # Load the style
+        valid_sheet_style = self.load_style(VALID_STYLE)
+        invalid_sheet_style = self.load_style(INVALID_STYLE)
+        clear_sheet_style = ""
+
+        if is_valid is True:
+            line_edit.setStyleSheet(valid_sheet_style)
+        elif is_valid is False:
+            line_edit.setStyleSheet(invalid_sheet_style)
+        elif is_valid is None:
+            line_edit.setStyleSheet(clear_sheet_style)
+
+    def clean_up_fields(self):
+        """Clears the text content of specified line edits and resets their styles."""
+
+        # Fields to clean
+        clear_fields = [
+            self.ui.lineEdit_SCM_type,
+            self.ui.lineEdit_SCM_actual,
+            self.ui.lineEdit_SCM_max,
+            self.ui.lineEdit_exposure_class_2,
+            self.ui.lineEdit_air_NMS,
+            self.ui.lineEdit_NMS,
+            self.ui.lineEdit_air_actual,
+            self.ui.lineEdit_air_min
+        ]
+
+        for field in clear_fields:
+            field.clear()
+            self.apply_validation_style(field, None)
+
+    def update_progress_bar(self):
+        """
+        Updates the progress bar based on the number of validation errors.
+        0 errors -> 100%
+        6 errors -> 0%
+        """
+        error_count = len(self.data_model.validation_errors)
+        max_errors = 6
+        # Calculate the progress percentage
+        progress_value = 100 - (error_count * (100 / max_errors))
+        # Set the progress bar's value
+        self.ui.progressBar.setValue(int(round(progress_value, 0)))
+
+    def handle_button_clicked(self):
+        """Pressing the button emits a signal to go to the RegularConcrete widget."""
+
+        # When the button is pressed, the signal is emitted
+        self.regular_concrete_widget_requested.emit()
+
+    def update_units(self, units):
+        """
+        Update fields that depend on the selected unit system (only for the specified compressive strength fields).
+
+        :param str units: The system of units to update the fields.
+        """
+
+        # Initialize the variables
+        unit_suffix = None
+
+        if units == 'SI':
+            unit_suffix = 'MPa'
+        elif units == 'MKS':
+            unit_suffix = 'kgf/cm²'
+
+        # Update the labels
+        self.ui.label_spec_strength_actual.setText(f"Valor actual ({unit_suffix})")
+        self.ui.label_spec_strength_min.setText(f"Valor mínimo ({unit_suffix})")
+
+    def grading_requirements(self):
+        """
+        Verify whether the sieve analysis given for fine and coarse aggregate are valid.
+        Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve the current method
+        method = self.data_model.method
+        # and passing percentage dictionaries for fine and coarse aggregate from the data model
+        measured_coarse = self.data_model.get_design_value('coarse_aggregate.gradation.passing')
+        measured_fine = self.data_model.get_design_value('fine_aggregate.gradation.passing')
+
+        # Get the classification for each sieve analysis
+        fine_category, coarse_category = self.validation.classify_grading(method, measured_coarse, measured_fine)
+
+        # Update the fields in the GUI
+        for line_edit, category in zip(
+                [self.ui.lineEdit_fine_check, self.ui.lineEdit_coarse_check],
+                [fine_category, coarse_category]
+        ):
+            if category is None:
+                line_edit.setText('Sin coincidencia')
+                self.apply_validation_style(line_edit, False)
+            else:
+                line_edit.setText(category)
+                self.apply_validation_style(line_edit, True)
+
+    def show_nms(self):
+        """Display the nominal maximum size of the coarse aggregate."""
+
+        # Retrieve the grading list from the data model
+        grading_list = self.data_model.get_design_value('coarse_aggregate.gradation.passing')
+
+        # Calculate the nominal maximum size
+        nms = self.validation.calculate_nominal_maximum_size(grading_list)
+
+        # Update the data model
+        self.data_model.update_design_data('validation.NMS', nms)
+
+        # Update the fields in the GUI
+        if nms is None:
+            self.ui.lineEdit_NMS.setText('No hay granulometría')
+        else:
+            self.ui.lineEdit_NMS.setText(str(nms))
+
+    def allowed_fineness_modulus(self):
+        """
+        Check whether the fineness modulus meets regulatory requirements.
+        Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve the current method and retained percentage dictionary for fine aggregate from the data model
+        method = self.data_model.method
+        cumulative_retained = self.data_model.get_design_value('fine_aggregate.gradation.cumulative_retained')
+
+        # Obtain the fineness modulus and if it is value passed the requirements
+        fineness_modulus, valid = self.validation.required_fineness_modulus(method, cumulative_retained)
+
+        # Update the fields in the GUI
+        self.ui.lineEdit_FM_actual.setText(str(fineness_modulus))
+        self.apply_validation_style(self.ui.lineEdit_FM_actual, valid)
+        self.ui.lineEdit_FM_max.setText(str(FM_MAXIMUM))
+        self.ui.lineEdit_FM_min.setText(str(FM_MINIMUM))
+
+    def minimum_spec_strength(self):
+        """
+        Check whether the specified compressive strength is sufficient for the given exposure classes.
+        Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve the method and current specified compressive strength from the data model
+        method = self.data_model.method
+        current_spec_strength = self.data_model.get_design_value('field_requirements.strength.spec_strength')
+
+        # Get exposure classes
+        exposure_classes = {}
+        for groups, items in {'group_1': 'items_1', 'group_2': 'items_2', 'group_3': 'items_3',
+                             'group_4': 'items_4'}.items():
+            group = self.data_model.get_design_value(f'field_requirements.exposure_class.{groups}')
+            item = self.data_model.get_design_value(f'field_requirements.exposure_class.{items}')
+            exposure_classes[group] = item
+
+        # Update de the data model
+        self.data_model.update_design_data('validation.exposure_classes', exposure_classes)
+
+        # Check if the given specified compressive strength is sufficient
+        valid, minimum_value, exposure_class = self.validation.required_spec_strength(method, current_spec_strength, list(exposure_classes.values()))
+
+        # Update the fields in the GUI
+        for groups, items in exposure_classes.items():
+            if items == exposure_class:
+                self.ui.lineEdit_exposure_class.setText(f'{groups}: {exposure_class}')
+                break # If it is already found, there is no need to continue
+
+        self.ui.lineEdit_spec_strength_actual.setText(str(current_spec_strength))
+        self.ui.lineEdit_spec_strength_min.setText(str(minimum_value))
+        self.apply_validation_style(self.ui.lineEdit_spec_strength_actual, valid)
+
+    def maximum_scm_content(self):
+        """
+        Check whether the given SCM content is lower than the maximum SCM content  permitted according
+        to the exposure class. Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve the method, exposure classes, scm type and its content from the data model
+        method = self.data_model.method
+        exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
+        scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
+        scm_content = self.data_model.get_design_value('cementitious_materials.SCM.SCM_content')
+
+        # Check if the provided SCM content meets the requirements
+        valid, threshold_value = self.validation.required_scm_content(method, list(exposure_classes.values()), scm_type, scm_content)
+
+        # Update the fields in the GUI
+        self.ui.lineEdit_SCM_type.setText(scm_type)
+        self.ui.lineEdit_SCM_actual.setText(str(scm_content))
+        self.apply_validation_style(self.ui.lineEdit_SCM_actual, valid)
+
+        if valid is None and threshold_value == 0:
+            self.ui.lineEdit_SCM_max.setText('N/A')
+        else:
+            self.ui.lineEdit_SCM_max.setText(str(threshold_value))
+
+    def minimum_entrained_air(self):
+        """
+        Verify if the specified entrained air content meets the minimum requirement based on exposure classes,
+        nominal maximum size (NMS) and coarse aggregate category. Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve values from the data model
+        method = self.data_model.method
+        exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
+        nms = self.data_model.get_design_value('validation.NMS')
+        coarse_category = self.data_model.get_design_value('validation.coarse_category')
+        entrained_air = self.data_model.get_design_value('field_requirements.air_content.user_defined')
+
+        # Get the required minimum entrained air content and associated parameters.
+        valid, minimum_entrained_air, exp_class, nms_val = self.validation.required_entrained_air(
+            method,
+            list(exposure_classes.values()),
+            nms,
+            coarse_category,
+            entrained_air
+        )
+
+        # Format the exposure class string for display:
+        if isinstance(exp_class, list):
+            exp_class_text = ", ".join(exp_class)
+        else:
+            exp_class_text = str(exp_class)
+
+        # Update the UI fields
+        self.ui.lineEdit_exposure_class_2.setText(exp_class_text)
+        if nms_val is None:
+            self.ui.lineEdit_air_NMS.setText("No hay granulometría")
+        else:
+            self.ui.lineEdit_air_NMS.setText(nms_val)
+
+        self.ui.lineEdit_air_actual.setText(str(entrained_air))
+        self.ui.lineEdit_air_min.setText(str(minimum_entrained_air))
+
+        # Apply validation style only if valid is not None (i.e., True or False)
+        if valid is not None:
+            self.apply_validation_style(self.ui.lineEdit_air_actual, valid)

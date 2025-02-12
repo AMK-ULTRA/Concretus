@@ -4,7 +4,7 @@ from Concretus.gui.windows.main_window import MainWindow
 from Concretus.logger import Logger
 
 # Initialize the logger
-logger = Logger(name='App')
+logger = Logger(__name__)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

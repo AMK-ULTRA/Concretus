@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>457</height>
+    <width>655</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>650</width>
-    <height>457</height>
+    <width>655</width>
+    <height>475</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -188,7 +188,7 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
        <item>
         <layout class="QFormLayout" name="formLayout_7">
          <property name="formAlignment">
@@ -218,32 +218,79 @@
            <property name="maximum">
             <number>210</number>
            </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_exposure">
-           <property name="text">
-            <string>Clase de exposición</string>
-           </property>
-           <property name="buddy">
-            <cstring>comboBox_exposure</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QComboBox" name="comboBox_exposure">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="editable">
-            <bool>false</bool>
+           <property name="value">
+            <number>10</number>
            </property>
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_class_exposure">
+         <property name="title">
+          <string>Clase de exposición</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout_17">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_1">
+              <property name="text">
+               <string>Grupo #1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="editable">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Grupo #2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboBox_2"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_18">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Group #3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_3"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Group #4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboBox_4"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_air">
@@ -251,7 +298,7 @@
           <bool>true</bool>
          </property>
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -279,7 +326,7 @@
              <double>3.500000000000000</double>
             </property>
             <property name="maximum">
-             <double>7.500000000000000</double>
+             <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.500000000000000</double>
@@ -291,21 +338,8 @@
             <property name="text">
              <string>Estimado debido a la exposición</string>
             </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_exposure_defined">
-            <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Shadow::Sunken</enum>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -359,17 +393,11 @@
             </item>
             <item row="0" column="1">
              <widget class="QSpinBox" name="spinBox_spec_strength">
-              <property name="minimum">
-               <number>180</number>
-              </property>
-              <property name="maximum">
-               <number>450</number>
-              </property>
               <property name="singleStep">
                <number>1</number>
               </property>
               <property name="value">
-               <number>210</number>
+               <number>0</number>
               </property>
              </widget>
             </item>
@@ -632,7 +660,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="cementitous_materials">
+     <widget class="QWidget" name="cementitious_materials">
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,1">
        <item>
         <layout class="QFormLayout" name="formLayout_9">
@@ -691,11 +719,17 @@
          </item>
          <item row="3" column="1">
           <widget class="QDoubleSpinBox" name="doubleSpinBox_cement_relative_density">
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
            <property name="singleStep">
             <double>0.010000000000000</double>
            </property>
            <property name="value">
-            <double>3.330000000000000</double>
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
@@ -783,6 +817,12 @@
           </item>
           <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_SCM_relative_density">
+            <property name="minimum">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>100.000000000000000</double>
+            </property>
             <property name="singleStep">
              <double>0.010000000000000</double>
             </property>
@@ -813,9 +853,6 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,1">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
          <item row="0" column="0">
           <widget class="QGroupBox" name="groupBox_fine_info">
            <property name="sizePolicy">
@@ -882,7 +919,7 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label_fine_relative_density">
               <property name="text">
-               <string>Densidad relativa, SSD</string>
+               <string>Peso específico, SSD</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -893,12 +930,22 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_relative_density"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_relative_density">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_fine_pus">
               <property name="text">
-               <string>Peso unitario suelto (kg/m3)</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Peso unitario suelto (kgf/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -909,12 +956,19 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_pus"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_pus">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10000.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_fine_puc">
               <property name="text">
-               <string>Peso unitario compactado (kg/m3)</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Peso unitario compactado (kgf/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -925,7 +979,14 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_puc"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_puc">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10000.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -954,6 +1015,12 @@
               <property name="wrapping">
                <bool>false</bool>
               </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -970,7 +1037,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_abs"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_abs">
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -986,7 +1060,7 @@
           <item>
            <widget class="QRadioButton" name="radioButton_fine_retained">
             <property name="text">
-             <string>Usar porcentaje retenido</string>
+             <string>Usar porcentaje de la fracción individual retenida</string>
             </property>
            </widget>
           </item>
@@ -1014,7 +1088,7 @@
              <bool>false</bool>
             </attribute>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>150</number>
+             <number>190</number>
             </attribute>
             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
              <bool>false</bool>
@@ -1033,7 +1107,7 @@
             </attribute>
             <column>
              <property name="text">
-              <string>Tamiz, pulg (mm)</string>
+              <string>Cedazo, ASTM E11 (ISO 565)</string>
              </property>
              <property name="font">
               <font>
@@ -1044,12 +1118,18 @@
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje pasante, %</string>
+              <string>Porcentaje acumulado que pasa</string>
+             </property>
+             <property name="font">
+              <font>
+               <italic>false</italic>
+               <bold>false</bold>
+              </font>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje retenido, %</string>
+              <string>Porcentaje de la fracción individual retenida</string>
              </property>
             </column>
            </widget>
@@ -1123,7 +1203,7 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label_coarse_relative_density">
               <property name="text">
-               <string>Densidad relativa, SSD</string>
+               <string>Peso específico, SSD</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -1134,12 +1214,22 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_relative_density"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_relative_density">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_coarse_pus">
               <property name="text">
-               <string>Peso unitario suelto (kg/m3)</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Peso unitario suelto (kgf/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -1150,12 +1240,22 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_pus"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_pus">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_coarse_puc">
               <property name="text">
-               <string>Peso unitario compactado (kg/m3)</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Peso unitario compactado (kgf/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -1166,7 +1266,17 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_puc"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_puc">
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1195,6 +1305,12 @@
               <property name="wrapping">
                <bool>false</bool>
               </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -1211,7 +1327,14 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_abs"/>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_abs">
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1227,7 +1350,7 @@
           <item>
            <widget class="QRadioButton" name="radioButton_coarse_retained">
             <property name="text">
-             <string>Usar porcentaje retenido</string>
+             <string>Usar porcentaje de la fracción individual retenida</string>
             </property>
            </widget>
           </item>
@@ -1255,7 +1378,7 @@
              <bool>false</bool>
             </attribute>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>150</number>
+             <number>190</number>
             </attribute>
             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
              <bool>false</bool>
@@ -1274,7 +1397,7 @@
             </attribute>
             <column>
              <property name="text">
-              <string>Tamiz, pulg (mm)</string>
+              <string>Cedazo, ASTM E11 (ISO 565)</string>
              </property>
              <property name="font">
               <font>
@@ -1285,12 +1408,12 @@
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje pasante, %</string>
+              <string>Porcentaje acumulado que pasa</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje retenido, %</string>
+              <string>Porcentaje de la fracción individual retenida</string>
              </property>
             </column>
            </widget>
@@ -1422,7 +1545,20 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_relative_density"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_relative_density">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="minimum">
+          <double>0.001000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>100.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_admixture_dosage">
@@ -1435,7 +1571,17 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_dosage"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_admixture_dosage">
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>1000.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_admixture_effectiveness">
@@ -1471,7 +1617,6 @@
   <tabstop>lineEdit_purchaser</tabstop>
   <tabstop>dateEdit_date</tabstop>
   <tabstop>spinBox_slump</tabstop>
-  <tabstop>comboBox_exposure</tabstop>
   <tabstop>groupBox_air</tabstop>
   <tabstop>radioButton_user_defined</tabstop>
   <tabstop>doubleSpinBox_user_defined</tabstop>
@@ -1529,8 +1674,8 @@
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>329</x>
-     <y>31</y>
+     <x>338</x>
+     <y>30</y>
     </hint>
     <hint type="destinationlabel">
      <x>320</x>
@@ -1545,12 +1690,12 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>187</x>
-     <y>306</y>
+     <x>137</x>
+     <y>317</y>
     </hint>
     <hint type="destinationlabel">
-     <x>608</x>
-     <y>380</y>
+     <x>436</x>
+     <y>317</y>
     </hint>
    </hints>
   </connection>
@@ -1561,28 +1706,12 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>175</y>
+     <x>164</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>comboBox_exposure</sender>
-   <signal>currentTextChanged(QString)</signal>
-   <receiver>label_exposure_defined</receiver>
-   <slot>setText(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>361</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>411</x>
-     <y>169</y>
+     <x>562</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>

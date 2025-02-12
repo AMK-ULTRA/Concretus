@@ -13,26 +13,42 @@ class Ui_AboutDialog(object):
     def setupUi(self, AboutDialog):
         AboutDialog.setObjectName("AboutDialog")
         AboutDialog.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
-        AboutDialog.resize(640, 420)
+        AboutDialog.resize(655, 570)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(AboutDialog.sizePolicy().hasHeightForWidth())
         AboutDialog.setSizePolicy(sizePolicy)
-        AboutDialog.setMinimumSize(QtCore.QSize(640, 420))
-        AboutDialog.setMaximumSize(QtCore.QSize(640, 420))
+        AboutDialog.setMinimumSize(QtCore.QSize(655, 570))
+        AboutDialog.setMaximumSize(QtCore.QSize(655, 570))
         AboutDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
+        self.verticalLayout = QtWidgets.QVBoxLayout(AboutDialog)
+        self.verticalLayout.setContentsMargins(-1, -1, -1, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSpacing(6)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.title = QtWidgets.QLabel(parent=AboutDialog)
+        self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignBottom|QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft)
+        self.title.setObjectName("title")
+        self.horizontalLayout.addWidget(self.title)
         self.label_logo = QtWidgets.QLabel(parent=AboutDialog)
-        self.label_logo.setGeometry(QtCore.QRect(20, 0, 140, 140))
+        self.label_logo.setMinimumSize(QtCore.QSize(100, 100))
+        self.label_logo.setMaximumSize(QtCore.QSize(100, 100))
         self.label_logo.setText("")
         self.label_logo.setPixmap(QtGui.QPixmap("../../assets/images/about_logo.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
-        self.label_about = QtWidgets.QLabel(parent=AboutDialog)
-        self.label_about.setGeometry(QtCore.QRect(180, 10, 440, 391))
-        self.label_about.setTextFormat(QtCore.Qt.TextFormat.AutoText)
-        self.label_about.setWordWrap(True)
-        self.label_about.setObjectName("label_about")
+        self.horizontalLayout.addWidget(self.label_logo)
+        self.horizontalLayout.setStretch(0, 1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.body = QtWidgets.QLabel(parent=AboutDialog)
+        self.body.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.body.setWordWrap(True)
+        self.body.setObjectName("body")
+        self.verticalLayout.addWidget(self.body)
+        self.verticalLayout.setStretch(1, 1)
 
         self.retranslateUi(AboutDialog)
         QtCore.QMetaObject.connectSlotsByName(AboutDialog)
@@ -40,4 +56,192 @@ class Ui_AboutDialog(object):
     def retranslateUi(self, AboutDialog):
         _translate = QtCore.QCoreApplication.translate
         AboutDialog.setWindowTitle(_translate("AboutDialog", "Info"))
-        self.label_about.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt;\">Acerca de </span><span style=\" font-size:12pt; font-weight:700;\">Concretus</span></p><p>Versión: 1.0.0 </p><p>Fecha: 2025-02-20 </p><p>Copyright © 2025 Jesús Rivas </p><p><span style=\" font-weight:700; font-style:italic;\">Concretus</span> es un software especializado en el diseño y dosificación de mezclas de concreto. Actualmente incorpora tres métodos:</p><p><span style=\" font-weight:700;\">Método MCE</span>: Basado en el libro <span style=\" font-style:italic;\">Manual del Concreto Estructural</span> de Porrero, Ramos, Grases y Velazco (2009)</p><p><span style=\" font-weight:700;\">Método ACI</span>: Basado en el manual <span style=\" font-style:italic;\">ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and High-Density Concrete – Guide </span>del Comité 211 del Instituto Americano del Concreto (2022)</p><p><span style=\" font-weight:700;\">Método DoE</span>: Basado en el libro <span style=\" font-style:italic;\">Design of Normal Concrete Mixes</span> de Teychenné, Franklin y Erntroy (1997)</p><p>Desarrollado por: Jesús Alejandro Rivas Simancas</p><p>Correo electrónico: rivas601@gmail.com </p><p>Licencia: General Public License (GPL) </p></body></html>"))
+        self.title.setText(_translate("AboutDialog", "<html>\n"
+"\n"
+"<head>\n"
+"<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
+"<meta name=Generator content=\"Microsoft Word 15 (filtered)\">\n"
+"<style>\n"
+"<!--\n"
+" /* Font Definitions */\n"
+" @font-face\n"
+"    {font-family:Wingdings;\n"
+"    panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
+"@font-face\n"
+"    {font-family:\"Cambria Math\";\n"
+"    panose-1:2 4 5 3 5 4 6 3 2 4;}\n"
+"@font-face\n"
+"    {font-family:Calibri;\n"
+"    panose-1:2 15 5 2 2 2 4 3 2 4;}\n"
+"@font-face\n"
+"    {font-family:Aptos;}\n"
+" /* Style Definitions */\n"
+" p.MsoNormal, li.MsoNormal, div.MsoNormal\n"
+"    {margin-top:0in;\n"
+"    margin-right:0in;\n"
+"    margin-bottom:8.0pt;\n"
+"    margin-left:0in;\n"
+"    line-height:107%;\n"
+"    font-size:11.0pt;\n"
+"    font-family:\"Aptos\",sans-serif;}\n"
+".MsoChpDefault\n"
+"    {font-family:\"Aptos\",sans-serif;}\n"
+".MsoPapDefault\n"
+"    {margin-bottom:8.0pt;\n"
+"    line-height:107%;}\n"
+"@page WordSection1\n"
+"    {size:8.5in 11.0in;\n"
+"    margin:1.0in 1.0in 1.0in 1.0in;}\n"
+"div.WordSection1\n"
+"    {page:WordSection1;}\n"
+" /* List Definitions */\n"
+" ol\n"
+"    {margin-bottom:0in;}\n"
+"ul\n"
+"    {margin-bottom:0in;}\n"
+"-->\n"
+"</style>\n"
+"\n"
+"</head>\n"
+"\n"
+"<body lang=ES-VE link=\"#467886\" vlink=\"#96607D\" style=\'word-wrap:break-word\'>\n"
+"\n"
+"<div class=WordSection1>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-size:14.0pt;line-height:107%;\n"
+"font-family:\"Calibri\",sans-serif\'>Acerca de <i>Concretus</i></span></b></p>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Versión:</span></b><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'>&nbsp;1.0.0 (March 2025)<br>\n"
+"<b>Licencia:</b>&nbsp;GNU General Public License (GPL v3)</span></p>\n"
+"\n"
+"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'>\n"
+"\n"
+"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
+"\n"
+"</span></div>\n"
+"\n"
+"</div>\n"
+"\n"
+"</body>\n"
+"\n"
+"</html>"))
+        self.body.setText(_translate("AboutDialog", "<html>\n"
+"\n"
+"<head>\n"
+"<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
+"<meta name=Generator content=\"Microsoft Word 15 (filtered)\">\n"
+"<style>\n"
+"<!--\n"
+" /* Font Definitions */\n"
+" @font-face\n"
+"    {font-family:Wingdings;\n"
+"    panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
+"@font-face\n"
+"    {font-family:\"Cambria Math\";\n"
+"    panose-1:2 4 5 3 5 4 6 3 2 4;}\n"
+"@font-face\n"
+"    {font-family:Calibri;\n"
+"    panose-1:2 15 5 2 2 2 4 3 2 4;}\n"
+"@font-face\n"
+"    {font-family:Aptos;}\n"
+"@font-face\n"
+"    {font-family:\"Segoe UI Emoji\";\n"
+"    panose-1:2 11 5 2 4 2 4 2 2 3;}\n"
+" /* Style Definitions */\n"
+" p.MsoNormal, li.MsoNormal, div.MsoNormal\n"
+"    {margin-top:0in;\n"
+"    margin-right:0in;\n"
+"    margin-bottom:8.0pt;\n"
+"    margin-left:0in;\n"
+"    line-height:107%;\n"
+"    font-size:11.0pt;\n"
+"    font-family:\"Aptos\",sans-serif;}\n"
+"a:link, span.MsoHyperlink\n"
+"    {color:#467886;\n"
+"    text-decoration:underline;}\n"
+".MsoChpDefault\n"
+"    {font-family:\"Aptos\",sans-serif;}\n"
+".MsoPapDefault\n"
+"    {margin-bottom:8.0pt;\n"
+"    line-height:107%;}\n"
+"@page WordSection1\n"
+"    {size:8.5in 11.0in;\n"
+"    margin:1.0in 1.0in 1.0in 1.0in;}\n"
+"div.WordSection1\n"
+"    {page:WordSection1;}\n"
+" /* List Definitions */\n"
+" ol\n"
+"    {margin-bottom:0in;}\n"
+"ul\n"
+"    {margin-bottom:0in;}\n"
+"-->\n"
+"</style>\n"
+"\n"
+"</head>\n"
+"\n"
+"<body lang=ES-VE link=\"#467886\" vlink=\"#96607D\" style=\'word-wrap:break-word\'>\n"
+"\n"
+"<div class=WordSection1>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>© 2025\n"
+"Jesús Alejandro Rivas Simancas</span></b></p>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Descripción:</span></b><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
+"Software especializado en diseño y dosificación de mezclas de concreto.\n"
+"Actualmente soporta solo el diseño de concreto normal mediante 3 métodos:</span></p>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Métodos\n"
+"implementados:</span></b></p>\n"
+"\n"
+"<ol style=\'margin-top:0in\' start=1 type=1>\n"
+" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
+"     MCE</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
+"     Basado en:<br>\n"
+"     <i>&quot;Manual del Concreto Estructural&quot;</i><br>\n"
+"     Porrero, Ramos, Grases y Velazco (2009)</span></li>\n"
+" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
+"     ACI</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
+"     Basado en:<br>\n"
+"     <i>&quot;ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and\n"
+"     High-Density Concrete – Guide&quot;</i><br>\n"
+"     Comité 211 del American Concrete Institute (2022)</span></li>\n"
+" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
+"     DoE</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
+"     Basado en:<br>\n"
+"     <i>&quot;Design of Normal Concrete Mixes&quot;</i><br>\n"
+"     Teychenné, Franklin y Erntroy (1997)</span></li>\n"
+"</ol>\n"
+"\n"
+"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'>\n"
+"\n"
+"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
+"\n"
+"</span></div>\n"
+"\n"
+"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Desarrollo\n"
+"y contacto:</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
+"</span><span style=\'font-family:\"Segoe UI Emoji\",sans-serif\'>&#9993;&#65039;</span><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'>&nbsp;</span><a\n"
+"href=\"mailto:rivas601@gmail.com\" target=\"_blank\"><span style=\'font-family:\"Calibri\",sans-serif\'>rivas601@gmail.com</span></a></p>\n"
+"\n"
+"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
+"style=\'font-family:\"Calibri\",sans-serif\'>\n"
+"\n"
+"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
+"\n"
+"</span></div>\n"
+"\n"
+"<p class=MsoNormal><i><span style=\'font-family:\"Calibri\",sans-serif\'>Este\n"
+"programa es software libre: puede redistribuirlo y/o modificarlo bajo los\n"
+"términos de la Licencia Pública General GNU publicada por la Free Software\n"
+"Foundation (versión 3 de la Licencia o cualquier versión posterior).</span></i></p>\n"
+"\n"
+"</div>\n"
+"\n"
+"</body>\n"
+"\n"
+"</html>"))

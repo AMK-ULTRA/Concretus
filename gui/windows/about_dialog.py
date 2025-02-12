@@ -15,13 +15,14 @@ class AboutDialog(QDialog):
         self.ui.setupUi(self)
 
         # Initialize the logger
-        self.logger = Logger(name='AboutDialog', log_file='concretus.log')
-        self.logger.info('The about dialog has been created')
+        self.logger = Logger(__name__)
+        self.logger.info('About dialog initialized')
 
         # Apply resource paths
         self.apply_resource_paths()
 
     def apply_resource_paths(self):
         """Apply resource paths (images and icons) from settings.py."""
+
         # Logo image
         self.ui.label_logo.setPixmap(QPixmap(str(IMAGE_ABOUT)))
