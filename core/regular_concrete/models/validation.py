@@ -1,6 +1,6 @@
 from Concretus.logger import Logger
-from Concretus.settings import COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES, FM_MAXIMUM, \
-    FM_MINIMUM, MAXIMUM_SCM, NMS_BY_CATEGORY, MINIMUM_ENTRAINED_AIR
+from Concretus.settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES,
+                                MAXIMUM_SCM, NMS_BY_CATEGORY, MINIMUM_ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
 
 
 class Validation:
@@ -128,7 +128,8 @@ class Validation:
         Classify a sieve analysis (for an aggregate) by comparing the measured data with the allowable ranges.
 
         :param dict[str, float | None] measured_data: Dictionary with measured data (key = sieve name, value = % measured or None).
-        :param dict[str, dict] range_categories: Dictionary where keys are categories (e.g. "#0", "#1", etc.) and values are dictionaries mapping each sieve requirements.
+        :param dict[str, dict] range_categories: Dictionary where keys are categories (e.g. "#0", "#1", etc.)
+                                                 and values are dictionaries mapping each sieve requirements.
         :param float threshold: Minimum threshold (between 0 and 1) to consider the category valid.
         :return: The best category (or None if none meet the criteria) and all the remaining categories with corresponding scores.
         :rtype: tuple[str | None, dict]
@@ -251,7 +252,8 @@ class Validation:
 
     def required_spec_strength(self, method, spec_strength, exposure_classes):
         """
-        Checks if the specified compressive strength meets the minimum requirement based on the most demanding exposure class.
+        Checks if the specified compressive strength meets the minimum requirement
+        based on the most demanding exposure class.
 
         :param str method: The method to retrieve the necessary requirements.
         :param int spec_strength: The specified compressive strength to evaluate.
@@ -294,7 +296,8 @@ class Validation:
         Calculates the fineness modulus of a fine aggregate based on sieve analysis data.
 
         :param list[str] sieves: A list of specified series of sieves according to regulations.
-        :param dict[str, float | None] cumulative_retained_grading: A dictionary mapping each sieve with its cumulative retained percentage
+        :param dict[str, float | None] cumulative_retained_grading: A dictionary mapping each sieve
+                                                                    with its cumulative retained percentage
         :return: The calculated fineness modulus.
         :rtype: float
         """
@@ -311,9 +314,13 @@ class Validation:
         Checks if the calculated fineness modulus is within the required range.
 
         :param str method: The method used for the calculation.
-        :param dict[str, float | None] cumulative_retained_grading: A dictionary containing the sieve analysis data (cumulative retained percentage).
-        :return: The fineness modulus (rounded to 2 digits) and True if the fineness modulus is within the range, False otherwise.
-        :rtype: tuple[float, bool]
+        :param dict[str, float | None] cumulative_retained_grading: A dictionary containing the sieve analysis data
+                                                                    (cumulative retained percentage).
+        :return: The fineness modulus (rounded to 2 digits) and:
+                 - True if the fineness modulus is within the range,
+                 - False if the fineness modulus is not within the range,
+                 - None if there were no limits for the fineness modulus for the given method.
+        :rtype: tuple[float, bool | None]
         """
 
         # Predefined dictionary with all valid sieves for each method
@@ -324,14 +331,23 @@ class Validation:
         # Update the data model
         self.data_model.update_design_data('validation.fineness_modulus', fineness_modulus)
 
-        # Check if the calculated fineness modulus is within the required ranges
-        if FM_MINIMUM <= fineness_modulus <= FM_MAXIMUM:
+        # Retrieve the limits according to the method
+        fm_max = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MAXIMUM")
+        fm_min = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MINIMUM")
+
+        # If there were no limits for the fineness modulus in the given method
+        if fm_max is None and fm_min is None:
+            self.logger.debug(f"No limits exits for the fineness modulus for the method {method}")
+            return round(fineness_modulus, 2), None
+
+        # Otherwise, check if the calculated fineness modulus is within the required ranges
+        if fm_min <= fineness_modulus <= fm_max:
             self.logger.debug("Fineness modulus is within the required range.")
             return round(fineness_modulus, 2), True
         else:
             error_message = (
                 f"Fineness modulus out of range. "
-                f"Minimum: {FM_MINIMUM}, Maximum: {FM_MAXIMUM}, "
+                f"Minimum: {fm_min}, Maximum: {fm_max}, "
                 f"Calculated: {fineness_modulus}"
             )
             # Add validation error
@@ -425,9 +441,11 @@ class Validation:
         (via NMS_BY_CATEGORY), it is used instead of the provided NMS.
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
-        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI, or ["XF2", "XF3", "XF4"] for DoE).
+        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
+                                           or ["XF2", "XF3", "XF4"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
-        :param str coarse_category: The coarse aggregate category; if available, used to look up a different NMS value from NMS_BY_CATEGORY.
+        :param str coarse_category: The coarse aggregate category; if available, used to look up a
+                                    different NMS value from NMS_BY_CATEGORY.
         :return: A tuple (minimum_entrained_air, exposure_class(es), NMS) where:
                  - minimum_entrained_air is the required entrained air content or None if was none found.
                  - exposure_class(es) is the associated exposure class (or all exposure classes if none have requirements).
@@ -476,7 +494,8 @@ class Validation:
         the design method, a list of exposure classes, and a given nominal maximum size (or its category-specific alternative).
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
-        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI, or ["XF2", "XF3", "XF4"] for DoE).
+        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
+                                           or ["XF2", "XF3", "XF4"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
         :param str coarse_category: The coarse aggregate category, which may override the provided nms via NMS_BY_CATEGORY.
         :param float entrained_air: The entrained air content (in %) to evaluate.

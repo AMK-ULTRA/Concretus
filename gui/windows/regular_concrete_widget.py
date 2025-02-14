@@ -16,9 +16,9 @@ class RegularConcrete(QWidget):
         self.ui.setupUi(self)
         # Connect to the data model
         self.data_model = data_model
-        # Load current unit system and method whenever units/method changes
-        self.data_model.units_changed.connect(lambda units: self.update_units(units))
-        self.data_model.method_changed.connect(lambda method: self.update_method(method))
+
+        # Global signal/slot connections
+        self.global_connections()
 
         # Create an instance of the event filter
         self.delete_key_filter = DeleteKeyEventFilter()
@@ -56,6 +56,13 @@ class RegularConcrete(QWidget):
                 [self.ui.radioButton_fine_retained, self.ui.radioButton_coarse_retained]
         ):
             self.save_retained_states(aggregate, radio_button.isChecked())
+
+    def global_connections(self):
+        """Set global signal/slot connections, i.e. the connections between different QWidgets."""
+
+        # Load current unit system and method whenever units/method changes
+        self.data_model.units_changed.connect(lambda units: self.update_units(units))
+        self.data_model.method_changed.connect(lambda method: self.update_method(method))
 
     def save_data(self):
         """Stores all form data in the data model."""
@@ -323,10 +330,8 @@ class RegularConcrete(QWidget):
         self.ui.tableWidget_coarse.setRowCount(0)
 
         # Center the table headers for fine and coarse aggregate grading
-        self.ui.tableWidget_fine.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Stretch)
-        self.ui.tableWidget_coarse.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Stretch)
+        self.ui.tableWidget_fine.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.ui.tableWidget_coarse.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
         # Sieve set according to the selected method
         sieves_fine = SIEVES[method]["fine_sieves"]

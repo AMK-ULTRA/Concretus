@@ -14,12 +14,12 @@ class AboutDialog(QDialog):
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
 
+        # Apply resource paths
+        self.apply_resource_paths()
+
         # Initialize the logger
         self.logger = Logger(__name__)
         self.logger.info('About dialog initialized')
-
-        # Apply resource paths
-        self.apply_resource_paths()
 
     def apply_resource_paths(self):
         """Apply resource paths (images and icons) from settings.py."""

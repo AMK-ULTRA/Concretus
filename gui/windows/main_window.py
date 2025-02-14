@@ -11,6 +11,7 @@ from Concretus.gui.windows.check_design_widget import CheckDesign
 from Concretus.gui.windows.trial_mix_widget import TrialMix
 from Concretus.gui.windows.about_dialog import AboutDialog
 from Concretus.gui.windows.config_dialog import ConfigDialog
+from Concretus.core.regular_concrete.plots.grading_curve import PlotDialog
 from Concretus.logger import Logger
 from Concretus.settings import ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX
 
@@ -32,10 +33,6 @@ class MainWindow(QMainWindow):
         # Set up the main connections
         self.setup_connections()
 
-        # Create an empty reference to the dialogs
-        self.config_dialog = None
-        self.report_dialog = None
-        self.about_dialog = None
         # Create an empty reference to the widgets
         self.welcome = None
         self.regular_concrete = None
@@ -47,12 +44,22 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stacked_widget)
         self.init_components() # Initialize the components for the QStackedWidget
 
-        # Enable the QActions according to the current step
-        self.data_model.step_changed.connect(lambda current_step: self.enable_actions(current_step))
+        # Global signal/slot connections
+        self.global_connections()
 
         # Initialize the logger
         self.logger = Logger(__name__)
         self.logger.info('Main window initialized')
+
+    def global_connections(self):
+        """Set global signal/slot connections, i.e. the connections between different QWidgets."""
+
+        # Enable the QActions according to the current step
+        self.data_model.step_changed.connect(lambda current_step: self.enable_actions(current_step))
+        # When requested, show the RegularWidget widget
+        self.check_design.regular_concrete_requested.connect(partial(self.navigate_to, self.regular_concrete))
+        # Show the plot (fine or coarse aggregate) when requested by the user
+        self.check_design.plot_requested.connect(lambda aggregate_type: self.show_plot_dialog(aggregate_type))
 
     def group_action(self):
         """Set up QActionGroup for multiple menu actions."""
@@ -113,9 +120,6 @@ class MainWindow(QMainWindow):
         # Display the welcome widget
         self.show_welcome()
 
-        # When requested, show the RegularWidget widget
-        self.check_design.regular_concrete_widget_requested.connect(partial(self.navigate_to, self.regular_concrete))
-
     def enable_actions(self, current_step):
         """
         Enables the appropriate actions based on the current step.
@@ -159,13 +163,9 @@ class MainWindow(QMainWindow):
 
         self.logger.info('The configuration dialog has been selected')
 
-        if not self.config_dialog: # Create an instance only once
-            self.config_dialog = ConfigDialog(self.data_model, self)
-
-        if self.config_dialog.exec() == QDialog.DialogCode.Accepted:
-            self.config_dialog.save_config()
-        else:
-            self.config_dialog.load_config() # Keep previous selection if dialog is rejected
+        config_dialog = ConfigDialog(self.data_model, self)
+        if config_dialog.exec() == QDialog.DialogCode.Accepted:
+            config_dialog.save_config()
 
     def show_report_dialog(self):
         """Launch the Report dialog."""
@@ -176,9 +176,21 @@ class MainWindow(QMainWindow):
         """Launch the About dialog."""
 
         self.logger.info('The about dialog has been selected')
-        if not self.about_dialog:
-            self.about_dialog = AboutDialog(self)
-        self.about_dialog.exec()
+
+        about_dialog = AboutDialog(self)
+        about_dialog.exec()
+
+    def show_plot_dialog(self, aggregate_type):
+        """
+        Launch the About dialog.
+
+        :param str aggregate_type: The type of aggregate to plot ("fine" or "coarse").
+        """
+
+        self.logger.info('The plot dialog has been selected')
+
+        plot_dialog = PlotDialog(self.data_model, aggregate_type, self)
+        plot_dialog.exec()
 
     def show_welcome(self):
         """Displays the Welcome widget and updates the workflow step value."""

@@ -270,7 +270,7 @@ class Ui_CheckDesignWidget(object):
     def retranslateUi(self, CheckDesignWidget):
         _translate = QtCore.QCoreApplication.translate
         CheckDesignWidget.setWindowTitle(_translate("CheckDesignWidget", "Form"))
-        self.groupBox_grading.setTitle(_translate("CheckDesignWidget", "Limites granulométricos"))
+        self.groupBox_grading.setTitle(_translate("CheckDesignWidget", "Límites granulométricos"))
         self.label_fine.setText(_translate("CheckDesignWidget", "Agregado fino"))
         self.pushButton_fine_graph.setText(_translate("CheckDesignWidget", "Ver gráfico"))
         self.label_coarse.setText(_translate("CheckDesignWidget", "Agregado grueso"))

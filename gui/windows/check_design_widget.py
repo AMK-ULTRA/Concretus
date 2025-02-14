@@ -1,15 +1,18 @@
+from functools import partial
+
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
 from Concretus.core.regular_concrete.models.validation import Validation
 from Concretus.gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
 from Concretus.logger import Logger
-from Concretus.settings import VALID_STYLE, INVALID_STYLE, FM_MINIMUM, FM_MAXIMUM
+from Concretus.settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS
 
 
 class CheckDesign(QWidget):
-    # Define custom signal
-    regular_concrete_widget_requested = pyqtSignal()
+    # Define custom signals
+    regular_concrete_requested = pyqtSignal()
+    plot_requested = pyqtSignal(str)
 
     def __init__(self, data_model, parent=None):
         super().__init__(parent)
@@ -19,13 +22,11 @@ class CheckDesign(QWidget):
         # Connect to the data model
         self.data_model = data_model
 
-        # Create an instance of the main class in validation.py
+        # Create an instance of the validation module
         self.validation = Validation(self.data_model)
-        # Minimum GUI update every time units change
-        self.data_model.units_changed.connect(lambda units: self.update_units(units))
 
-        # Connect the click signal to the method that emits the custom signal
-        self.ui.pushButton_review_design.clicked.connect(self.handle_button_clicked)
+        # Global signal/slot connections
+        self.global_connections()
 
         # Initialize the logger
         self.logger = Logger(__name__)
@@ -64,6 +65,17 @@ class CheckDesign(QWidget):
         self.ui.groupBox_SCM.setEnabled(False)
         self.ui.groupBox_air_content.setEnabled(False)
 
+    def global_connections(self):
+        """Set global signal/slot connections, i.e. the connections between different QWidgets."""
+
+        # Minimum GUI update every time units change
+        self.data_model.units_changed.connect(lambda units: self.update_units(units))
+        # Go to Regular Concrete widget when requested by the user
+        self.ui.pushButton_review_design.clicked.connect(self.get_back_button_clicked)
+        # Show the plot (fine or coarse aggregate) when requested by the user
+        self.ui.pushButton_fine_graph.clicked.connect(partial(self.display_plot_button_clicked, "fine"))
+        self.ui.pushButton_coarse_graph.clicked.connect(partial(self.display_plot_button_clicked, "coarse"))
+
     @staticmethod
     def load_style(style_file):
         """
@@ -82,8 +94,8 @@ class CheckDesign(QWidget):
         Apply a sheet style for validation fields.
 
         :param any line_edit: The QLineEdit widget to apply the sheet style (e.g. self.ui.lineEdit_SCM_max).
-        :param bool | None is_valid: Is True, a valid sheet style is applied;
-        is False, an invalid sheet style is applied; is None, clear any sheet style previously applied.
+        :param bool | None is_valid: Is True, a valid sheet style is applied; is False, an invalid sheet style
+                                     is applied; is None, clear any sheet style previously applied.
         """
 
         # Load the style
@@ -130,11 +142,21 @@ class CheckDesign(QWidget):
         # Set the progress bar's value
         self.ui.progressBar.setValue(int(round(progress_value, 0)))
 
-    def handle_button_clicked(self):
+    def get_back_button_clicked(self):
         """Pressing the button emits a signal to go to the RegularConcrete widget."""
 
         # When the button is pressed, the signal is emitted
-        self.regular_concrete_widget_requested.emit()
+        self.regular_concrete_requested.emit()
+
+    def display_plot_button_clicked(self, aggregate_type):
+        """
+        Pressing the button emits a signal to go show the plotted grading curve.
+
+        :param str aggregate_type: The aggregate to be plotted.
+        """
+
+        # When the button is pressed, the signal is emitted along with the type of aggregate to be plotted.
+        self.plot_requested.emit(aggregate_type)
 
     def update_units(self, units):
         """
@@ -213,11 +235,21 @@ class CheckDesign(QWidget):
         # Obtain the fineness modulus and if it is value passed the requirements
         fineness_modulus, valid = self.validation.required_fineness_modulus(method, cumulative_retained)
 
+        # Retrieve the limits according to the method
+        fm_limits = FINENESS_MODULUS_LIMITS.get(method, {})
+        fm_max = fm_limits.get("FM_MAXIMUM")
+        fm_min = fm_limits.get("FM_MINIMUM")
+
         # Update the fields in the GUI
         self.ui.lineEdit_FM_actual.setText(str(fineness_modulus))
         self.apply_validation_style(self.ui.lineEdit_FM_actual, valid)
-        self.ui.lineEdit_FM_max.setText(str(FM_MAXIMUM))
-        self.ui.lineEdit_FM_min.setText(str(FM_MINIMUM))
+
+        if fm_max is None and fm_min is None:
+            self.ui.lineEdit_FM_max.setText("N/A")
+            self.ui.lineEdit_FM_min.setText("N/A")
+        else:
+            self.ui.lineEdit_FM_max.setText(str(fm_max))
+            self.ui.lineEdit_FM_min.setText(str(fm_min))
 
     def minimum_spec_strength(self):
         """

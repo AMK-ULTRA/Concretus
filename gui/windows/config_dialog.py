@@ -14,14 +14,13 @@ class ConfigDialog(QDialog):
         self.ui.setupUi(self)
         # Connect to the data model
         self.data_model = data_model
-        # Load current configuration whenever units/language change
-        self.data_model.units_changed.connect(self.load_config)
-        self.data_model.language_changed.connect(self.load_config)
-
 
         # Set initial values
         self.ui.comboBox_lang.addItems(list(LANGUAGES.values()))
         self.ui.comboBox_units.addItems(list(UNIT_SYSTEM.values()))
+
+        # Load the previous configuration
+        self.load_config()
 
         # Initialize the logger
         self.logger = Logger(__name__)
@@ -44,10 +43,11 @@ class ConfigDialog(QDialog):
                 return key
 
     def save_config(self):
-        """Save configuration to data model."""
+        """Save current language and unit system to data model."""
 
-        self.data_model.language = self.get_lang_key()
-        self.data_model.units = self.get_units_key()
+        lang_key, units_key = self.get_lang_key(), self.get_units_key()
+        self.data_model.language = lang_key
+        self.data_model.units = units_key
 
     def load_config(self):
         """Load the previous language and unit system."""

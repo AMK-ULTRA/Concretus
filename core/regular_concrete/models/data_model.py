@@ -27,7 +27,7 @@ class RegularConcreteDataModel(QObject):
         self._method = None # Underlying variable
 
         # Data structure
-        self._design_data = self.create_empty_design_data() # data model
+        self.design_data = self.create_empty_design_data() # data model
         self.validation_errors: dict[str, str] = {} # dictionary with all the errors
         self._trial_mix_results: dict[str, float] = {}
 
@@ -226,7 +226,7 @@ class RegularConcreteDataModel(QObject):
         """
 
         keys = key_path.split('.')
-        data = self._design_data
+        data = self.design_data
 
         try:
             for key in keys[:-1]:
@@ -248,7 +248,7 @@ class RegularConcreteDataModel(QObject):
         """
 
         keys = key_path.split('.')
-        data = self._design_data
+        data = self.design_data
         try:
             for key in keys:
                 data = data[key]
@@ -293,8 +293,8 @@ class RegularConcreteDataModel(QObject):
     def reset(self):
         """Reset all data while maintaining the structure."""
 
-        self._design_data = self.create_empty_design_data()
-        self.validation_errors = []
+        self.design_data = self.create_empty_design_data()
+        self.validation_errors = {}
         self._trial_mix_results = {}
         self.current_step = 0
         self.logger.info("All data has been restored")
