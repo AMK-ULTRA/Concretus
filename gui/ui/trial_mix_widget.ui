@@ -22,7 +22,7 @@
   <property name="locale">
    <locale language="Spanish" country="Venezuela"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -110,18 +110,6 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>240</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>240</height>
-      </size>
-     </property>
      <property name="showGrid">
       <bool>true</bool>
      </property>
@@ -149,66 +137,6 @@
      <attribute name="verticalHeaderStretchLastSection">
       <bool>false</bool>
      </attribute>
-     <row>
-      <property name="text">
-       <string>Agua</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Cemento</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>SCM #1</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Agregado grueso</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Agregado fino</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Aire</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Incorporador de aire</string>
-      </property>
-     </row>
-     <column>
-      <property name="text">
-       <string>Volumen absoluto (L/m³)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Peso (kgf/m³)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Volumen (L/m³)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Peso para la prueba (kgf/m³)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Volumen para la prueba (L/m³)</string>
-      </property>
-     </column>
     </widget>
    </item>
    <item>

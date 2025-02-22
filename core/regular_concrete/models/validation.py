@@ -1,3 +1,4 @@
+from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.logger import Logger
 from Concretus.settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES,
                                 MAXIMUM_SCM, NMS_BY_CATEGORY, MINIMUM_ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
@@ -6,11 +7,11 @@ from Concretus.settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGT
 class Validation:
     def __init__(self, data_model):
         # Connect to the data model
-        self.data_model = data_model
+        self.data_model: RegularConcreteDataModel = data_model
 
         # Initialize the logger
         self.logger = Logger(__name__)
-        self.logger.debug('Validation logic is active')
+        self.logger.info('Validation logic is active')
 
     def calculate_grading_percentages(self):
         """
@@ -222,7 +223,7 @@ class Validation:
     @staticmethod
     def get_max_exposure_value(method, units, exposure_classes):
         """
-        Get the most demanding exposure class with your specified minimum compressive strength.
+        Get the most demanding exposure class with its specified minimum compressive strength at 28 days.
 
         :param str method: Design method ("MCE", "ACI", "DoE")
         :param str units: Unit system ("MKS", "SI")

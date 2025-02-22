@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 
 from Concretus.gui.ui.ui_config_dialog import Ui_ConfigDialog
+from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.logger import Logger
 from Concretus.settings import LANGUAGES, UNIT_SYSTEM
 
@@ -13,7 +14,7 @@ class ConfigDialog(QDialog):
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
         # Connect to the data model
-        self.data_model = data_model
+        self.data_model: RegularConcreteDataModel = data_model
 
         # Set initial values
         self.ui.comboBox_lang.addItems(list(LANGUAGES.values()))

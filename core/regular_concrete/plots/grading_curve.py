@@ -4,6 +4,7 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialog, QVBoxLayout
 import pyqtgraph as pg
 
+from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.logger import Logger
 from Concretus.settings import COARSE_RANGES, FINE_RANGES
 
@@ -15,7 +16,7 @@ class PlotDialog(QDialog):
         """
 
         super().__init__(parent)
-        self.data_model = data_model # Connect to the data model
+        self.data_model: RegularConcreteDataModel = data_model # Connect to the data model
         self.aggregate_type = aggregate_type
         self.setWindowTitle("Curva granulométrica")
         self.resize(1000, 600)
@@ -107,7 +108,7 @@ class PlotDialog(QDialog):
         """
 
         # This regex captures a number (with comma or dot) inside parentheses before "mm".
-        match = re.search(r'\(([\d,\.]+)\s*mm\)', key)
+        match = re.search(r'\(.*?(\d+([,.]\d+)?)', key)
         if match:
             num_str = match.group(1).replace(',', '.')
             try:

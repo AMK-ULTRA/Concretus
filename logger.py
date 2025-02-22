@@ -27,7 +27,8 @@ class Logger:
             self._setup_handlers(log_file, log_format)
             Logger._initialized = True
 
-    def _setup_handlers(self, log_file, log_format):
+    @staticmethod
+    def _setup_handlers(log_file, log_format):
         """Configure handlers at the root logger level."""
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)  # Ensure minimum level

@@ -3,11 +3,44 @@ from PyQt6.QtGui import QDoubleValidator
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit
 
 from Concretus.gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
+from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.logger import Logger
 from Concretus.settings import MIN_SPEC_STRENGTH, MAX_SPEC_STRENGTH, SIEVES, FINE_RETAINED_STATE, COARSE_RETAINED_STATE
 
 
+class NumericDelegate(QItemDelegate):
+    """Override the createEditor method of QItemDelegate (inherited by QAbstractItemDelegate)."""
+
+    def createEditor(self, parent, option, index):
+        # Create a QLineEdit and assign it a QDoubleValidator to allow numbers
+        editor = QLineEdit(parent)
+        validator = QDoubleValidator(editor)
+        # Setting the validator range
+        validator.setBottom(0)  # only positive numbers
+        editor.setValidator(validator)
+        return editor
+
+
+class DeleteKeyEventFilter(QObject):
+    """Override the eventFilter method of QObject (inherited by QTableWidget)."""
+
+    def eventFilter(self, obj, event):
+        # We are only interested in capturing keypress events
+        if event.type() == QEvent.Type.KeyPress:
+            if event.key() == Qt.Key.Key_Delete:
+                # We check if the object is a QTableWidget (just in case)
+                # and we delete the contents of the current cell
+                current_item = obj.currentItem()
+                if current_item is not None:
+                    current_item.setText("")
+                return True  # Indicates that the event was handled
+        # For all other cases, the event is passed to the default processor
+        return super().eventFilter(obj, event)
+
+
 class RegularConcrete(QWidget):
+    """Main logic of the Regular Concrete widget."""
+
     def __init__(self, data_model, parent=None):
         super().__init__(parent)
         # Create an instance of the GUI
@@ -15,7 +48,7 @@ class RegularConcrete(QWidget):
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
         # Connect to the data model
-        self.data_model = data_model
+        self.data_model: RegularConcreteDataModel = data_model
 
         # Global signal/slot connections
         self.global_connections()
@@ -41,11 +74,11 @@ class RegularConcrete(QWidget):
         self.update_units(self.data_model.units)
 
     def on_enter(self):
-        """Logic when entering the widget."""
+        """Prepare widget when it becomes visible."""
         pass
 
     def on_exit(self):
-        """Logic when exiting the widget."""
+        """Clean up widget when navigating away."""
 
         self.save_data()
         self.save_table_data()
@@ -91,11 +124,16 @@ class RegularConcrete(QWidget):
             (self.ui.doubleSpinBox_user_defined, 'field_requirements.air_content.user_defined', 'value'),
             (self.ui.radioButton_exposure_defined, 'field_requirements.air_content.exposure_defined', 'isChecked'),
             (self.ui.spinBox_spec_strength, 'field_requirements.strength.spec_strength', 'value'),
-            (self.ui.doubleSpinBox_value, 'field_requirements.strength.std_dev_known.value', 'value'),
+            (self.ui.comboBox_spec_strength_time, 'field_requirements.strength.spec_strength_time', 'currentText'),
+            (self.ui.groupBox_std_dev_known, 'field_requirements.strength.std_dev_known.std_dev_known_enabled',
+             'isChecked'),
+            (self.ui.doubleSpinBox_std_dev_value, 'field_requirements.strength.std_dev_known.std_dev_value', 'value'),
             (self.ui.spinBox_test_nro, 'field_requirements.strength.std_dev_known.test_nro', 'value'),
             (self.ui.comboBox_defective_level, 'field_requirements.strength.std_dev_known.defective_level',
              lambda cb: float(cb.currentText())),
-            (self.ui.comboBox_qual_control, 'field_requirements.strength.std_dev_unknown.qual_control', 'currentText'),
+            (self.ui.groupBox_std_dev_unknown, 'field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled',
+             'isEnabled'),
+            (self.ui.comboBox_qual_control, 'field_requirements.strength.std_dev_unknown.quality_control', 'currentText'),
             (self.ui.spinBox_margin, 'field_requirements.strength.std_dev_unknown.margin', 'value'),
 
             # Cementitious Materials
@@ -395,11 +433,11 @@ class RegularConcrete(QWidget):
         self.ui.spinBox_spec_strength.setValue(default_spec_strength)
 
         # Update default value for known standard deviation
-        self.ui.doubleSpinBox_value.setMaximum(10 if units == 'SI' else 100)
+        self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if units == 'SI' else 100)
 
         # Update the labels
         self.ui.label_spec_strength.setText(f"Resistencia de cálculo especificada ({unit_suffix})")
-        self.ui.label_value.setText(f"Valor ({unit_suffix})")
+        self.ui.label_std_dev_value.setText(f"Valor ({unit_suffix})")
         self.ui.label_margin.setText(f"Margen ({unit_suffix})")
 
         self.logger.info(f'A complete update of the unit system to {units} has been made')
@@ -434,6 +472,9 @@ class RegularConcrete(QWidget):
                 },
                 "air_enabled": False,
                 "defective_level_index": 10,
+                "spec_strength_time_enabled": True,
+                "spec_strength_time": ("7 días", "28 días", "90 días"),
+                "spec_strength_time_index": 1,
                 "qual_control_enabled": True,
                 "margin_enabled": False,
                 "cement_types": ("Tipo I", "Tipo II", "Tipo III", "Tipo IV", "Tipo V"),
@@ -464,6 +505,9 @@ class RegularConcrete(QWidget):
                 },
                 "air_enabled": True,
                 "defective_level_index": 10,
+                "spec_strength_time_enabled": False,
+                "spec_strength_time": ["28 días"],
+                "spec_strength_time_index": 0,
                 "qual_control_enabled": False,
                 "margin_enabled": False,
                 "cement_types": ("Tipo I", "Tipo IA", "Tipo II", "Tipo IIA",
@@ -495,6 +539,9 @@ class RegularConcrete(QWidget):
                 },
                 "air_enabled": True,
                 "defective_level_index": 6,
+                "spec_strength_time_enabled": True,
+                "spec_strength_time": ("3 días", "7 días", "28 días", "91 días"),
+                "spec_strength_time_index": 2,
                 "qual_control_enabled": False,
                 "margin_enabled": True,
                 "cement_types": ("CEM I", "CEM II", "CEM III", "CEM VI", "CEM V"),
@@ -532,6 +579,10 @@ class RegularConcrete(QWidget):
             self.ui.comboBox_4.addItems(config["exposure_class"]["items_4"])
             self.ui.groupBox_air.setEnabled(config["air_enabled"])
             self.ui.comboBox_defective_level.setCurrentIndex(config["defective_level_index"])
+            self.ui.comboBox_spec_strength_time.setEnabled(config["spec_strength_time_enabled"])
+            self.ui.comboBox_spec_strength_time.clear()
+            self.ui.comboBox_spec_strength_time.addItems(config["spec_strength_time"])
+            self.ui.comboBox_spec_strength_time.setCurrentIndex(config["spec_strength_time_index"])
             self.ui.label_qual_control.setEnabled(config["qual_control_enabled"])
             self.ui.comboBox_qual_control.setEnabled(config["qual_control_enabled"])
             self.ui.label_margin.setEnabled(config["margin_enabled"])
@@ -560,33 +611,3 @@ class RegularConcrete(QWidget):
             self.logger.info(f'A complete update of the current method to "{method}" has been made')
         else:
             self.logger.warning('An invalid configuration dictionary has been selected')
-
-
-class NumericDelegate(QItemDelegate):
-    """Override the createEditor method of QItemDelegate (inherited by QAbstractItemDelegate)."""
-
-    def createEditor(self, parent, option, index):
-        # Create a QLineEdit and assign it a QDoubleValidator to allow numbers
-        editor = QLineEdit(parent)
-        validator = QDoubleValidator(editor)
-        # Setting the validator range
-        validator.setBottom(0)  # only positive numbers
-        editor.setValidator(validator)
-        return editor
-
-
-class DeleteKeyEventFilter(QObject):
-    """Override the eventFilter method of QObject (inherited by QTableWidget)."""
-
-    def eventFilter(self, obj, event):
-        # We are only interested in capturing keypress events
-        if event.type() == QEvent.Type.KeyPress:
-            if event.key() == Qt.Key.Key_Delete:
-                # We check if the object is a QTableWidget (just in case)
-                # and we delete the contents of the current cell
-                current_item = obj.currentItem()
-                if current_item is not None:
-                    current_item.setText("")
-                return True  # Indicates that the event was handled
-        # For all other cases, the event is passed to the default processor
-        return super().eventFilter(obj, event)

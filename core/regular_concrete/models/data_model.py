@@ -34,7 +34,7 @@ class RegularConcreteDataModel(QObject):
         self.logger = Logger(__name__)
         self.logger.info("Data model initialized")
 
-    # ----------------------------------- Principal properties -----------------------------------
+    # -------------------------------------------- Principal properties --------------------------------------------
     @property
     def language(self) -> str:
         return self._language # Access the underlying variable
@@ -83,7 +83,7 @@ class RegularConcreteDataModel(QObject):
             self.step_changed.emit(step)
             self.logger.info(f"The current step changed to: {step}")
 
-    # ----------------------------------- Design data -----------------------------------
+    # -------------------------------------------- Design data --------------------------------------------
     @staticmethod
     def create_empty_design_data():
         """Create the empty design data."""
@@ -115,13 +115,16 @@ class RegularConcreteDataModel(QObject):
                 },
                 'strength': {
                     'spec_strength': None,
+                    'spec_strength_time': None,
                     'std_dev_known': {
-                        'value': None,
+                        'std_dev_known_enabled': None,
+                        'std_dev_value': None,
                         'test_nro': None,
                         'defective_level': None
                     },
                     'std_dev_unknown': {
-                        'qual_control': None,
+                        'std_dev_unknown_enabled': None,
+                        'quality_control': None,
                         'margin': None
                     }
                 }
@@ -160,7 +163,8 @@ class RegularConcreteDataModel(QObject):
                     'retained_checked': None,
                     'retained': None,
                     'cumulative_retained': None
-                }
+                },
+                'fineness_modulus': None
             },
             'coarse_aggregate': {
                 'info': {
@@ -183,7 +187,8 @@ class RegularConcreteDataModel(QObject):
                     'retained_checked': None,
                     'retained': None,
                     'cumulative_retained': None
-                }
+                },
+                'NMS': None
             },
             'water': {
                 'water_type': None,
@@ -202,18 +207,7 @@ class RegularConcreteDataModel(QObject):
                 'coarse_scores': None,
                 'fine_category': None,
                 'fine_scores': None,
-                'NMS': None,
-                'fineness_modulus': None,
                 'exposure_classes': None,
-            },
-            'trial_mix': {
-                'water': None,
-                'cement': None,
-                'scm_1': None,
-                'fine_aggregate': None,
-                'coarse-aggregate': None,
-                'air_content': None,
-                'air-entraining_admixture': None
             }
         }
 
@@ -257,7 +251,7 @@ class RegularConcreteDataModel(QObject):
             self.logger.error(f"Invalid key path: {key_path} ({str(e)})")
             raise
 
-    # ----------------------------------- Validation methods -----------------------------------
+    # -------------------------------------------- Validation methods --------------------------------------------
     def add_validation_error(self, section, message):
         """
         Add a validation error with context.
@@ -289,7 +283,7 @@ class RegularConcreteDataModel(QObject):
             self.validation_errors = {}
         self.validation_updated.emit(self.validation_errors)
 
-    # ----------------------------------- Reset method -----------------------------------
+    # -------------------------------------------- Reset method --------------------------------------------
     def reset(self):
         """Reset all data while maintaining the structure."""
 

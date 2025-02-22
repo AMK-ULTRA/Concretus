@@ -3,8 +3,9 @@ from functools import partial
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
-from Concretus.core.regular_concrete.models.validation import Validation
 from Concretus.gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
+from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
+from Concretus.core.regular_concrete.models.validation import Validation
 from Concretus.logger import Logger
 from Concretus.settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS
 
@@ -20,7 +21,7 @@ class CheckDesign(QWidget):
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
         # Connect to the data model
-        self.data_model = data_model
+        self.data_model: RegularConcreteDataModel = data_model
 
         # Create an instance of the validation module
         self.validation = Validation(self.data_model)
@@ -33,7 +34,7 @@ class CheckDesign(QWidget):
         self.logger.info('Check design widget initialized')
 
     def on_enter(self):
-        """Logic when entering the widget."""
+        """Prepare widget when it becomes visible."""
 
         self.validation.calculate_grading_percentages()
         self.grading_requirements()
@@ -56,7 +57,7 @@ class CheckDesign(QWidget):
         self.update_progress_bar()
 
     def on_exit(self):
-        """Logic when exiting the widget."""
+        """Clean up widget when navigating away."""
 
         self.data_model.clear_validation_errors()
         self.clean_up_fields()
@@ -214,7 +215,7 @@ class CheckDesign(QWidget):
         nms = self.validation.calculate_nominal_maximum_size(grading_list)
 
         # Update the data model
-        self.data_model.update_design_data('validation.NMS', nms)
+        self.data_model.update_design_data('coarse_aggregate.NMS', nms)
 
         # Update the fields in the GUI
         if nms is None:
@@ -234,6 +235,9 @@ class CheckDesign(QWidget):
 
         # Obtain the fineness modulus and if it is value passed the requirements
         fineness_modulus, valid = self.validation.required_fineness_modulus(method, cumulative_retained)
+
+        # Update the fineness modulus in the data model
+        self.data_model.update_design_data('fine_aggregate.fineness_modulus', fineness_modulus)
 
         # Retrieve the limits according to the method
         fm_limits = FINENESS_MODULUS_LIMITS.get(method, {})
