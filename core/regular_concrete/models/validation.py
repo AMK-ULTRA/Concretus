@@ -285,7 +285,7 @@ class Validation:
             # Add validation error
             self.data_model.add_validation_error(
                 'Minimum specified compressive strength',
-                f'The minimum value must be: {required_strength} for the unit system: {units}')
+                f'The minimum value must be {required_strength} for the exposure class ({exposure_class})')
             return False, required_strength, exposure_class
         else:
             self.logger.debug('The specified compressive strength is greater than the minimum required by regulations')

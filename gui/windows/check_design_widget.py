@@ -133,15 +133,52 @@ class CheckDesign(QWidget):
     def update_progress_bar(self):
         """
         Updates the progress bar based on the number of validation errors.
-        0 errors -> 100%
-        6 errors -> 0%
+        0 errors correspond to 100% progress and 6 errors to 0% progress.
         """
-        error_count = len(self.data_model.validation_errors)
-        max_errors = 6
+
+        # Retrieve the dictionary with all errors
+        validation_errors = self.data_model.validation_errors
+
+        # Define error keys and assign 1 if key exists in validation_errors, otherwise 0
+        error_keys = [
+            "GRADING REQUIREMENTS FOR COARSE AGGREGATE",
+            "GRADING REQUIREMENTS FOR FINE AGGREGATE",
+            "FINENESS MODULUS",
+            "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+            "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+            "MINIMUM ENTRAINED AIR",
+        ]
+        errors = {key: 1 if key in validation_errors else 0 for key in error_keys}
+
+        # Retrieve the scores for coarse and fine gradings
+        coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
+        fine_scores = self.data_model.get_design_value('validation.fine_scores')
+
+        # Determine the maximum score for coarse and fine; use 0 if empty
+        k_1 = max(coarse_scores.values(), default=0)
+        k_2 = max(fine_scores.values(), default=0)
+
+        # Multiply the first two error values by their respective maximum scores
+        weighted_error_1 = errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] * k_1
+        weighted_error_2 = errors["GRADING REQUIREMENTS FOR FINE AGGREGATE"] * k_2
+
+        # Create a list of all errors, using the weighted values for the first two
+        error_list = [
+            weighted_error_1,
+            weighted_error_2,
+            errors["FINENESS MODULUS"],
+            errors["MINIMUM SPECIFIED COMPRESSIVE STRENGTH"],
+            errors["MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)"],
+            errors["MINIMUM ENTRAINED AIR"],
+        ]
+        error_count = sum(error_list)
+        max_errors = 6  # Total number of error categories
+
         # Calculate the progress percentage
-        progress_value = 100 - (error_count * (100 / max_errors))
-        # Set the progress bar's value
-        self.ui.progressBar.setValue(int(round(progress_value, 0)))
+        progress_value = 100 - (error_count * 100 / max_errors)
+
+        # Update the progress bar with the computed value
+        self.ui.progressBar.setValue(int(round(progress_value)))
 
     def get_back_button_clicked(self):
         """Pressing the button emits a signal to go to the RegularConcrete widget."""
@@ -323,7 +360,7 @@ class CheckDesign(QWidget):
         # Retrieve values from the data model
         method = self.data_model.method
         exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
-        nms = self.data_model.get_design_value('validation.NMS')
+        nms = self.data_model.get_design_value('coarse_aggregate.NMS')
         coarse_category = self.data_model.get_design_value('validation.coarse_category')
         entrained_air = self.data_model.get_design_value('field_requirements.air_content.user_defined')
 

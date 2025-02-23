@@ -1,0 +1,1045 @@
+2025-02-23 10:11:52,714 - __main__ - INFO - The application has just started
+2025-02-23 10:11:52,780 - Concretus.core.regular_concrete.models.data_model - INFO - Data model initialized
+2025-02-23 10:11:52,834 - Concretus.gui.windows.welcome_widget - INFO - Welcome widget initialized
+2025-02-23 10:11:52,868 - Concretus.gui.windows.regular_concrete_widget - INFO - Regular concrete widget initialized
+2025-02-23 10:11:52,869 - Concretus.gui.windows.regular_concrete_widget - INFO - A complete update of the unit system to MKS has been made
+2025-02-23 10:11:52,875 - Concretus.core.regular_concrete.models.validation - INFO - Validation logic is active
+2025-02-23 10:11:52,876 - Concretus.gui.windows.check_design_widget - INFO - Check design widget initialized
+2025-02-23 10:11:52,880 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Data model for MCE method initialized
+2025-02-23 10:11:52,880 - Concretus.gui.windows.trial_mix_widget - INFO - Trial mix widget initialized
+2025-02-23 10:11:52,888 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 1
+2025-02-23 10:11:52,888 - Concretus.gui.windows.main_window - INFO - Main window initialized
+2025-02-23 10:11:55,308 - Concretus.gui.windows.main_window - INFO - The Regular Concrete design has been selected
+2025-02-23 10:11:55,311 - Concretus.gui.windows.regular_concrete_widget - INFO - QRadioButton for fine table is active: False
+2025-02-23 10:11:55,312 - Concretus.gui.windows.regular_concrete_widget - INFO - QRadioButton for coarse table is active: False
+2025-02-23 10:11:55,314 - Concretus.gui.windows.regular_concrete_widget - INFO - The set of sieves for the MCE method has been generated
+2025-02-23 10:11:55,320 - Concretus.gui.windows.regular_concrete_widget - INFO - A complete update of the current method to "MCE" has been made
+2025-02-23 10:11:55,320 - Concretus.core.regular_concrete.models.data_model - INFO - Regular concrete method changed to: MCE
+2025-02-23 10:11:55,321 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 2
+2025-02-23 10:11:58,541 - Concretus.gui.windows.regular_concrete_widget - INFO - QRadioButton for fine table is active: True
+2025-02-23 10:12:27,456 - Concretus.gui.windows.regular_concrete_widget - INFO - QRadioButton for coarse table is active: True
+2025-02-23 10:12:48,941 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:12:48,941 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:12:48,941 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:12:48,942 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:12:48,943 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:12:48,944 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:12:48,945 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:12:48,946 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:12:48,947 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.4, 'No. 50 (0,300 mm)': 76.35, 'No. 100 (0,150 mm)': 89.34, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:12:48,948 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:12:48,949 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:12:48,950 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 21.119999999999997, 'No. 16 (1,18 mm)': 55.33, 'No. 30 (0,600 mm)': 108.72999999999999, 'No. 50 (0,300 mm)': 185.07999999999998, 'No. 100 (0,150 mm)': 274.41999999999996, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:12:48,951 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 78.88, 'No. 16 (1,18 mm)': 44.67, 'No. 30 (0,600 mm)': -8.72999999999999, 'No. 50 (0,300 mm)': -85.07999999999998, 'No. 100 (0,150 mm)': -174.41999999999996, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:12:48,951 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:12:48,951 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:12:48,951 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:12:48,951 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:12:48,952 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:12:48,952 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.375}
+2025-02-23 10:12:48,952 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:12:48,952 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.375}
+2025-02-23 10:12:48,956 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:12:48,956 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 6.499499999999999
+2025-02-23 10:12:48,956 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: FINENESS MODULUS -> Fineness modulus out of range. Minimum: 2.3, Maximum: 3.1, Calculated: 6.499499999999999
+2025-02-23 10:12:48,957 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 6.5
+2025-02-23 10:12:48,958 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:12:48,958 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:12:48,974 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 3
+2025-02-23 10:13:28,136 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:13:28,136 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:13:28,137 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:13:28,137 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:13:28,137 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:13:28,137 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:13:28,137 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:13:28,138 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:13:28,139 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:13:28,140 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:13:28,141 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:13:28,142 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:13:28,143 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 12.99, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:13:28,144 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:13:28,146 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 89.34, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:13:28,146 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 10.659999999999997, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:13:28,146 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.625}
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:13:28,147 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.625}
+2025-02-23 10:13:28,150 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:13:28,150 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7442
+2025-02-23 10:13:28,150 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:13:28,151 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.74
+2025-02-23 10:13:28,153 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:13:28,153 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:16:40,056 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:16:40,156 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:16:40,156 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:16:40,157 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, 10.659999999999997), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73)]
+2025-02-23 10:16:40,190 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:16:40,190 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:16:40,202 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:16:40,203 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:17:28,046 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:17:28,073 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:17:28,073 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:28,074 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(4.75, 3.980000000000004), (9.5, 12.120000000000005), (12.5, 31.060000000000002), (19.0, 83.28999999999999), (25.0, 98.3), (37.5, 100.0)]
+2025-02-23 10:17:28,082 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:28,082 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 7), (9.5, 20), (12.5, 45), (19.0, 90), (25.0, 100), (37.5, 100)]
+2025-02-23 10:17:28,092 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:28,092 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 0), (9.5, 0), (12.5, 15), (19.0, 50), (25.0, 90), (37.5, 100)]
+2025-02-23 10:17:40,988 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:17:41,012 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:17:41,012 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:41,012 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, 10.659999999999997), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73)]
+2025-02-23 10:17:41,022 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:41,023 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:17:41,034 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:17:41,034 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:18:03,359 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:18:03,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:18:03,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:18:03,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:18:03,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:18:03,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:18:03,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:18:03,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:03,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:03,364 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:03,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:03,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:03,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:03,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:18:03,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 100.0, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 12.99, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:03,367 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:03,369 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 100.0, 'No. 4 (4,75 mm)': 105.27, 'No. 8 (2,36 mm)': 115.85, 'No. 16 (1,18 mm)': 134.20999999999998, 'No. 30 (0,600 mm)': 153.39999999999998, 'No. 50 (0,300 mm)': 176.34999999999997, 'No. 100 (0,150 mm)': 189.33999999999997, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:03,369 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 0.0, 'No. 4 (4,75 mm)': -5.269999999999996, 'No. 8 (2,36 mm)': -15.849999999999994, 'No. 16 (1,18 mm)': -34.20999999999998, 'No. 30 (0,600 mm)': -53.39999999999998, 'No. 50 (0,300 mm)': -76.34999999999997, 'No. 100 (0,150 mm)': -89.33999999999997, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:03,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.0}
+2025-02-23 10:18:03,371 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:03,371 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.0}
+2025-02-23 10:18:03,373 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:18:03,373 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 8.7442
+2025-02-23 10:18:03,373 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: FINENESS MODULUS -> Fineness modulus out of range. Minimum: 2.3, Maximum: 3.1, Calculated: 8.7442
+2025-02-23 10:18:03,373 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 8.74
+2025-02-23 10:18:03,374 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:18:03,374 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:18:05,234 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:18:05,258 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:18:05,258 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:05,258 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, -89.33999999999997), (0.3, -76.34999999999997), (0.6, -53.39999999999998), (1.18, -34.20999999999998), (2.36, -15.849999999999994), (4.75, -5.269999999999996), (6.3, 0.0)]
+2025-02-23 10:18:05,268 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:05,269 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:18:05,280 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:05,280 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:18:10,260 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:18:10,285 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:18:10,285 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:10,285 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, -89.33999999999997), (0.3, -76.34999999999997), (0.6, -53.39999999999998), (1.18, -34.20999999999998), (2.36, -15.849999999999994), (4.75, -5.269999999999996), (6.3, 0.0)]
+2025-02-23 10:18:10,294 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:10,294 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:18:10,306 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:10,306 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:18:22,445 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:18:22,446 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:18:22,446 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:18:22,446 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:18:22,447 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:18:22,447 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:18:22,447 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:18:22,447 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:18:22,447 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:18:22,448 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:18:22,449 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:18:22,450 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:22,451 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:18:22,452 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:18:22,453 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:18:22,454 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 0.0, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 12.99, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:22,455 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:22,456 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:22,458 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 0.0, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 89.34, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:22,458 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': None, '1/4" (6,3 mm)': 100.0, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 10.659999999999997, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:22,458 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:22,458 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:22,459 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:18:22,459 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:18:22,459 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:22,459 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.625}
+2025-02-23 10:18:22,459 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:22,460 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.625}
+2025-02-23 10:18:22,463 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:18:22,463 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7442
+2025-02-23 10:18:22,463 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:18:22,464 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.74
+2025-02-23 10:18:22,465 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:18:22,466 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:18:24,549 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:18:24,573 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:18:24,573 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:24,574 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, 10.659999999999997), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73), (6.3, 100.0)]
+2025-02-23 10:18:24,583 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:24,584 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:18:24,595 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:24,595 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:18:33,737 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:18:33,737 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:18:33,737 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:18:33,737 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:18:33,738 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:18:33,738 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:18:33,738 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:18:33,738 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:18:33,738 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:18:33,739 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:18:33,740 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:18:33,741 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:18:33,741 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:33,742 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:33,743 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:18:33,744 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:18:33,745 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': 0.0, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 12.99, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:33,746 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:33,748 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': 0.0, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 89.34, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:33,748 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': 100.0, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 10.659999999999997, 'No. 200 (0,075 mm)': None}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.75}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:33,749 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.75}
+2025-02-23 10:18:33,751 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:18:33,752 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7442
+2025-02-23 10:18:33,752 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:18:33,752 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.74
+2025-02-23 10:18:33,753 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:18:33,753 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:18:35,113 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:18:35,141 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:18:35,141 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:35,142 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.15, 10.659999999999997), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73), (6.3, 100.0), (9.5, 100.0)]
+2025-02-23 10:18:35,151 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:35,151 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:18:35,163 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:35,163 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:18:53,496 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:18:53,496 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:18:53,496 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:18:53,496 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:18:53,496 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:18:53,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:18:53,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:18:53,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:18:53,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:18:53,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:18:53,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 12.99, 'No. 200 (0,075 mm)': 5.0}
+2025-02-23 10:18:53,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:18:53,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:53,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:53,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:53,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:18:53,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:18:53,506 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 89.34, 'No. 200 (0,075 mm)': 94.34}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 10.659999999999997, 'No. 200 (0,075 mm)': 5.659999999999997}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.75}
+2025-02-23 10:18:53,507 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:18:53,508 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.75}
+2025-02-23 10:18:53,510 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:18:53,510 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7442
+2025-02-23 10:18:53,511 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:18:53,511 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.74
+2025-02-23 10:18:53,512 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:18:53,513 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:18:55,142 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:18:55,174 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:18:55,174 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:55,175 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5.659999999999997), (0.15, 10.659999999999997), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73), (9.5, 100.0)]
+2025-02-23 10:18:55,186 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:55,186 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:18:55,200 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:18:55,200 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:19:11,355 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:19:11,355 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:19:11,355 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:19:11,355 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:19:11,356 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:19:11,357 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:19:11,358 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:19:11,359 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:19:11,360 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:19:11,361 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 10.0, 'No. 200 (0,075 mm)': 1.0}
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:11,362 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:11,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:11,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:11,363 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 86.35000000000001, 'No. 200 (0,075 mm)': 87.35000000000001}
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 13.649999999999991, 'No. 200 (0,075 mm)': 12.649999999999991}
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> None
+2025-02-23 10:19:11,365 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:11,366 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 0.75}
+2025-02-23 10:19:11,366 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:11,366 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR FINE AGGREGATE -> Did not meet any requirements: {'COVENIN 0277': 0.75}
+2025-02-23 10:19:11,368 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:19:11,368 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7143
+2025-02-23 10:19:11,368 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:19:11,368 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.71
+2025-02-23 10:19:11,370 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:19:11,370 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:19:12,341 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:19:12,366 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:19:12,366 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:12,366 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 12.649999999999991), (0.15, 13.649999999999991), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73), (9.5, 100.0)]
+2025-02-23 10:19:12,375 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:12,375 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:19:12,387 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:12,387 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:19:23,496 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:19:23,497 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:19:23,498 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:19:23,499 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:19:23,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:19:23,500 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:23,501 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:23,502 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:19:23,503 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 15.0, 'No. 200 (0,075 mm)': 6.0}
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:23,504 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:23,506 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 91.35000000000001, 'No. 200 (0,075 mm)': 97.35000000000001}
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 8.649999999999991, 'No. 200 (0,075 mm)': 2.6499999999999915}
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 96.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 3.980000000000004, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> None
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> COVENIN 0277
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:23,507 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 1.0}
+2025-02-23 10:19:23,508 - Concretus.core.regular_concrete.models.data_model - INFO - Validation error: GRADING REQUIREMENTS FOR COARSE AGGREGATE -> Did not meet any requirements: {'Nro. 0': 0.0, 'Nro. 1': 0.8333333333333334, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:23,510 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:19:23,510 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7643
+2025-02-23 10:19:23,510 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:19:23,511 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.76
+2025-02-23 10:19:23,512 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:19:23,512 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:19:28,104 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:19:28,139 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:19:28,139 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:28,139 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 2.6499999999999915), (0.15, 8.649999999999991), (0.3, 23.64999999999999), (0.6, 46.599999999999994), (1.18, 65.78999999999999), (2.36, 84.15), (4.75, 94.73), (9.5, 100.0)]
+2025-02-23 10:19:28,149 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:28,149 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 5), (0.15, 10), (0.3, 30), (0.6, 60), (1.18, 80), (2.36, 95), (4.75, 100), (9.5, 100)]
+2025-02-23 10:19:28,159 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:28,160 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(0.075, 0), (0.15, 2), (0.3, 8), (0.6, 20), (1.18, 40), (2.36, 60), (4.75, 85), (9.5, 100)]
+2025-02-23 10:19:36,408 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:19:36,445 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:19:36,446 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:36,446 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(4.75, 3.980000000000004), (9.5, 12.120000000000005), (12.5, 31.060000000000002), (19.0, 83.28999999999999), (25.0, 98.3), (37.5, 100.0)]
+2025-02-23 10:19:36,456 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:36,456 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 7), (9.5, 20), (12.5, 45), (19.0, 90), (25.0, 100), (37.5, 100)]
+2025-02-23 10:19:36,465 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:19:36,466 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 0), (9.5, 0), (12.5, 15), (19.0, 50), (25.0, 90), (37.5, 100)]
+2025-02-23 10:19:54,192 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:19:54,192 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:19:54,192 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:19:54,193 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:19:54,194 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:19:54,195 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:19:54,196 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:54,197 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 0.01
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 0.01
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 0.01
+2025-02-23 10:19:54,198 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:19:54,199 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 15.0, 'No. 200 (0,075 mm)': 6.0}
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': 10.0, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:54,200 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:19:54,201 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:19:54,202 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 91.35000000000001, 'No. 200 (0,075 mm)': 97.35000000000001}
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 8.649999999999991, 'No. 200 (0,075 mm)': 2.6499999999999915}
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': 97.88, 'No. 4 (4,75 mm)': 106.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': 2.1200000000000045, 'No. 4 (4,75 mm)': -6.019999999999996, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> Nro. 1
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> COVENIN 0277
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 1.0, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:54,203 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 1.0}
+2025-02-23 10:19:54,204 - Concretus.core.regular_concrete.models.validation - DEBUG - The best category for the coarse aggregate grading is Nro. 1. The calculated scores of all the sieves studied are as follows:
+2025-02-23 10:19:54,204 - Concretus.core.regular_concrete.models.validation - DEBUG - {'Nro. 0': 0.0, 'Nro. 1': 1.0, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:19:54,204 - Concretus.core.regular_concrete.models.validation - DEBUG - The best category for the fine aggregate grading is COVENIN 0277. The calculated scores of all the sieves studied are as follows:
+2025-02-23 10:19:54,204 - Concretus.core.regular_concrete.models.validation - DEBUG - {'COVENIN 0277': 1.0}
+2025-02-23 10:19:54,206 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:19:54,207 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7643
+2025-02-23 10:19:54,207 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:19:54,207 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.76
+2025-02-23 10:19:54,208 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:19:54,208 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:20:02,707 - Concretus.gui.windows.main_window - INFO - The plot dialog has been selected
+2025-02-23 10:20:02,731 - Concretus.core.regular_concrete.plots.grading_curve - INFO - Plotting dialog initialized
+2025-02-23 10:20:02,731 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:20:02,732 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(4.75, -6.019999999999996), (6.3, 2.1200000000000045), (9.5, 12.120000000000005), (12.5, 31.060000000000002), (19.0, 83.28999999999999), (25.0, 98.3), (37.5, 100.0)]
+2025-02-23 10:20:02,744 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:20:02,744 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 7), (9.5, 20), (12.5, 45), (19.0, 90), (25.0, 100), (37.5, 100)]
+2025-02-23 10:20:02,753 - Concretus.core.regular_concrete.plots.grading_curve - INFO - ************PLOTTING************
+2025-02-23 10:20:02,753 - Concretus.core.regular_concrete.plots.grading_curve - DEBUG - [(6.3, 0), (9.5, 0), (12.5, 15), (19.0, 50), (25.0, 90), (37.5, 100)]
+2025-02-23 10:20:46,342 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:20:46,353 - Concretus.core.regular_concrete.design_methods.mce - INFO - Calculation mode for the MCE method has initialized
+2025-02-23 10:20:46,354 - Concretus.core.regular_concrete.design_methods.mce - INFO - Starting MCE calculation process...
+2025-02-23 10:20:46,354 - Concretus.core.regular_concrete.design_methods.mce - DEBUG - Input data loaded and converted successfully.
+2025-02-23 10:20:46,354 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated spec_strength.target_strength.margin -> 60
+2025-02-23 10:20:46,354 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_min -> 37.41465634956759
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_max -> 40.15559545182528
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.design_alpha -> 0.5581175812939425
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.correction_factor_1 -> 1.0
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.correction_factor_2 -> 1.0
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.corrected_alpha -> 0.5581175812939425
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.min_alpha -> 0.75
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.m -> 902.5
+2025-02-23 10:20:46,355 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.n -> 8.69
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.design_cement_content -> 250.1406057264092
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.correction_factor_1 -> 1.0
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.correction_factor_2 -> 1.0
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.corrected_cement_content -> 250.1406057264092
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.max_cement_content -> 270
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.design_methods.mce - INFO - Calculations completed successfully.
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated spec_strength.target_strength.target_strength_value -> 270
+2025-02-23 10:20:46,356 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.alpha -> 0.5581175812939425
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_mean -> 38.785125900696436
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_economic -> 38.09989112513202
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta -> 0.3809989112513202
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated air.entrapped_air -> 10.8
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_content -> 150.69174694936447
+2025-02-23 10:20:46,357 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_abs_volume -> 150.69174694936447
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_volume -> 150.69174694936447
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_content -> 270
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_abs_volume -> 81.08108108108108
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_volume -> -
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_content -> 2.8857892787256674
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_abs_volume -> 288.57892787256674
+2025-02-23 10:20:46,358 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_volume -> 288578.92787256674
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_content -> 4.688482440969878
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_abs_volume -> 468.8482440969878
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_volume -> 468848.24409698776
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated summation.total_abs_volume -> 1000.0000000000001
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated summation.total_content -> 428.26601866906003
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.design_methods.mce - DEBUG - MCE data model updated with calculation results.
+2025-02-23 10:20:46,359 - Concretus.core.regular_concrete.design_methods.mce - INFO - MCE calculation process completed successfully.
+2025-02-23 10:20:46,361 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 4
+2025-02-23 10:21:04,502 - Concretus.gui.windows.main_window - INFO - The Regular Concrete design has been selected
+2025-02-23 10:21:04,502 - Concretus.core.regular_concrete.models.mce_data_model - INFO - All data for MCE method has been restored
+2025-02-23 10:21:04,504 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 2
+2025-02-23 10:21:55,625 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.project_name -> 
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.location -> 
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.method -> MCE
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.purchaser -> 
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated general_info.date -> 01-01-2025
+2025-02-23 10:21:55,625 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.slump -> 10
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_1 -> Exposición al agua
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_1 -> Despreciable
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_2 -> Exposición a sulfatos
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_2 -> Despreciable
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_3 -> Humedad relativa
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_3 -> Despreciable
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.group_4 -> Condición ambiental
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.exposure_class.items_4 -> Atmósfera común
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.air_content_checked -> False
+2025-02-23 10:21:55,626 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.user_defined -> 3.5
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.air_content.exposure_defined -> True
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength -> 210
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.spec_strength_time -> 28 días
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_known_enabled -> False
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.std_dev_value -> 0.0
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.test_nro -> 1
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_known.defective_level -> 9.0
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled -> True
+2025-02-23 10:21:55,627 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.quality_control -> Excelente
+2025-02-23 10:21:55,628 - Concretus.core.regular_concrete.models.data_model - INFO - Updated field_requirements.strength.std_dev_unknown.margin -> 0
+2025-02-23 10:21:55,628 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_seller -> 
+2025-02-23 10:21:55,628 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_type -> Tipo I
+2025-02-23 10:21:55,630 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.cement_class -> 42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]
+2025-02-23 10:21:55,630 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.relative_density -> 3.33
+2025-02-23 10:21:55,630 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_checked -> False
+2025-02-23 10:21:55,630 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_type -> 
+2025-02-23 10:21:55,631 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_content -> 0
+2025-02-23 10:21:55,631 - Concretus.core.regular_concrete.models.data_model - INFO - Updated cementitious_materials.SCM.SCM_relative_density -> 0.01
+2025-02-23 10:21:55,631 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.name -> 
+2025-02-23 10:21:55,631 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.source -> 
+2025-02-23 10:21:55,631 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.info.type -> Natural
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.relative_density_SSD -> 3.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUS -> 1500.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.physical_prop.PUC -> 1200.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.name -> 
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.source -> 
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.info.type -> Triturado
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.relative_density_SSD -> 4.0
+2025-02-23 10:21:55,632 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUS -> 2500.0
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.physical_prop.PUC -> 3000.0
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.moisture_content -> 0.0
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.moisture.absorption_content -> 0.0
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_type -> Agua potable
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_source -> 
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated water.water_density -> 1000.0
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_type -> Incorporador de aire
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_name -> 
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_relative_density -> 0.001
+2025-02-23 10:21:55,633 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.admixture_dosage -> 0.01
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated chemical_admixtures.effectiveness -> 0
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {}
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 10.58, 'No. 16 (1,18 mm)': 18.36, 'No. 30 (0,600 mm)': 19.19, 'No. 50 (0,300 mm)': 22.95, 'No. 100 (0,150 mm)': 15.0, 'No. 200 (0,075 mm)': 6.0}
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {}
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 15.01, '1/2" (12,5 mm)': 52.23, '3/8" (9,5 mm)': 18.94, '1/4" (6,3 mm)': 10.0, 'No. 4 (4,75 mm)': 8.14, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.retained_checked -> True
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing_checked -> False
+2025-02-23 10:21:55,634 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.retained_checked -> True
+2025-02-23 10:21:55,635 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing_checked -> False
+2025-02-23 10:21:55,636 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.cumulative_retained -> {'3/8" (9,5 mm)': 0.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 5.27, 'No. 8 (2,36 mm)': 15.85, 'No. 16 (1,18 mm)': 34.21, 'No. 30 (0,600 mm)': 53.400000000000006, 'No. 50 (0,300 mm)': 76.35000000000001, 'No. 100 (0,150 mm)': 91.35000000000001, 'No. 200 (0,075 mm)': 97.35000000000001}
+2025-02-23 10:21:55,636 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.gradation.passing -> {'3/8" (9,5 mm)': 100.0, '1/4" (6,3 mm)': None, 'No. 4 (4,75 mm)': 94.73, 'No. 8 (2,36 mm)': 84.15, 'No. 16 (1,18 mm)': 65.78999999999999, 'No. 30 (0,600 mm)': 46.599999999999994, 'No. 50 (0,300 mm)': 23.64999999999999, 'No. 100 (0,150 mm)': 8.649999999999991, 'No. 200 (0,075 mm)': 2.6499999999999915}
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.cumulative_retained -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 0.0, '1" (25 mm)': 1.7, '3/4" (19 mm)': 16.71, '1/2" (12,5 mm)': 68.94, '3/8" (9,5 mm)': 87.88, '1/4" (6,3 mm)': 97.88, 'No. 4 (4,75 mm)': 106.02, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.gradation.passing -> {'3-1/2" (90 mm)': None, '3" (75 mm)': None, '2-1/2" (63 mm)': None, '2" (50 mm)': None, '1-1/2" (37,5 mm)': 100.0, '1" (25 mm)': 98.3, '3/4" (19 mm)': 83.28999999999999, '1/2" (12,5 mm)': 31.060000000000002, '3/8" (9,5 mm)': 12.120000000000005, '1/4" (6,3 mm)': 2.1200000000000045, 'No. 4 (4,75 mm)': -6.019999999999996, 'No. 8 (2,36 mm)': None, 'No. 16 (1,18 mm)': None, 'No. 30 (0,600 mm)': None, 'No. 50 (0,300 mm)': None}
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_category -> Nro. 1
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_category -> COVENIN 0277
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.coarse_scores -> {'Nro. 0': 0.0, 'Nro. 1': 1.0, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fine_scores -> {'COVENIN 0277': 1.0}
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.validation - DEBUG - The best category for the coarse aggregate grading is Nro. 1. The calculated scores of all the sieves studied are as follows:
+2025-02-23 10:21:55,637 - Concretus.core.regular_concrete.models.validation - DEBUG - {'Nro. 0': 0.0, 'Nro. 1': 1.0, 'Nro. 2': 0.0, 'Nro. 3': 0.0}
+2025-02-23 10:21:55,638 - Concretus.core.regular_concrete.models.validation - DEBUG - The best category for the fine aggregate grading is COVENIN 0277. The calculated scores of all the sieves studied are as follows:
+2025-02-23 10:21:55,638 - Concretus.core.regular_concrete.models.validation - DEBUG - {'COVENIN 0277': 1.0}
+2025-02-23 10:21:55,640 - Concretus.core.regular_concrete.models.data_model - INFO - Updated coarse_aggregate.NMS -> 1" (25 mm)
+2025-02-23 10:21:55,640 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.fineness_modulus -> 2.7643
+2025-02-23 10:21:55,640 - Concretus.core.regular_concrete.models.validation - DEBUG - Fineness modulus is within the required range.
+2025-02-23 10:21:55,640 - Concretus.core.regular_concrete.models.data_model - INFO - Updated fine_aggregate.fineness_modulus -> 2.76
+2025-02-23 10:21:55,641 - Concretus.core.regular_concrete.models.data_model - INFO - Updated validation.exposure_classes -> {'Exposición al agua': 'Despreciable', 'Exposición a sulfatos': 'Despreciable', 'Humedad relativa': 'Despreciable', 'Condición ambiental': 'Atmósfera común'}
+2025-02-23 10:21:55,642 - Concretus.core.regular_concrete.models.validation - DEBUG - The specified compressive strength is greater than the minimum required by regulations
+2025-02-23 10:21:55,643 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 3
+2025-02-23 10:21:56,655 - Concretus.gui.windows.main_window - INFO - The Check Design has been selected
+2025-02-23 10:21:56,660 - Concretus.core.regular_concrete.design_methods.mce - INFO - Calculation mode for the MCE method has initialized
+2025-02-23 10:21:56,660 - Concretus.core.regular_concrete.design_methods.mce - INFO - Starting MCE calculation process...
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.design_methods.mce - DEBUG - Input data loaded and converted successfully.
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated spec_strength.target_strength.margin -> 60
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_min -> 37.41465634956759
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_max -> 40.15559545182528
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.design_alpha -> 0.5581175812939425
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.correction_factor_1 -> 1.0
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.correction_factor_2 -> 1.0
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.corrected_alpha -> 0.5581175812939425
+2025-02-23 10:21:56,661 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.min_alpha -> 0.75
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.m -> 902.5
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.n -> 8.69
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.design_cement_content -> 250.1406057264092
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.correction_factor_1 -> 1.0
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.correction_factor_2 -> 1.0
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.corrected_cement_content -> 250.1406057264092
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.max_cement_content -> 270
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.design_methods.mce - INFO - Calculations completed successfully.
+2025-02-23 10:21:56,662 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated spec_strength.target_strength.target_strength_value -> 270
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water_cement_ratio.alpha -> 0.5581175812939425
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_mean -> 38.785125900696436
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta_economic -> 38.09989112513202
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated beta.beta -> 0.3809989112513202
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated air.entrapped_air -> 10.8
+2025-02-23 10:21:56,663 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_content -> 150.69174694936447
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_abs_volume -> 150.69174694936447
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated water.water_volume -> 150.69174694936447
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_content -> 270
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_abs_volume -> 81.08108108108108
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated cementitious_material.cement.cement_volume -> -
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_content -> 1024.2378732944198
+2025-02-23 10:21:56,664 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_abs_volume -> 341.41262443147326
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated fine_aggregate.fine_volume -> 682.8252488629465
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_content -> 1664.058190152325
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_abs_volume -> 416.0145475380813
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated coarse_aggregate.coarse_volume -> 665.62327606093
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated summation.total_abs_volume -> 1000.0000000000001
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.models.mce_data_model - INFO - Updated summation.total_content -> 3108.9878103961096
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.design_methods.mce - DEBUG - MCE data model updated with calculation results.
+2025-02-23 10:21:56,665 - Concretus.core.regular_concrete.design_methods.mce - INFO - MCE calculation process completed successfully.
+2025-02-23 10:21:56,666 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 4
+2025-02-23 10:22:45,628 - Concretus.gui.windows.main_window - INFO - The Regular Concrete design has been selected
+2025-02-23 10:22:45,629 - Concretus.core.regular_concrete.models.mce_data_model - INFO - All data for MCE method has been restored
+2025-02-23 10:22:45,632 - Concretus.core.regular_concrete.models.data_model - INFO - The current step changed to: 2
+2025-02-23 10:50:59,073 - Concretus.gui.windows.main_window - INFO - Exit dialog has been opened
+2025-02-23 10:51:00,426 - Concretus.gui.windows.main_window - INFO - Exit dialog has been accepted
