@@ -483,11 +483,9 @@ class RegularConcrete(QWidget):
                 "scm_enabled": False,
                 "scm_types": None,
                 "fine_types": ("Natural", "Triturada"),
-                "fine_relative_density": "Peso específico, SSD",
                 "fine_pus": "Peso unitario suelto (kgf/m³)",
                 "fine_puc": "Peso unitario compactado (kgf/m³)",
                 "coarse_types": ("Triturado", "Semitriturado", "Grava natural"),
-                "coarse_relative_density": "Peso específico, SSD",
                 "coarse_pus": "Peso unitario suelto (kgf/m³)",
                 "coarse_puc": "Peso unitario compactado (kgf/m³)",
                 "chemical_admixtures_enabled": False
@@ -517,11 +515,9 @@ class RegularConcrete(QWidget):
                 "scm_enabled": True,
                 "scm_types": ("Cenizas volantes", "Cemento de escoria", "Humo de sílice"),
                 "fine_types": ("Natural", "Manufacturada"),
-                "fine_relative_density": "Densidad relativa, SSD",
                 "fine_pus": "Masa unitaria suelta (kg/m³)",
                 "fine_puc": "Masa unitaria compactada (kg/m³)",
                 "coarse_types": ("Redondeada", "Angular"),
-                "coarse_relative_density": "Densidad relativa, SSD",
                 "coarse_pus": "Masa unitaria suelta (kg/m³)",
                 "coarse_puc": "Masa unitaria compactada (kg/m³)",
                 "chemical_admixtures_enabled": True
@@ -550,11 +546,9 @@ class RegularConcrete(QWidget):
                 "scm_enabled": True,
                 "scm_types": ["Cenizas volantes"],
                 "fine_types": ("Triturada", "No triturada"),
-                "fine_relative_density": "Densidad relativa, SSD",
                 "fine_pus": "Masa unitaria suelta (kg/m³)",
                 "fine_puc": "Masa unitaria compactada (kg/m³)",
                 "coarse_types": ("Triturada", "No triturada"),
-                "coarse_relative_density": "Densidad relativa, SSD",
                 "coarse_pus": "Masa unitaria suelta (kg/m³)",
                 "coarse_puc": "Masa unitaria compactada (kg/m³)",
                 "chemical_admixtures_enabled": True
@@ -598,10 +592,8 @@ class RegularConcrete(QWidget):
                 self.ui.comboBox_SCM_type.addItems(config.get("scm_types", []))
             self.ui.comboBox_fine_type.clear()
             self.ui.comboBox_fine_type.addItems(config["fine_types"])
-            self.ui.label_fine_relative_density.setText(config["fine_relative_density"])
             self.ui.label_fine_pus.setText(config["fine_pus"])
             self.ui.label_fine_puc.setText(config["fine_puc"])
-            self.ui.label_coarse_relative_density.setText(config["coarse_relative_density"])
             self.ui.label_coarse_pus.setText(config["coarse_pus"])
             self.ui.label_coarse_puc.setText(config["coarse_puc"])
             self.ui.comboBox_coarse_type.clear()

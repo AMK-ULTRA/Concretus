@@ -928,17 +928,26 @@
          </item>
          <item row="0" column="1">
           <widget class="QGroupBox" name="groupBox_fine_physical_prop">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="title">
             <string>Propiedades físicas</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_13">
+           <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
              <widget class="QLabel" name="label_fine_relative_density">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Relación entre la densidad (con muestra saturada y de superficie seca) del agregado y la densidad del agua a una temperatura determinada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
-               <string>Peso específico, SSD</string>
+               <string>Densidad relativa (SSS)</string>
               </property>
               <property name="wordWrap">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="buddy">
                <cstring>doubleSpinBox_fine_relative_density</cstring>
@@ -1012,7 +1021,7 @@
            <property name="title">
             <string>Humedad</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_14">
+           <layout class="QFormLayout" name="formLayout_13">
             <item row="0" column="0">
              <widget class="QLabel" name="label_fine_mc">
               <property name="text">
@@ -1164,7 +1173,7 @@
            <property name="title">
             <string>Información general</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_10">
+           <layout class="QFormLayout" name="formLayout_14">
             <item row="0" column="0">
              <widget class="QLabel" name="label_coarse_name">
               <property name="text">
@@ -1215,14 +1224,17 @@
            <property name="title">
             <string>Propiedades físicas</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_16">
+           <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
              <widget class="QLabel" name="label_coarse_relative_density">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Relación entre la densidad (con muestra saturada y de superficie seca) del agregado y la densidad del agua a una temperatura determinada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
-               <string>Peso específico, SSD</string>
+               <string>Densidad relativa (SSS)</string>
               </property>
               <property name="wordWrap">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="buddy">
                <cstring>doubleSpinBox_coarse_relative_density</cstring>
@@ -1302,7 +1314,7 @@
            <property name="title">
             <string>Humedad</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_15">
+           <layout class="QFormLayout" name="formLayout_10">
             <item row="0" column="0">
              <widget class="QLabel" name="label_coarse_mc">
               <property name="text">
@@ -1633,11 +1645,16 @@
   <tabstop>lineEdit_purchaser</tabstop>
   <tabstop>dateEdit_date</tabstop>
   <tabstop>spinBox_slump</tabstop>
+  <tabstop>comboBox_1</tabstop>
+  <tabstop>comboBox_2</tabstop>
+  <tabstop>comboBox_3</tabstop>
+  <tabstop>comboBox_4</tabstop>
   <tabstop>groupBox_air</tabstop>
   <tabstop>radioButton_user_defined</tabstop>
   <tabstop>doubleSpinBox_user_defined</tabstop>
   <tabstop>radioButton_exposure_defined</tabstop>
   <tabstop>spinBox_spec_strength</tabstop>
+  <tabstop>comboBox_spec_strength_time</tabstop>
   <tabstop>groupBox_std_dev_known</tabstop>
   <tabstop>doubleSpinBox_std_dev_value</tabstop>
   <tabstop>spinBox_test_nro</tabstop>
@@ -1668,8 +1685,6 @@
   <tabstop>doubleSpinBox_coarse_relative_density</tabstop>
   <tabstop>doubleSpinBox_coarse_pus</tabstop>
   <tabstop>doubleSpinBox_coarse_puc</tabstop>
-  <tabstop>doubleSpinBox_coarse_mc</tabstop>
-  <tabstop>doubleSpinBox_coarse_abs</tabstop>
   <tabstop>radioButton_coarse_retained</tabstop>
   <tabstop>tableWidget_coarse</tabstop>
   <tabstop>comboBox_water_type</tabstop>
@@ -1680,6 +1695,8 @@
   <tabstop>doubleSpinBox_admixture_relative_density</tabstop>
   <tabstop>doubleSpinBox_admixture_dosage</tabstop>
   <tabstop>spinBox_admixture_effectiveness</tabstop>
+  <tabstop>doubleSpinBox_coarse_mc</tabstop>
+  <tabstop>doubleSpinBox_coarse_abs</tabstop>
  </tabstops>
  <resources/>
  <connections>

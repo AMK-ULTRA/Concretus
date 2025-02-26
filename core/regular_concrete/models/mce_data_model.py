@@ -35,6 +35,7 @@ class MCEDataModel:
             },
             'water': {
                 'water_content': None,
+                'water_content_correction': None,
                 'water_abs_volume': None,
                 'water_volume': None
             },
@@ -44,11 +45,13 @@ class MCEDataModel:
             },
             'fine_aggregate': {
                 'fine_content': None,
+                'fine_content_wet': None,
                 'fine_abs_volume': None,
                 'fine_volume': None
             },
             'coarse_aggregate': {
                 'coarse_content': None,
+                'coarse_content_wet': None,
                 'coarse_abs_volume': None,
                 'coarse_volume': None
             },
@@ -161,4 +164,4 @@ class MCEDataModel:
 
         self.mce_data = self.create_empty_mce_data()
         self.validation_errors = {}
-        self.logger.info("All data for MCE method has been restored")
+        self.logger.info("The data model for MCE method has been restored")

@@ -67,7 +67,7 @@ class TrialMix(QWidget):
         # Define column headers based on the method.
         if method == "MCE":
             column_headers = [
-                "Volumen absoluto (L/m³)",
+                "Volumen absoluto (L)",
                 "Peso (kgf/m³)",
                 "Volumen (L/m³)",
                 "Peso para la prueba (kgf/m³)",
@@ -75,7 +75,7 @@ class TrialMix(QWidget):
             ]
         elif method in ("ACI", "DoE"):
             column_headers = [
-                "Volumen absoluto (L/m³)",
+                "Volumen absoluto (L)",
                 "Masa (kg/m³)",
                 "Volumen (L/m³)",
                 "Masa para la prueba (kg/m³)",
@@ -223,11 +223,11 @@ class TrialMix(QWidget):
 
         # Column 2 values: Contents
         col2 = [
-            current_method_data_model.get_data('water.water_content'),
+            current_method_data_model.get_data('water.water_content_correction'),
             current_method_data_model.get_data('cementitious_material.cement.cement_content'),
             current_method_data_model.get_data('cementitious_material.scm.scm_content'),
-            current_method_data_model.get_data('fine_aggregate.fine_content'),
-            current_method_data_model.get_data('coarse_aggregate.coarse_content'),
+            current_method_data_model.get_data('fine_aggregate.fine_content_wet'),
+            current_method_data_model.get_data('coarse_aggregate.coarse_content_wet'),
             "-",  # For entrapped air
             "-",  # For entrained air
             current_method_data_model.get_data('cementitious_material.scm.air_entraining_admixture_content'),

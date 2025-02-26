@@ -18,29 +18,35 @@ class CementitiousMaterial:
 @dataclass
 class Cement(CementitiousMaterial):
 
-    def cement_abs_volume(self, cement_content, relative_density=3.33):
+    def cement_abs_volume(self, cement_content, water_density, relative_density=3.33):
         """
-        Calculate the absolute volume of cement grains in liters per cubic meter (L/m^3).
+        Calculates the absolute volume of cement grains in cubic meters (m³).
 
-        :param float cement_content: The cement content in kilogram-force per cubic meter (kgf/m^3).
-        :param float relative_density: The relative density of cement, (default 3.33).
-        :return: The absolute volume of cement grains in liters per cubic meter (L/m^3).
+        The cement content and water density must use consistent units:
+        - If cement content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If cement content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+
+        :param float cement_content: The cement content (kg or kgf).
+        :param float water_density: The water density (kg/m³ or kgf/m³).
+        :param float relative_density: The relative density of cement (default 3.33).
+        :return: The absolute volume of cement grains in cubic meters (m³).
         :rtype: float
         """
 
-        if relative_density:
-            return cement_content / relative_density
+        if water_density != 0 and relative_density != 0:
+            return cement_content / (relative_density * water_density)
         else:
             self.mce_data_model.add_calculation_error('Cement volume',
-                                                      f'The relative density of the cement is {relative_density}')
-            raise ZeroDivisionError("The relative density of cement cannot be zero")
+                                                      f'The relative density of the cement is {relative_density}. '
+                                                      f'The water density is {water_density}')
+            raise ZeroDivisionError("The relative density of cement or the water density is zero")
 
     def cement_volume(self):
         pass
 
-    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, k=117.2, n=0.16, m=1.3, theta=None):
+    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, theta=None, k=117.2, n=0.16, m=1.3):
         """
-        Calculate the cement content in kilogram-force per cubic meter (kgf/m^3) using the triangular_relationship.
+        Calculate the cement content in kilogram-force per cubic meter of mixture (kgf/m³) using the triangular_relationship.
         The parameters k, n, m are constants that depend on the characteristics of the component materials of
         the mixture and the conditions under which it is prepared.
 
@@ -57,7 +63,7 @@ class Cement(CementitiousMaterial):
         :param float m: Constant (default 1.3).
         :param float theta: A constant used to modify the triangular relationship,
                             this value will be specific to the particular materials, design and slump (if provided).
-        :return: The calculated cement content in kilogram-force per cubic meter (kgf/m^3).
+        :return: The calculated cement content in kilogram-force per cubic meter (kgf/m³).
         :rtype: float
         """
 
@@ -123,14 +129,17 @@ class Water:
     density: float
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
-    def water_volume(self, water_content, density):
+    def water_abs_volume(self, water_content, density):
         """
-        Calculates the volume of water in liters per cubic meter (L/m^3).
-        For water, the absolute volume and total volume are the same.
+        Calculates the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
 
-        :param float water_content: The content of water in kilogram-force per cubic meter (kgf/m^3).
-        :param float density: The density of water in kilograms per cubic meter (kg/m^3).
-        :return: The volume of water in liters per cubic meter (L/m^3).
+        The water content and density must use consistent units:
+        - If water content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If water content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+
+        :param float water_content: The content of water (kg or kgf).
+        :param float density: The water density (kg/m³ or kgf/m³).
+        :return: The volume of water in cubic meter (m³).
         :rtype: float
         """
 
@@ -139,23 +148,51 @@ class Water:
                                                       f'The density is {density}')
             raise ValueError("Density cannot be zero")
 
-        LITERS_PER_CUBIC_METER = 1000
-        density_liters_per_cubic_meter = density / LITERS_PER_CUBIC_METER
+        return water_content / density
 
-        return water_content / density_liters_per_cubic_meter
+    @staticmethod
+    def water_volume(water_abs_volume):
+        """
+        Convert the absolute volume of water from cubic meters (m³) to liters (L).
+
+        :param water_abs_volume: The absolute volume of water in cubic meters (m³).
+        :return: The volume of water in liters (L).
+        """
+
+        return 1000 * water_abs_volume
 
     @staticmethod
     def water_content(cement_content, alpha):
         """
-        Calculate the content of water in kilogram-force per cubic meter (kgf/m^3).
+        Calculate the content of water in kilogram-force per cubic meter (kgf/m³).
 
-        :param float cement_content: The cement content in kilogram-force per cubic meter (kgf/m^3).
+        :param float cement_content: The cement content in kilogram-force per cubic meter (kgf/m³).
         :param float alpha: The water-cement ratio.
-        :return: The weight of water in kilogram-force per cubic meter (kgf/m^3).
+        :return: The weight of water in kilogram-force per cubic meter (kgf/m³).
         :rtype: float
         """
 
         return cement_content * alpha
+
+    @staticmethod
+    def water_content_correction(water_content, fine_content_ssd, fine_content_wet, coarse_content_ssd,
+                                 coarse_content_wet):
+        """
+        Calculate the corrected water content for a mixture by accounting for both free water and aggregate absorption.
+
+        This function adjusts the measured free water content by incorporating the differences between
+        the saturated surface-dry (SSD) and wet conditions for both fine and coarse aggregates.
+
+        :param float water_content: The measured free water content in the mixture.
+        :param float fine_content_ssd: The fine aggregate content measured under SSD conditions.
+        :param float fine_content_wet: The fine aggregate content measured under wet conditions.
+        :param float coarse_content_ssd: The coarse aggregate content measured under SSD conditions.
+        :param float coarse_content_wet: The coarse aggregate content measured under wet conditions.
+        :return: The corrected water content.
+        :rtype: float
+        """
+
+        return water_content + (fine_content_ssd - fine_content_wet) + (coarse_content_ssd - coarse_content_wet)
 
 @dataclass
 class Air:
@@ -163,11 +200,11 @@ class Air:
 
     def entrapped_air_volume(self, nms, cement_content):
         """
-        Calculate the entrapped air in the mixture.
+        Calculate the entrapped air in cubic meter (m³).
 
         :param str nms: The nominal maximum size (e.g., '2-1/2" (63 mm)').
-        :param float cement_content: The cement content in kgf/m^3.
-        :return: The entrapped air volumen in liters per cubic meter.
+        :param float cement_content: The cement content in kgf/m³.
+        :return: The entrapped air volumen in cubic meter (m³).
         :rtype: float
         """
 
@@ -177,7 +214,7 @@ class Air:
         if match:
             nms_mm = match.group(1).replace(',', '.')
             nms_mm = float(nms_mm)
-            return cement_content / nms_mm
+            return 0.001 * (cement_content / nms_mm)
         else:
             self.mce_data_model.add_calculation_error('Entrapped air volumen',
                                                       f'Error trying to match regular expression for {nms}')
@@ -257,34 +294,70 @@ class Aggregate:
 
         return all_sieves
 
+    @staticmethod
+    def agg_content_moisture_correction(ssd_content, moisture_content, absorption):
+        """
+        Adjust the aggregate content from an SSD (saturated surface-dry) condition to a wet condition.
+
+        This function converts the aggregate content measured under SSD conditions to its equivalent
+        wet condition value. The adjustment accounts for the moisture content and absorption capacity
+        of the aggregate. Both the moisture_content and absorption should be provided as percentages
+        (e.g., 2 for 2%).
+
+        :param float ssd_content: Aggregate content under SSD conditions.
+        :param float moisture_content: Moisture content of the aggregate as a percentage.
+        :param float absorption: Absorption capacity of the aggregate as a percentage.
+        :return: Adjusted aggregate content under wet conditions.
+        :rtype: float
+        """
+
+        denominator = 100 + absorption
+        if denominator == 0:
+            raise ValueError("Invalid absorption value: 100 + absorption cannot be zero.")
+
+        return ssd_content * ((100 + moisture_content) / denominator)
+
 @dataclass
 class FineAggregate(Aggregate):
     fineness_modulus: float = None
 
-    def fine_agg_abs_volume(self, fine_content, relative_density):
+    def fine_abs_volume(self, fine_content, water_density, relative_density):
         """
-        Calculate the absolute volume of fine aggregate in liters per cubic meter (L/m^3).
+        Calculate the absolute volume of fine aggregate in cubic meters (m³).
 
-        :param float fine_content: The fine content in kilogram-force per cubic meter (kgf/m^3).
+        The fine content and water density must use consistent units:
+        - If fine content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If fine content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+
+        :param float fine_content: The fine content (kg or kgf).
+        :param water_density: The water density (kg/m³ or kgf/m³).
         :param float relative_density: The relative density of fine aggregate.
-        :return: The absolute volume of fine aggregate in liters per cubic meter (L/m^3).
+        :return: The absolute volume of fine aggregate in cubic meters (m³).
         :rtype: float
         """
 
-        if relative_density:
-            return fine_content / relative_density
+        if water_density != 0 and relative_density != 0:
+            return fine_content / (relative_density * water_density)
         else:
             self.mce_data_model.add_calculation_error('Fine aggregate volume',
-                                                      f'The relative density of the fine aggregate is {relative_density}')
-            raise ZeroDivisionError("The relative density of the fine aggregate cannot be zero")
+                                                      f'The relative density of the fine aggregate is {relative_density}. '
+                                                      f'The water density is {water_density}')
+            raise ZeroDivisionError("The relative density of fine aggregate or the water density is zero")
 
-    def fine_agg_volume(self, fine_content, loose_bulk_density):
+    def fine_volume(self, fine_content, loose_bulk_density):
         """
-        Calculate the (apparent) volume of fine aggregate in liters per cubic meter (L/m^3).
+        Calculate the apparent volume of fine aggregate in liters (L). The "apparent" volume includes the volume
+        of the aggregate particles and the voids between them.
 
-        :param float fine_content: The fine aggregate content in kilogram-force per cubic meter (kgf/m^3).
-        :param float loose_bulk_density: The loose bulk density of the fine aggregate in kilogram-force per cubic meter (kgf/m^3).
-        :return: The volume (apparent) of fine aggregate in liters per cubic meter (L/m^3).
+        Unit consistency is crucial:
+        - If fine_content is in kilograms (kg), loose_bulk_density must be in kilograms per cubic meter (kg/m³).
+        - If fine_content is in kilogram-force (kgf), loose_bulk_density must be in kilogram-force per cubic meter (kgf/m³).
+
+        The function converts the calculated volume from cubic meters (m³) to liters (L).
+
+        :param float fine_content: The fine aggregate content (kg or kgf).
+        :param float loose_bulk_density: The loose bulk density (kg/m³) or loose unit weight (kgf/m³) of the fine aggregate.
+        :return: The apparent volume of fine aggregate in liters (L).
         :rtype: float
         """
 
@@ -298,22 +371,23 @@ class FineAggregate(Aggregate):
 
         return fine_content / loose_bulk_density_liters_per_cubic_meter
 
-    def fine_agg_content(self, entrapped_air, cement_abs_volume, water_volume, fine_relative_density,
-                         coarse_relative_density, beta_value):
+    def fine_content(self, entrapped_air, cement_abs_volume, water_volume, water_density, fine_relative_density,
+                     coarse_relative_density, beta_value):
         """
-        Calculate the fine content in kilogram-force per cubic meter (kgf/m^3).
+        Calculate the fine content in kilogram-force per cubic meter (kgf/m³).
 
         The formula calculates the fine aggregate content by subtracting the volumes of
-        entrapped air, cement, and water (in L/m^3) from 1000 L/m^3 (total volume), then dividing by
+        entrapped air, cement, and water (in m³) from 1 m³ (total volume of the mixture), then dividing by
         an expression that involves the relative densities and beta relationship.
 
-        :param float entrapped_air: The volume of entrapped air in liters per cubic meter (L/m^3).
-        :param float cement_abs_volume: The absolute volume of cement grains in liters per cubic meter (L/m^3).
-        :param float water_volume: The volume of water in liters per cubic meter (L/m^3).
+        :param float entrapped_air: The volume of entrapped air in cubic meter (m³).
+        :param float cement_abs_volume: The absolute volume of cement grains in cubic meter (m³).
+        :param float water_volume: The volume of water in cubic meter (m³).
+        :param float water_density: The water density.
         :param float fine_relative_density: The relative density if the fine aggregate.
         :param float coarse_relative_density: The relative density if the coarse aggregate.
         :param float beta_value: The beta relationship.
-        :return: The calculated fine aggregate content in kilogram-force per cubic meter (kgf/m^3).
+        :return: The calculated fine aggregate content in kilogram-force per cubic meter (kgf/m³).
         :rtype: float
         """
 
@@ -332,10 +406,11 @@ class FineAggregate(Aggregate):
             raise ValueError("The relative density of the coarse aggregate cannot be zero")
 
         # Calculate numerator:
-        numerator = 1000 - (entrapped_air + cement_abs_volume + water_volume)
+        numerator = 1 - (entrapped_air + cement_abs_volume + water_volume)
 
         # Calculate denominator:
-        denominator = (1 / fine_relative_density) + (((1 / beta_value) - 1) * (1 / coarse_relative_density))
+        denominator = (1 / water_density) * (
+                    (1 / fine_relative_density) + (1 / coarse_relative_density) * ((1 / beta_value) - 1))
 
         # Return the computed fine aggregate content
         return numerator / denominator
@@ -344,51 +419,64 @@ class FineAggregate(Aggregate):
 class CoarseAggregate(Aggregate):
     nominal_max_size: float
 
-    def coarse_agg_abs_volume(self, coarse_content, relative_density):
+    def coarse_abs_volume(self, coarse_content, water_density, relative_density):
         """
-        Calculate the absolute volume of coarse aggregate in liters per cubic meter (L/m^3).
+        Calculate the absolute volume of coarse aggregate in cubic meters (m³).
 
-        :param float coarse_content: The coarse content in kilogram-force per cubic meter (kgf/m^3).
+        The coarse content and water density must use consistent units:
+        - If coarse content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If coarse content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+
+        :param float coarse_content: The coarse content (kg or kgf).
+        :param water_density: The water density (kg/m³ or kgf/m³).
         :param float relative_density: The relative density of coarse aggregate.
-        :return: The absolute volume of coarse aggregate in liters per cubic meter (L/m^3).
+        :return: The absolute volume of coarse aggregate in cubic meters (m³).
         :rtype: float
         """
 
-        if relative_density:
-            return coarse_content / relative_density
+        if water_density != 0 and relative_density != 0:
+            return coarse_content / (relative_density * water_density)
         else:
             self.mce_data_model.add_calculation_error('Coarse aggregate volume',
-                                                      f'The relative density of the coarse aggregate is {relative_density}')
-            raise ZeroDivisionError("The relative density of the coarse aggregate cannot be zero")
+                                                      f'The relative density of the coarse aggregate is {relative_density}. '
+                                                      f'The water density is {water_density}')
+            raise ZeroDivisionError("The relative density of coarse aggregate or the water density is zero")
 
-    def coarse_agg_volume(self, coarse_content, loose_bulk_density):
+    def coarse_volume(self, coarse_content, loose_bulk_density):
         """
-        Calculate the (apparent) volume of coarse aggregate in liters per cubic meter (L/m^3).
+        Calculate the apparent volume of coarse aggregate in liters (L). The "apparent" volume includes the volume
+        of the aggregate particles and the voids between them.
 
-        :param float coarse_content: The coarse aggregate content in kilogram-force per cubic meter (kgf/m^3).
-        :param float loose_bulk_density: The loose bulk density of the fine aggregate in kilogram-force per cubic meter (kgf/m^3).
-        :return: The volume (apparent) of coarse aggregate in liters per cubic meter (L/m^3).
+        Unit consistency is crucial:
+        - If coarse_content is in kilograms (kg), loose_bulk_density must be in kilograms per cubic meter (kg/m³).
+        - If coarse_content is in kilogram-force (kgf), loose_bulk_density must be in kilogram-force per cubic meter (kgf/m³).
+
+        The function converts the calculated volume from cubic meters (m³) to liters (L).
+
+        :param float coarse_content: The coarse aggregate content (kg or kgf).
+        :param float loose_bulk_density: The loose bulk density (kg/m³) or loose unit weight (kgf/m³) of the coarse aggregate.
+        :return: The apparent volume of coarse aggregate in liters (L).
         :rtype: float
         """
 
         if loose_bulk_density == 0:
-            self.mce_data_model.add_calculation_error('Coarse aggregate volume',
-                                                      f'The loose bulk density of the coarse aggregate is {loose_bulk_density}')
-            raise ZeroDivisionError("The loose bulk density for the coarse aggregate cannot be zero.")
+            self.mce_data_model.add_calculation_error('Fine aggregate volume',
+                                                      f'The loose bulk density of the fine aggregate is {loose_bulk_density}')
+            raise ZeroDivisionError("The loose bulk density for the fine aggregate cannot be zero.")
 
         LITERS_PER_CUBIC_METER = 1000
         loose_bulk_density_liters_per_cubic_meter = loose_bulk_density / LITERS_PER_CUBIC_METER
 
         return coarse_content / loose_bulk_density_liters_per_cubic_meter
 
-    def coarse_agg_content(self, fine_content, beta_value):
+    def coarse_content(self, fine_content, beta_value):
         """
-        Calculate the coarse content in kilogram-force per cubic meter (kgf/m^3).
+        Calculate the coarse content in kilogram-force per cubic meter (kgf/m³).
         It is based on the fine aggregate content and beta value.
 
-        :param float fine_content: The fine aggregate content in kilogram-force per cubic meter (kgf/m^3).
+        :param float fine_content: The fine aggregate content in kilogram-force per cubic meter (kgf/m³).
         :param float beta_value: The beta relationship.
-        :return: The coarse aggregate content in kilogram-force per cubic meter (kgf/m^3).
+        :return: The coarse aggregate content in kilogram-force per cubic meter (kgf/m³).
         :rtype: float
         """
 
@@ -862,7 +950,8 @@ class MCE:
 
             # E. Cement Absolute Volume
             cement_relative_density = self.cement.relative_density
-            cement_abs_volume = self.cement.cement_abs_volume(cement_content, cement_relative_density)
+            water_density = self.water.density
+            cement_abs_volume = self.cement.cement_abs_volume(cement_content, water_density, cement_relative_density)
 
             # F. Entrapped Air Volume
             entrapped_air_volume = self.air.entrapped_air_volume(nominal_max_size, cement_content)
@@ -871,11 +960,11 @@ class MCE:
             water_content = self.water.water_content(cement_content, alpha)
 
             # H. Water (Absolute) Volume
-            water_density = self.water.density
-            water_volume = self.water.water_volume(water_content, water_density)
-            water_abs_volume = water_volume  # They are the same
+            water_abs_volume = self.water.water_abs_volume(water_content, water_density)
+            water_volume = self.water.water_volume(water_abs_volume)
 
             # I. Aggregate Content
+
             # Calculate beta: use the economic approach
             beta_mean = (beta_min + beta_max) / 2
             beta_economic = (beta_mean + beta_min) / 2
@@ -884,25 +973,52 @@ class MCE:
             fine_relative_density = self.fine_agg.relative_density
             coarse_relative_density = self.coarse_agg.relative_density
 
-            fine_content = self.fine_agg.fine_agg_content(entrapped_air_volume, cement_abs_volume, water_volume,
-                                                          fine_relative_density, coarse_relative_density, beta_value)
-            coarse_content = self.coarse_agg.coarse_agg_content(fine_content, beta_value)
+            fine_content = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_abs_volume, water_density,
+                                                      fine_relative_density, coarse_relative_density, beta_value)
+            coarse_content = self.coarse_agg.coarse_content(fine_content, beta_value)
 
             # J. Aggregate Absolute Volume
-            fine_abs_volume = self.fine_agg.fine_agg_abs_volume(fine_content, fine_relative_density)
-            coarse_abs_volume = self.coarse_agg.coarse_agg_abs_volume(coarse_content, coarse_relative_density)
+            fine_abs_volume = self.fine_agg.fine_abs_volume(fine_content, water_density, fine_relative_density)
+            coarse_abs_volume = self.coarse_agg.coarse_abs_volume(coarse_content, water_density, coarse_relative_density)
 
             # K. Aggregate Volume
             fine_loose_bulk_density = self.fine_agg.loose_bulk_density
             coarse_loose_bulk_density = self.coarse_agg.loose_bulk_density
 
-            fine_volume = self.fine_agg.fine_agg_volume(fine_content, fine_loose_bulk_density)
-            coarse_volume = self.coarse_agg.coarse_agg_volume(coarse_content, coarse_loose_bulk_density)
+            fine_volume = self.fine_agg.fine_volume(fine_content, fine_loose_bulk_density)
+            coarse_volume = self.coarse_agg.coarse_volume(coarse_content, coarse_loose_bulk_density)
 
-            # L. Add up all absolute volumes and contents
+            # Moisture adjustments
+            fine_moisture_content = self.fine_agg.moisture_content
+            coarse_moisture_content = self.coarse_agg.moisture_content
+            fine_moisture_absorption = self.fine_agg.moisture_absorption
+            coarse_moisture_absorption = self.coarse_agg.moisture_absorption
+
+            fine_content_wet = self.fine_agg.agg_content_moisture_correction(fine_content, fine_moisture_content,
+                                                                         fine_moisture_absorption)
+            coarse_content_wet = self.coarse_agg.agg_content_moisture_correction(coarse_content, coarse_moisture_content,
+                                                                             coarse_moisture_absorption)
+            water_content_correction = self.water.water_content_correction(water_content, fine_content, fine_content_wet,
+                                                                coarse_content, coarse_content_wet)
+
+            # Since the water and aggregate contents (fine and coarse) were adjusted,
+            # their apparent volumes change accordingly.
+            water_volume = self.water.water_abs_volume(water_content_correction, water_density)
+            water_volume = self.water.water_volume(water_volume)
+            fine_volume = self.fine_agg.fine_volume(fine_content_wet, fine_loose_bulk_density)
+            coarse_volume = self.coarse_agg.coarse_volume(coarse_content_wet, coarse_loose_bulk_density)
+
+            # Convert absolute from m3 to L.
+            water_abs_volume = 1000 * water_abs_volume
+            cement_abs_volume = 1000 * cement_abs_volume
+            fine_abs_volume = 1000 * fine_abs_volume
+            coarse_abs_volume = 1000 * coarse_abs_volume
+            entrapped_air_volume = 1000 * entrapped_air_volume
+
+            # Add up all absolute volumes and contents
             total_abs_volume = sum(
                 [water_abs_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_volume])
-            total_content = sum([water_content, cement_content, fine_content, coarse_content])
+            total_content = sum([water_content_correction, cement_content, fine_content_wet, coarse_content_wet])
 
             # Store all the results in a dictionary
             self.calculation_results = {
@@ -913,15 +1029,18 @@ class MCE:
                 "beta": beta_value,
                 "entrapped_air": entrapped_air_volume,
                 "water_content": water_content,
+                "water_content_correction": water_content_correction,
                 "water_abs_volume": water_abs_volume,
                 "water_volume": water_volume,
                 "cement_content": cement_content,
                 "cement_abs_volume": cement_abs_volume,
                 "cement_volume": "-",
                 "fine_content": fine_content,
+                "fine_content_wet": fine_content_wet,
                 "fine_abs_volume": fine_abs_volume,
                 "fine_volume": fine_volume,
                 "coarse_content": coarse_content,
+                "coarse_content_wet": coarse_content_wet,
                 "coarse_abs_volume": coarse_abs_volume,
                 "coarse_volume": coarse_volume,
                 "total_abs_volume": total_abs_volume,
@@ -954,30 +1073,14 @@ class MCE:
                 data_key = f"beta.{key}"
             elif key == "entrapped_air":
                 data_key = "air.entrapped_air"
-            elif key == "water_abs_volume":
-                data_key = "water.water_abs_volume"
-            elif key == "water_volume":
-                data_key = "water.water_volume"
-            elif key == "water_content":
-                data_key = "water.water_content"
-            elif key == "cement_content":
-                data_key = "cementitious_material.cement.cement_content"
-            elif key == "cement_abs_volume":
-                data_key = "cementitious_material.cement.cement_abs_volume"
-            elif key == "cement_volume":
-                data_key = "cementitious_material.cement.cement_volume"
-            elif key == "fine_content":
-                data_key = "fine_aggregate.fine_content"
-            elif key == "fine_abs_volume":
-                data_key = "fine_aggregate.fine_abs_volume"
-            elif key == "fine_volume":
-                data_key = "fine_aggregate.fine_volume"
-            elif key == "coarse_content":
-                data_key = "coarse_aggregate.coarse_content"
-            elif key == "coarse_abs_volume":
-                data_key = "coarse_aggregate.coarse_abs_volume"
-            elif key == "coarse_volume":
-                data_key = "coarse_aggregate.coarse_volume"
+            elif key in ("water_content", "water_content_correction", "water_abs_volume", "water_volume"):
+                data_key = f"water.{key}"
+            elif key in ("cement_content", "cement_abs_volume", "cement_volume"):
+                data_key = f"cementitious_material.cement.{key}"
+            elif key in ("fine_content", "fine_content_wet", "fine_abs_volume", "fine_volume"):
+                data_key = f"fine_aggregate.{key}"
+            elif key in ("coarse_content", "coarse_content_wet", "coarse_abs_volume", "coarse_volume"):
+                data_key = f"coarse_aggregate.{key}"
             elif key in ("total_abs_volume", "total_content"):
                 data_key = f"summation.{key}"
             else:
