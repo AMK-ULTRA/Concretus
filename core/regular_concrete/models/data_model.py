@@ -14,7 +14,6 @@ class RegularConcreteDataModel(QObject):
     language_changed = pyqtSignal(str)  # Emit when the system language changes
     units_changed = pyqtSignal(str)  # Emit when the system of units changes
     method_changed = pyqtSignal(str) # Emit when the method for the specific regular procedure changes
-    validation_updated = pyqtSignal(list)  # Errors list
     step_changed = pyqtSignal(int)  # Current step value in the workflow
 
     def __init__(self):
@@ -29,7 +28,7 @@ class RegularConcreteDataModel(QObject):
         # Data structure
         self.design_data = self.create_empty_design_data() # data model
         self.validation_errors: dict[str, str] = {} # dictionary with all the errors
-        self._trial_mix_results: dict[str, float] = {}
+        self.trial_mix_results: dict[str, float] = {}
 
         self.logger = Logger(__name__)
         self.logger.info("Data model initialized")
@@ -265,13 +264,12 @@ class RegularConcreteDataModel(QObject):
         if key not in self.validation_errors:
             self.validation_errors[key] = message
             self.logger.info(f"Validation error: {key} -> {message}")
-            self.validation_updated.emit(self.validation_errors)
 
     def clear_validation_errors(self, section = None):
         """
         Clear validation errors. If a section is provided, only the error associated with that section is cleared.
 
-        :param section: If provided, only the error associated with that section is cleared.
+        :param str section: If provided, only the error associated with that section is cleared.
         """
 
         if section:
@@ -281,7 +279,6 @@ class RegularConcreteDataModel(QObject):
         else:
             # Clear all errors.
             self.validation_errors = {}
-        self.validation_updated.emit(self.validation_errors)
 
     # -------------------------------------------- Reset method --------------------------------------------
     def reset(self):
@@ -289,7 +286,7 @@ class RegularConcreteDataModel(QObject):
 
         self.design_data = self.create_empty_design_data()
         self.validation_errors = {}
-        self._trial_mix_results = {}
+        self.trial_mix_results = {}
         self.current_step = 0
         self.logger.info("All data has been restored")
         self.data_updated.emit()

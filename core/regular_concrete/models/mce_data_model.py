@@ -5,7 +5,7 @@ class MCEDataModel:
 
     def __init__(self):
         self.mce_data = self.create_empty_mce_data() # data model
-        self.validation_errors: dict[str, str] = {}  # dictionary with all the errors
+        self.calculation_errors: dict[str, str] = {}  # dictionary with all the errors
         self.logger = Logger(__name__)
         self.logger.info("Data model for MCE method initialized")
 
@@ -129,33 +129,33 @@ class MCEDataModel:
 
     # -------------------------------------------- Validation methods --------------------------------------------
     def add_calculation_error(self, section, message):
-            """
-            Add a calculation error with context.
+        """
+        Add a calculation error with context.
 
-            :param str section: Name of the section that failed.
-            :param str message: Description of validation failure.
-            """
+        :param str section: Name of the section that failed.
+        :param str message: Description of validation failure.
+        """
 
-            key = section.upper()
-            # Only add the error if it is not already present
-            if key not in self.validation_errors:
-                self.validation_errors[key] = message
-                self.logger.info(f"Calculation error: {key} -> {message}")
+        key = section.upper()
+        # Only add the error if it is not already present
+        if key not in self.calculation_errors:
+            self.calculation_errors[key] = message
+            self.logger.info(f"Calculation error: {key} -> {message}")
 
     def clear_calculation_errors(self, section=None):
-            """
-            Clear validation errors. If a section is provided, only the error associated with that section is cleared.
+        """
+        Clear validation errors. If a section is provided, only the error associated with that section is cleared.
 
-            :param section: If provided, only the error associated with that section is cleared.
-            """
+        :param str section: If provided, only the error associated with that section is cleared.
+        """
 
-            if section:
-                key = section.upper()
-                # Remove the error for the specified section if it exists.
-                self.validation_errors.pop(key, None)
-            else:
-                # Clear all errors.
-                self.validation_errors = {}
+        if section:
+            key = section.upper()
+            # Remove the error for the specified section if it exists.
+            self.calculation_errors.pop(key, None)
+        else:
+            # Clear all errors.
+            self.calculation_errors = {}
 
     # -------------------------------------------- Reset method --------------------------------------------
 
@@ -163,5 +163,5 @@ class MCEDataModel:
         """Reset all data while maintaining the structure."""
 
         self.mce_data = self.create_empty_mce_data()
-        self.validation_errors = {}
+        self.calculation_errors = {}
         self.logger.info("The data model for MCE method has been restored")

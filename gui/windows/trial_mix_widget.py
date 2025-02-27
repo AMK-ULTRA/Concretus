@@ -141,6 +141,9 @@ class TrialMix(QWidget):
         else:
             row_headers = []
 
+        # Clean table
+        self.ui.tableWidget.setRowCount(0)
+
         # Set the number of rows and assign vertical headers
         self.ui.tableWidget.setRowCount(len(row_headers))
         self.ui.tableWidget.setVerticalHeaderLabels(row_headers)

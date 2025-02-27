@@ -29,17 +29,15 @@ class Cement(CementitiousMaterial):
         :param float cement_content: The cement content (kg or kgf).
         :param float water_density: The water density (kg/m³ or kgf/m³).
         :param float relative_density: The relative density of cement (default 3.33).
-        :return: The absolute volume of cement grains in cubic meters (m³).
+        :return: The absolute volume (in m³).
         :rtype: float
         """
 
-        if water_density != 0 and relative_density != 0:
-            return cement_content / (relative_density * water_density)
-        else:
-            self.mce_data_model.add_calculation_error('Cement volume',
-                                                      f'The relative density of the cement is {relative_density}. '
-                                                      f'The water density is {water_density}')
-            raise ZeroDivisionError("The relative density of cement or the water density is zero")
+        if water_density == 0 or relative_density == 0:
+            error_msg = f"The relative density ({relative_density}) or the water density ({water_density}) cannot be zero"
+            self.mce_data_model.add_calculation_error('Cement volume', error_msg)
+            raise ZeroDivisionError(error_msg)
+        return cement_content / (relative_density * water_density)
 
     def cement_volume(self):
         pass
@@ -75,19 +73,29 @@ class Cement(CementitiousMaterial):
             design_cement_content = k * slump ** n * alpha ** (-m)
 
             if nms is None:
-                self.mce_data_model.add_calculation_error('Cement content',
-                                                          f'The nominal maximum size is {nms}')
-                raise ValueError("The nominal maximum size cannot be None")
+                error_msg = f'The nominal maximum size is {nms}. it cannot be None'
+                self.mce_data_model.add_calculation_error('Cement content', error_msg)
+                raise ValueError(error_msg)
+
             # Retrieve correction factors from settings
             correction_factor_1 = CEMENT_FACTOR_1.get(nms, 0) # according to the nominal maximum size
             correction_factor_2 = CEMENT_FACTOR_2.get(agg_types[0], {}).get(agg_types[1], 0) # according to aggregate type
+
+            if correction_factor_1 == 0:
+                error_msg = (f"The NMS correction was not possible. No factor correction for {nms}. "
+                             f"Valid NMS values are: {list(CEMENT_FACTOR_1.keys())}")
+                self.mce_data_model.add_calculation_error('Cement content', error_msg)
+                raise ValueError(error_msg)
+            if correction_factor_2 == 0:
+                error_msg = f"The aggregate type correction was not possible. No factor correction for aggregate types -> {agg_types}"
+                self.mce_data_model.add_calculation_error('Cement content', error_msg)
+                raise ValueError(error_msg)
 
             # Calculate corrected cement content
             corrected_cement_content = correction_factor_1 * correction_factor_2 * design_cement_content
 
             # Determine maximum cement content based on exposure classes
-            max_cement_content = (MAX_CEMENT.get(exposure_classes[0], 0), MAX_CEMENT.get(exposure_classes[1], 0),
-                                  MAX_CEMENT.get(exposure_classes[2], 0), MAX_CEMENT.get(exposure_classes[3], 0))
+            max_cement_content = [MAX_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
             max_cement_content = max(max_cement_content)
 
             # The final cement content is the maximum between the corrected cement content and the maximum cement content
@@ -109,8 +117,7 @@ class Cement(CementitiousMaterial):
             design_cement_content = theta * alpha ** (-m)
 
             # Determine maximum cement content based on exposure classes
-            max_cement_content = (MAX_CEMENT.get(exposure_classes[0], 0), MAX_CEMENT.get(exposure_classes[1], 0),
-                                  MAX_CEMENT.get(exposure_classes[2], 0), MAX_CEMENT.get(exposure_classes[3], 0))
+            max_cement_content = [MAX_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
             max_cement_content = max(max_cement_content)
 
             # The final cement content is the maximum between the design cement content and the maximum cement content
@@ -139,14 +146,14 @@ class Water:
 
         :param float water_content: The content of water (kg or kgf).
         :param float density: The water density (kg/m³ or kgf/m³).
-        :return: The volume of water in cubic meter (m³).
+        :return: The absolute volume of water (in m³).
         :rtype: float
         """
 
         if density == 0:
-            self.mce_data_model.add_calculation_error('Water volume',
-                                                      f'The density is {density}')
-            raise ValueError("Density cannot be zero")
+            error_msg = f'The density is {density}. It cannot be zero'
+            self.mce_data_model.add_calculation_error('Water volume', error_msg)
+            raise ValueError(error_msg)
 
         return water_content / density
 
@@ -156,7 +163,7 @@ class Water:
         Convert the absolute volume of water from cubic meters (m³) to liters (L).
 
         :param water_abs_volume: The absolute volume of water in cubic meters (m³).
-        :return: The volume of water in liters (L).
+        :return: The volume of water in liters.
         """
 
         return 1000 * water_abs_volume
@@ -168,7 +175,7 @@ class Water:
 
         :param float cement_content: The cement content in kilogram-force per cubic meter (kgf/m³).
         :param float alpha: The water-cement ratio.
-        :return: The weight of water in kilogram-force per cubic meter (kgf/m³).
+        :return: The water weight (in kgf/m³).
         :rtype: float
         """
 
@@ -216,9 +223,9 @@ class Air:
             nms_mm = float(nms_mm)
             return 0.001 * (cement_content / nms_mm)
         else:
-            self.mce_data_model.add_calculation_error('Entrapped air volumen',
-                                                      f'Error trying to match regular expression for {nms}')
-            raise Exception("No match found")
+            error_msg = f'No match found for nominal maximum size: {nms}'
+            self.mce_data_model.add_calculation_error('Entrapped air volumen', error_msg)
+            raise Exception(error_msg)
 
 @dataclass
 class Aggregate:
@@ -234,8 +241,10 @@ class Aggregate:
     @staticmethod
     def fill_all_sieves(grading):
         """
-        Fill a base dictionary (with all sieves) with data from a given dictionary
-        and fill empty values with 100 or 0, depending on certain conditions.
+        Fill a base dictionary with all available sieves using values from the provided grading dictionary.
+        If a sieve is not present, its value remains None.
+        Then, based on the available numeric values, for sieves before the one with the maximum value,
+        assign 100; for those after the one with the minimum value, assign 0.
 
         :param dict[str, float | None] grading: A dictionary with the passing percentages for certain sieves.
         :return: A dictionary with all passing percentages for all the available sieves.
@@ -294,8 +303,56 @@ class Aggregate:
 
         return all_sieves
 
-    @staticmethod
-    def agg_content_moisture_correction(ssd_content, moisture_content, absorption):
+    def apparent_volume(self, content, loose_bulk_density, aggregate_type="aggregate"):
+        """
+        Calculate the apparent volume (in liters) of the aggregate given its content and loose bulk density.
+        The "apparent" volume includes the volume of the aggregate particles and the voids between them.
+
+        The aggregate content and loose bulk density must use consistent units:
+        - If aggregate content is in kilograms (kg), loose bulk density must be in kilograms per cubic meter (kg/m³).
+        - If aggregate content is in kilogram-force (kgf), loose bulk density must be in kilogram-force per cubic meter (kgf/m³).
+
+        The function converts the calculated volume from cubic meters (m³) to liters (L).
+
+        :param float content: The aggregate content (kg or kgf).
+        :param float loose_bulk_density: The loose bulk density (kg/m³) or loose unit weight (kgf/m³) of the aggregate.
+        :param str aggregate_type: The type of aggregate, for identification (e.g., 'fine' or 'coarse').
+        :return: The apparent volume (in liters).
+        :rtype: float
+        """
+
+        if loose_bulk_density == 0:
+            error_msg = f"The loose bulk density of the {aggregate_type} aggregate cannot be zero"
+            self.mce_data_model.add_calculation_error(f"{aggregate_type} apparent volumen", error_msg)
+            raise ZeroDivisionError(error_msg)
+
+        LITERS_PER_CUBIC_METER = 1000
+        # The loose bulk density is in kg/m³, so it is converted to kg/(L) by dividing by 1000
+        return content / (loose_bulk_density / LITERS_PER_CUBIC_METER)
+
+    def absolute_volume(self, content, water_density, relative_density, aggregate_type="aggregate"):
+        """
+        Calculate the absolute volume (in m³) of the aggregate given its content, water density and relative density.
+
+        The aggregate content and water density must use consistent units:
+        - If aggregate content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If aggregate content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+
+        :param float content: The aggregate content (kg or kgf).
+        :param float water_density: Water density (kg/m³ or kgf/m³).
+        :param float relative_density: The relative density of the aggregate.
+        :param str aggregate_type: The type of aggregate, for identification (e.g., 'fine' or 'coarse').
+        :return: The absolute volume (in m³).
+        :rtype: float
+        """
+
+        if water_density == 0 or relative_density == 0:
+            error_msg = f"The relative density ({relative_density}) or the water density ({water_density}) cannot be zero"
+            self.mce_data_model.add_calculation_error(f"{aggregate_type} absolute volume", error_msg)
+            raise ZeroDivisionError(error_msg)
+        return content / (relative_density * water_density)
+
+    def content_moisture_correction(self, ssd_content, moisture_content, absorption):
         """
         Adjust the aggregate content from an SSD (saturated surface-dry) condition to a wet condition.
 
@@ -313,63 +370,15 @@ class Aggregate:
 
         denominator = 100 + absorption
         if denominator == 0:
-            raise ValueError("Invalid absorption value: 100 + absorption cannot be zero.")
+            error_msg = f"Invalid absorption value: {absorption}"
+            self.mce_data_model.add_calculation_error('Aggregate moisture correction', error_msg)
+            raise ValueError(error_msg)
 
         return ssd_content * ((100 + moisture_content) / denominator)
 
 @dataclass
 class FineAggregate(Aggregate):
     fineness_modulus: float = None
-
-    def fine_abs_volume(self, fine_content, water_density, relative_density):
-        """
-        Calculate the absolute volume of fine aggregate in cubic meters (m³).
-
-        The fine content and water density must use consistent units:
-        - If fine content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
-        - If fine content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
-
-        :param float fine_content: The fine content (kg or kgf).
-        :param water_density: The water density (kg/m³ or kgf/m³).
-        :param float relative_density: The relative density of fine aggregate.
-        :return: The absolute volume of fine aggregate in cubic meters (m³).
-        :rtype: float
-        """
-
-        if water_density != 0 and relative_density != 0:
-            return fine_content / (relative_density * water_density)
-        else:
-            self.mce_data_model.add_calculation_error('Fine aggregate volume',
-                                                      f'The relative density of the fine aggregate is {relative_density}. '
-                                                      f'The water density is {water_density}')
-            raise ZeroDivisionError("The relative density of fine aggregate or the water density is zero")
-
-    def fine_volume(self, fine_content, loose_bulk_density):
-        """
-        Calculate the apparent volume of fine aggregate in liters (L). The "apparent" volume includes the volume
-        of the aggregate particles and the voids between them.
-
-        Unit consistency is crucial:
-        - If fine_content is in kilograms (kg), loose_bulk_density must be in kilograms per cubic meter (kg/m³).
-        - If fine_content is in kilogram-force (kgf), loose_bulk_density must be in kilogram-force per cubic meter (kgf/m³).
-
-        The function converts the calculated volume from cubic meters (m³) to liters (L).
-
-        :param float fine_content: The fine aggregate content (kg or kgf).
-        :param float loose_bulk_density: The loose bulk density (kg/m³) or loose unit weight (kgf/m³) of the fine aggregate.
-        :return: The apparent volume of fine aggregate in liters (L).
-        :rtype: float
-        """
-
-        if loose_bulk_density == 0:
-            self.mce_data_model.add_calculation_error('Fine aggregate volume',
-                                                      f'The loose bulk density of the fine aggregate is {loose_bulk_density}')
-            raise ZeroDivisionError("The loose bulk density for the fine aggregate cannot be zero.")
-
-        LITERS_PER_CUBIC_METER = 1000
-        loose_bulk_density_liters_per_cubic_meter = loose_bulk_density / LITERS_PER_CUBIC_METER
-
-        return fine_content / loose_bulk_density_liters_per_cubic_meter
 
     def fine_content(self, entrapped_air, cement_abs_volume, water_volume, water_density, fine_relative_density,
                      coarse_relative_density, beta_value):
@@ -380,35 +389,35 @@ class FineAggregate(Aggregate):
         entrapped air, cement, and water (in m³) from 1 m³ (total volume of the mixture), then dividing by
         an expression that involves the relative densities and beta relationship.
 
-        :param float entrapped_air: The volume of entrapped air in cubic meter (m³).
-        :param float cement_abs_volume: The absolute volume of cement grains in cubic meter (m³).
-        :param float water_volume: The volume of water in cubic meter (m³).
-        :param float water_density: The water density.
-        :param float fine_relative_density: The relative density if the fine aggregate.
-        :param float coarse_relative_density: The relative density if the coarse aggregate.
-        :param float beta_value: The beta relationship.
-        :return: The calculated fine aggregate content in kilogram-force per cubic meter (kgf/m³).
+        :param float entrapped_air: Volume of entrapped air (m³).
+        :param float cement_abs_volume: Absolute volume of cement (m³).
+        :param float water_volume: Volume of water (m³).
+        :param float water_density: Water density.
+        :param float fine_relative_density: Fine aggregate relative density.
+        :param float coarse_relative_density: Coarse aggregate relative density.
+        :param float beta_value: Beta relationship factor.
+        :return: Fine aggregate content (kgf/m³).
         :rtype: float
         """
 
         # Validate to avoid division by zero
         if fine_relative_density == 0:
-            self.mce_data_model.add_calculation_error('Fine aggregate content',
-                                                      f'The relative density of the fine aggregate is {fine_relative_density}')
-            raise ValueError("The relative density of the fine aggregate cannot be zero")
+            error_msg = f'The relative density of the fine aggregate is {fine_relative_density}. It cannot be zero'
+            self.mce_data_model.add_calculation_error('Fine aggregate content', error_msg)
+            raise ValueError(error_msg)
         if beta_value == 0:
-            self.mce_data_model.add_calculation_error('Fine aggregate content',
-                                                      f'The beta value is {beta_value}')
-            raise ValueError("The beta value cannot be zero")
+            error_msg = f'The beta value is {beta_value}. It cannot be zero'
+            self.mce_data_model.add_calculation_error('Fine aggregate content', error_msg)
+            raise ValueError(error_msg)
         if coarse_relative_density == 0:
-            self.mce_data_model.add_calculation_error('Fine aggregate content',
-                                                      f'The relative density of the coarse aggregate is {coarse_relative_density}')
-            raise ValueError("The relative density of the coarse aggregate cannot be zero")
+            error_msg = f'The relative density of the coarse aggregate is {coarse_relative_density}. It cannot be zero'
+            self.mce_data_model.add_calculation_error('Fine aggregate content', error_msg)
+            raise ValueError(error_msg)
 
-        # Calculate numerator:
+        # Calculate numerator
         numerator = 1 - (entrapped_air + cement_abs_volume + water_volume)
 
-        # Calculate denominator:
+        # Calculate denominator
         denominator = (1 / water_density) * (
                     (1 / fine_relative_density) + (1 / coarse_relative_density) * ((1 / beta_value) - 1))
 
@@ -419,71 +428,21 @@ class FineAggregate(Aggregate):
 class CoarseAggregate(Aggregate):
     nominal_max_size: float
 
-    def coarse_abs_volume(self, coarse_content, water_density, relative_density):
-        """
-        Calculate the absolute volume of coarse aggregate in cubic meters (m³).
-
-        The coarse content and water density must use consistent units:
-        - If coarse content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
-        - If coarse content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
-
-        :param float coarse_content: The coarse content (kg or kgf).
-        :param water_density: The water density (kg/m³ or kgf/m³).
-        :param float relative_density: The relative density of coarse aggregate.
-        :return: The absolute volume of coarse aggregate in cubic meters (m³).
-        :rtype: float
-        """
-
-        if water_density != 0 and relative_density != 0:
-            return coarse_content / (relative_density * water_density)
-        else:
-            self.mce_data_model.add_calculation_error('Coarse aggregate volume',
-                                                      f'The relative density of the coarse aggregate is {relative_density}. '
-                                                      f'The water density is {water_density}')
-            raise ZeroDivisionError("The relative density of coarse aggregate or the water density is zero")
-
-    def coarse_volume(self, coarse_content, loose_bulk_density):
-        """
-        Calculate the apparent volume of coarse aggregate in liters (L). The "apparent" volume includes the volume
-        of the aggregate particles and the voids between them.
-
-        Unit consistency is crucial:
-        - If coarse_content is in kilograms (kg), loose_bulk_density must be in kilograms per cubic meter (kg/m³).
-        - If coarse_content is in kilogram-force (kgf), loose_bulk_density must be in kilogram-force per cubic meter (kgf/m³).
-
-        The function converts the calculated volume from cubic meters (m³) to liters (L).
-
-        :param float coarse_content: The coarse aggregate content (kg or kgf).
-        :param float loose_bulk_density: The loose bulk density (kg/m³) or loose unit weight (kgf/m³) of the coarse aggregate.
-        :return: The apparent volume of coarse aggregate in liters (L).
-        :rtype: float
-        """
-
-        if loose_bulk_density == 0:
-            self.mce_data_model.add_calculation_error('Fine aggregate volume',
-                                                      f'The loose bulk density of the fine aggregate is {loose_bulk_density}')
-            raise ZeroDivisionError("The loose bulk density for the fine aggregate cannot be zero.")
-
-        LITERS_PER_CUBIC_METER = 1000
-        loose_bulk_density_liters_per_cubic_meter = loose_bulk_density / LITERS_PER_CUBIC_METER
-
-        return coarse_content / loose_bulk_density_liters_per_cubic_meter
-
     def coarse_content(self, fine_content, beta_value):
         """
         Calculate the coarse content in kilogram-force per cubic meter (kgf/m³).
         It is based on the fine aggregate content and beta value.
 
-        :param float fine_content: The fine aggregate content in kilogram-force per cubic meter (kgf/m³).
-        :param float beta_value: The beta relationship.
-        :return: The coarse aggregate content in kilogram-force per cubic meter (kgf/m³).
+        :param float fine_content: Fine aggregate content (kgf/m³).
+        :param float beta_value: Beta relationship factor.
+        :return: Coarse aggregate content (kgf/m³).
         :rtype: float
         """
 
         if beta_value == 0:
-            self.mce_data_model.add_calculation_error('Coarse aggregate content',
-                                                      f'The beta value is {beta_value}')
-            raise ValueError("The beta value cannot be zero")
+            error_msg = f'The beta value is {beta_value}. It cannot be zero'
+            self.mce_data_model.add_calculation_error('Coarse aggregate content', error_msg)
+            raise ValueError(error_msg)
 
         inverse_beta = 1 / beta_value
         result = fine_content * (inverse_beta - 1)
@@ -581,15 +540,16 @@ class StandardDeviation:
                 self.mce_data_model.update_data('spec_strength.target_strength.margin', margin)
                 f_cr = design_strength + margin
             else:
-                # If no margin was assigned, None is returned
-                self.mce_data_model.add_calculation_error('Target strength', 'No margin found')
-                raise ValueError("No margin found")
+                # If no margin was assigned, raises a value error exception
+                error_msg = f"No margin found for the design strength={design_strength}"
+                self.mce_data_model.add_calculation_error('Target strength', error_msg)
+                raise ValueError(error_msg)
 
         else:
-            # If no condition is met, None is returned
-            self.mce_data_model.add_calculation_error('Target strength',
-                                                      'Else statement was triggered')
-            raise ValueError("A error occurred")
+            # If no condition is met, raises a value error exception
+            error_msg = f"The 'std_dev_known' and 'std_dev_unknown' values are {std_dev_known} and {std_dev_unknown} respectively"
+            self.mce_data_model.add_calculation_error('Target strength', error_msg)
+            raise ValueError(error_msg)
 
         return f_cr
 
@@ -598,7 +558,7 @@ class Beta:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
     @staticmethod
-    def unused_sieves(coarse_grading, fine_grading):
+    def remove_unused_sieves(coarse_grading, fine_grading):
         """
         Remove keys with a None value from both coarse_grading and fine_grading.
         If a key has a None value in either dictionary, it will be removed from both.
@@ -611,27 +571,31 @@ class Beta:
         :rtype: tuple[dict[str, float], dict[str, float]]
         """
 
+        # Create copies to avoid modifying original dictionaries
+        coarse_cleaned = coarse_grading.copy()
+        fine_cleaned = fine_grading.copy()
+
         # Create a set of keys to remove (keys with None in either dictionary)
         keys_to_remove = {k for k, v in coarse_grading.items() if v is None} | {k for k, v in fine_grading.items() if
                                                                                 v is None}
 
-        # Remove the identified keys from both dictionaries
+        # Remove keys from the copies
         for key in keys_to_remove:
-            coarse_grading.pop(key, None)
-            fine_grading.pop(key, None)
+            coarse_cleaned.pop(key, None)
+            fine_cleaned.pop(key, None)
 
-        return coarse_grading, fine_grading
+        return coarse_cleaned, fine_cleaned
 
     def get_beta(self, nms, coarse_data, fine_data):
         """
         Calculate beta values (minimum and maximum) based on the grading limits and sieve data.
 
-        If the given nominal maximum size has no grading limits, return None twice.
+        If the given nominal maximum size has no grading limits, raises a value error exception.
 
         If the fine and coarse values are equal:
             - If they are either 0 or 100, that sieve is skipped.
             - If the value is not equal to either the minimum or maximum recommended percentages,
-              the function returns (0, 0).
+              the function raises a value error exception.
 
         Otherwise, a slope is calculated to obtain a linear equation of two points. The beta values
         are clamped between 0 and 100, and the maximum beta_min and minimum beta_max across all sieves are returned.
@@ -640,18 +604,19 @@ class Beta:
         :param dict[str, float | None] coarse_data: Data for coarse grading.
         :param dict[str, float | None] fine_data: Data for fine grading.
         :return: A tuple containing the minimum and maximum beta values, respectively.
-                 Or two 0s or two None, as appropriate.
-        :rtype: tuple[float | None, float | None]
+        :rtype: tuple[float, float]
         """
 
         # Retrieve the recommended grading limits for the given nominal maximum size
         grading_limits = COMBINED_GRADING.get(nms)
         if grading_limits is None:
-            self.mce_data_model.add_calculation_error('Get beta', f"Grading limits not found for NMS: {nms}")
-            return None, None
+            error_msg = (f"Grading limits not found for NMS: {nms}. "
+                         f"Available grading limits for the following NMS: {list(COMBINED_GRADING.keys())}")
+            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            raise ValueError(error_msg)
 
         # Clean any unused sieves from the grading
-        coarse_grading, fine_grading = self.unused_sieves(coarse_data, fine_data)
+        coarse_grading, fine_grading = self.remove_unused_sieves(coarse_data, fine_data)
 
         beta_mins = []
         beta_maxs = []
@@ -673,11 +638,10 @@ class Beta:
                     # Skip if values are at the boundary
                     continue
                 elif fine_value not in (percentage_max, percentage_min):
-                    # If value does not match expected limits,
-                    self.mce_data_model.add_calculation_error('Get beta',
-                                                              "The given grading does not match the recommended limits")
-                    # returns two None indicating that no posible beta values where found
-                    return None, None
+                    # If value does not match expected limits, raises a value error exception
+                    error_msg = "The given grading does not match the recommended limits"
+                    self.mce_data_model.add_calculation_error('Get beta', error_msg)
+                    raise ValueError(error_msg)
             else:
                 # Calculate the slope of a two-point linear equation
                 slope = 100 / (fine_value - coarse_value)
@@ -691,21 +655,23 @@ class Beta:
                 beta_mins.append(beta_min)
                 beta_maxs.append(beta_max)
 
-        # Return the maximum of beta_mins and the minimum of beta_maxs if computed, else return None twice
-        if beta_mins and beta_maxs:
-            if max(beta_mins) <= min(beta_maxs):
-                self.mce_data_model.update_data('beta.beta_min', max(beta_mins))
-                self.mce_data_model.update_data('beta.beta_max', min(beta_maxs))
-                return max(beta_mins), min(beta_maxs)
-            else:
-                self.mce_data_model.add_calculation_error('Get beta', f"The calculated set is not possible. "
-                                  f"The minimum beta ({max(beta_mins)}) is greater than the maximum ({min(beta_maxs)}).")
-                return None, None
-        else:
-            self.mce_data_model.add_calculation_error('Get beta',
-                                                      f"There is an empty set. beta_mins -> {beta_mins}; beta_maxs -> {beta_maxs}")
-            return None, None
+        if not beta_mins or not beta_maxs:
+            error_msg = f"There is an empty set. beta_mins -> {beta_mins}; beta_maxs -> {beta_maxs}"
+            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            raise ValueError(error_msg)
 
+        # Return the maximum of beta_mins and the minimum of beta_maxs if computed, else raises a value error exception
+        if max(beta_mins) <= min(beta_maxs):
+            self.mce_data_model.update_data('beta.beta_min', max(beta_mins))
+            self.mce_data_model.update_data('beta.beta_max', min(beta_maxs))
+            return max(beta_mins), min(beta_maxs)
+        else:
+            error_msg = (f"The calculated set is not possible. "
+                         f"The minimum beta ({max(beta_mins)}) is greater than the maximum ({min(beta_maxs)}).")
+            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            raise ValueError(error_msg)
+
+@dataclass
 class AbramsLaw:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
@@ -730,27 +696,41 @@ class AbramsLaw:
         :rtype: float
         """
 
-        # Get the n and m constants for the given age of the test.
+        # Get the n and m constants for the given age of the test
         if m is None and n is None:
-            n = CONSTANTS.get(target_strength_time, {})["n"]
-            m = CONSTANTS.get(target_strength_time, {})["m"]
+            try:
+                n = CONSTANTS.get(target_strength_time, {})["n"]
+                m = CONSTANTS.get(target_strength_time, {})["m"]
+            except KeyError:
+                error_msg = f"No constants found for target strength time: {target_strength_time}"
+                self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
+                raise KeyError(error_msg)
 
         # Calculate the alpha according to Abrams' Law
         design_alpha = (log10(m) - log10(target_strength)) / log10(n)
 
         # Retrieve correction factors from settings
-        correction_factor_1 = ALFA_FACTOR_1.get(nms, 1)  # according to the nominal maximum size
-        correction_factor_2 = ALFA_FACTOR_2.get(agg_types[0], {}).get(agg_types[1], 1)  # according to aggregate type
+        correction_factor_1 = ALFA_FACTOR_1.get(nms, 0)  # according to the nominal maximum size
+        correction_factor_2 = ALFA_FACTOR_2.get(agg_types[0], {}).get(agg_types[1], 0)  # according to aggregate type
+
+        if correction_factor_1 == 0:
+            error_msg = (f"The NMS correction was not possible. No factor correction for {nms}. "
+                         f"Valid NMS values are: {list(ALFA_FACTOR_1.keys())}")
+            self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
+            raise ValueError(error_msg)
+        if correction_factor_2 == 0:
+            error_msg = f"The aggregate type correction was not possible. No factor correction for aggregate types -> {agg_types}"
+            self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
+            raise ValueError(error_msg)
 
         # Calculate corrected alpha
         corrected_alpha = correction_factor_1 * correction_factor_2 * design_alpha
 
         # Determine the minimum alpha based on exposure classes
-        min_alpha = (MAX_ALFA.get(exposure_classes[0], 1), MAX_ALFA.get(exposure_classes[1], 1),
-                              MAX_ALFA.get(exposure_classes[2], 1), MAX_ALFA.get(exposure_classes[3], 1))
-        min_alpha = min(min_alpha)
+        min_alpha_values = [MAX_ALFA.get(exposure_class, 1) for exposure_class in exposure_classes]
+        min_alpha = min(min_alpha_values)
 
-        # The final alpha is the maximum between the corrected alpha and the maximum alpha
+        # The final alpha is the minimum between the corrected alpha and the minimum allowed alpha
         alpha = min(corrected_alpha, min_alpha)
 
         # Update the MCE data model with all intermediate values
@@ -816,7 +796,7 @@ class MCE:
         if factor is None:
             # Log a warning if no factor is found
             self.logger.warning(
-                f"No conversion factor found for unit system '{current_units}' and target unit '{unit}'.")
+                f"No conversion factor found for unit system '{current_units}' and target unit '{unit}'")
             return None
 
         # Return the converted value by multiplying with the factor.
@@ -829,7 +809,7 @@ class MCE:
         """
 
         try:
-            # For each parameter, retrieve and convert if needed.
+            # Convert units if necessary
             design_strength = self.data_model.get_design_value('field_requirements.strength.spec_strength')
             std_dev_value = self.data_model.get_design_value('field_requirements.strength.std_dev_known.std_dev_value')
             if self.data_model.units == "SI":
@@ -892,9 +872,9 @@ class MCE:
             self.beta.mce_data_model = self.mce_data_model
             self.abrams_law.mce_data_model = self.mce_data_model
 
-            self.logger.debug("Input data loaded and converted successfully.")
-        except Exception:
-            self.logger.error("Error loading or converting input data")
+            self.logger.debug("Input data loaded and converted successfully")
+        except Exception as e:
+            self.logger.error(f"Error loading or converting input data: {str(e)}")
             raise
 
     def perform_calculations(self):
@@ -918,10 +898,9 @@ class MCE:
             std_dev_unknown = self.std_deviation.std_dev_unknown
             quality_control = self.std_deviation.quality_control
 
-            target_strength = self.std_deviation.target_strength(
-                design_strength, std_dev_known, std_dev_value, sample_size,
-                defective_level, std_dev_unknown, quality_control
-            )
+            target_strength = self.std_deviation.target_strength(design_strength, std_dev_known, std_dev_value,
+                                                                 sample_size, defective_level, std_dev_unknown,
+                                                                 quality_control)
 
             # B. Beta Relationship
             fine_grading = self.fine_agg.fill_all_sieves(self.fine_agg.grading)
@@ -929,28 +908,24 @@ class MCE:
             nominal_max_size = self.coarse_agg.nominal_max_size
 
             beta_min, beta_max = self.beta.get_beta(nominal_max_size, coarse_grading, fine_grading)
-            if beta_min is None or beta_max is None:
-                self.logger.error("Beta relationship calculation failed")
-                return False
 
             # C. Water-Cement ratio, aka alpha or a/c (using abrams' law)
             target_strength_time = self.hardened_concrete.spec_strength_time
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
             exposure_classes = list(self.hardened_concrete.exposure_classes.values())
 
-            alpha = self.abrams_law.water_cement_ratio(
-                target_strength, target_strength_time, nominal_max_size, agg_types, exposure_classes
-            )
+            alpha = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nominal_max_size,
+                                                       agg_types, exposure_classes)
 
             # D. Cement Content (using triangular relationship)
             slump = self.fresh_concrete.slump
-            cement_content = self.cement.cement_content(
-                slump, alpha, nominal_max_size, agg_types, exposure_classes
-            )
+
+            cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes)
 
             # E. Cement Absolute Volume
             cement_relative_density = self.cement.relative_density
             water_density = self.water.density
+
             cement_abs_volume = self.cement.cement_abs_volume(cement_content, water_density, cement_relative_density)
 
             # F. Entrapped Air Volume
@@ -964,7 +939,6 @@ class MCE:
             water_volume = self.water.water_volume(water_abs_volume)
 
             # I. Aggregate Content
-
             # Calculate beta: use the economic approach
             beta_mean = (beta_min + beta_max) / 2
             beta_economic = (beta_mean + beta_min) / 2
@@ -973,20 +947,22 @@ class MCE:
             fine_relative_density = self.fine_agg.relative_density
             coarse_relative_density = self.coarse_agg.relative_density
 
-            fine_content = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_abs_volume, water_density,
-                                                      fine_relative_density, coarse_relative_density, beta_value)
+            fine_content = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_abs_volume,
+                                                      water_density, fine_relative_density, coarse_relative_density,
+                                                      beta_value)
             coarse_content = self.coarse_agg.coarse_content(fine_content, beta_value)
 
             # J. Aggregate Absolute Volume
-            fine_abs_volume = self.fine_agg.fine_abs_volume(fine_content, water_density, fine_relative_density)
-            coarse_abs_volume = self.coarse_agg.coarse_abs_volume(coarse_content, water_density, coarse_relative_density)
+            fine_abs_volume = self.fine_agg.absolute_volume(fine_content, water_density, fine_relative_density, "fine")
+            coarse_abs_volume = self.coarse_agg.absolute_volume(coarse_content, water_density, coarse_relative_density,
+                                                                "coarse")
 
             # K. Aggregate Volume
             fine_loose_bulk_density = self.fine_agg.loose_bulk_density
             coarse_loose_bulk_density = self.coarse_agg.loose_bulk_density
 
-            fine_volume = self.fine_agg.fine_volume(fine_content, fine_loose_bulk_density)
-            coarse_volume = self.coarse_agg.coarse_volume(coarse_content, coarse_loose_bulk_density)
+            fine_volume = self.fine_agg.apparent_volume(fine_content, fine_loose_bulk_density, "fine")
+            coarse_volume = self.coarse_agg.apparent_volume(coarse_content, coarse_loose_bulk_density, "coarse")
 
             # Moisture adjustments
             fine_moisture_content = self.fine_agg.moisture_content
@@ -994,21 +970,22 @@ class MCE:
             fine_moisture_absorption = self.fine_agg.moisture_absorption
             coarse_moisture_absorption = self.coarse_agg.moisture_absorption
 
-            fine_content_wet = self.fine_agg.agg_content_moisture_correction(fine_content, fine_moisture_content,
+            fine_content_wet = self.fine_agg.content_moisture_correction(fine_content, fine_moisture_content,
                                                                          fine_moisture_absorption)
-            coarse_content_wet = self.coarse_agg.agg_content_moisture_correction(coarse_content, coarse_moisture_content,
+            coarse_content_wet = self.coarse_agg.content_moisture_correction(coarse_content, coarse_moisture_content,
                                                                              coarse_moisture_absorption)
-            water_content_correction = self.water.water_content_correction(water_content, fine_content, fine_content_wet,
-                                                                coarse_content, coarse_content_wet)
+            water_content_correction = self.water.water_content_correction(water_content, fine_content,
+                                                                           fine_content_wet, coarse_content,
+                                                                           coarse_content_wet)
 
             # Since the water and aggregate contents (fine and coarse) were adjusted,
             # their apparent volumes change accordingly.
-            water_volume = self.water.water_abs_volume(water_content_correction, water_density)
-            water_volume = self.water.water_volume(water_volume)
-            fine_volume = self.fine_agg.fine_volume(fine_content_wet, fine_loose_bulk_density)
-            coarse_volume = self.coarse_agg.coarse_volume(coarse_content_wet, coarse_loose_bulk_density)
+            water_abs_volume = self.water.water_abs_volume(water_content_correction, water_density)
+            water_volume = self.water.water_volume(water_abs_volume)
+            fine_volume = self.fine_agg.apparent_volume(fine_content_wet, fine_loose_bulk_density, "fine")
+            coarse_volume = self.coarse_agg.apparent_volume(coarse_content_wet, coarse_loose_bulk_density, "coarse")
 
-            # Convert absolute from m3 to L.
+            # Convert absolute from m3 to L
             water_abs_volume = 1000 * water_abs_volume
             cement_abs_volume = 1000 * cement_abs_volume
             fine_abs_volume = 1000 * fine_abs_volume
@@ -1050,7 +1027,7 @@ class MCE:
             self.logger.info(f"Calculations completed successfully.")
             return True
 
-        except Exception as e: # Capturing all exceptions to ensure robust calculation process.
+        except Exception: # Capturing all exceptions to ensure robust calculation process
             self.logger.error("Error during calculations", exc_info=True)
             return False
 
@@ -1060,7 +1037,7 @@ class MCE:
         """
 
         if not self.calculation_results:
-            self.logger.error("No calculation results to update in the data model.")
+            self.logger.error("No calculation results to update in the data model")
             return
 
         for key, value in self.calculation_results.items():
@@ -1087,7 +1064,7 @@ class MCE:
                 continue
 
             self.mce_data_model.update_data(data_key, value)
-        self.logger.debug("MCE data model updated with calculation results.")
+        self.logger.debug("MCE data model updated with calculation results")
 
     def run(self):
         """
@@ -1101,6 +1078,6 @@ class MCE:
         self.load_inputs()
         if self.perform_calculations():
             self.update_data_model()
-            self.logger.info("MCE calculation process completed successfully.")
+            self.logger.info("MCE calculation process completed successfully")
         else:
-            self.logger.error("MCE calculation process terminated due to an error.")
+            self.logger.error("MCE calculation process terminated due to an error")

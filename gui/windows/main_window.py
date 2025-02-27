@@ -1,6 +1,6 @@
 from functools import partial
 
-from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget
+from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget, QLabel
 from PyQt6.QtGui import QActionGroup, QIcon
 
 from Concretus.gui.ui.ui_main_window import Ui_MainWindow
@@ -47,6 +47,10 @@ class MainWindow(QMainWindow):
         # Global signal/slot connections
         self.global_connections()
 
+        # Create a permanent label to display the current unit system on the right side
+        self.units_label = QLabel(f"Unidades: {self.data_model.units}")
+        self.ui.statusbar.addPermanentWidget(self.units_label)
+
         # Initialize the logger
         self.logger = Logger(__name__)
         self.logger.info('Main window initialized')
@@ -60,6 +64,8 @@ class MainWindow(QMainWindow):
         self.check_design.regular_concrete_requested.connect(partial(self.navigate_to, self.regular_concrete))
         # Show the plot (fine or coarse aggregate) when requested by the user
         self.check_design.plot_requested.connect(lambda aggregate_type: self.show_plot_dialog(aggregate_type))
+        # Change the display of units when the current unit system changes
+        self.data_model.units_changed.connect(lambda unit: self.update_unit_system(unit))
 
     def group_action(self):
         """Set up QActionGroup for multiple menu actions."""
@@ -119,6 +125,15 @@ class MainWindow(QMainWindow):
 
         # Display the welcome widget
         self.show_welcome()
+
+    def update_unit_system(self, new_units):
+        """
+        Update the units label when the unit system changes.
+
+        :param str new_units: A string representing the new unit system.
+        """
+
+        self.units_label.setText(f"Unidades: {new_units}")
 
     def enable_actions(self, current_step):
         """
