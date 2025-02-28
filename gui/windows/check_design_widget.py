@@ -154,9 +154,15 @@ class CheckDesign(QWidget):
         coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
         fine_scores = self.data_model.get_design_value('validation.fine_scores')
 
-        # Determine the maximum score for coarse and fine; use 0 if empty
-        k_1 = max(coarse_scores.values(), default=0)
-        k_2 = max(fine_scores.values(), default=0)
+        # Determine the maximum score for coarse and fine; use 1 if empty
+        k_1 = max(coarse_scores.values(), default=1)
+        k_2 = max(fine_scores.values(), default=1)
+
+        # Handle the case where the maximum score is zero
+        if k_1 == 0:
+            k_1 = 1
+        if k_2 == 0:
+            k_2 = 1
 
         # Multiply the first two error values by their respective maximum scores
         weighted_error_1 = errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] * k_1
@@ -172,7 +178,15 @@ class CheckDesign(QWidget):
             errors["MINIMUM ENTRAINED AIR"],
         ]
         error_count = sum(error_list)
-        max_errors = 6  # Total number of error categories
+
+        # Calculate the total number of error categories
+        max_errors = 4  # Number of permanent error categories
+
+        # Check for additional error categories
+        if self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'):
+            max_errors += 1
+        if self.data_model.get_design_value('field_requirements.air_content.air_content_checked'):
+            max_errors += 1
 
         # Calculate the progress percentage
         progress_value = 100 - (error_count * 100 / max_errors)
@@ -251,9 +265,6 @@ class CheckDesign(QWidget):
         # Calculate the nominal maximum size
         nms = self.validation.calculate_nominal_maximum_size(grading_list)
 
-        # Update the data model
-        self.data_model.update_design_data('coarse_aggregate.NMS', nms)
-
         # Update the fields in the GUI
         if nms is None:
             self.ui.lineEdit_NMS.setText('No hay granulometría')
@@ -272,9 +283,6 @@ class CheckDesign(QWidget):
 
         # Obtain the fineness modulus and if it is value passed the requirements
         fineness_modulus, valid = self.validation.required_fineness_modulus(method, cumulative_retained)
-
-        # Update the fineness modulus in the data model
-        self.data_model.update_design_data('fine_aggregate.fineness_modulus', fineness_modulus)
 
         # Retrieve the limits according to the method
         fm_limits = FINENESS_MODULUS_LIMITS.get(method, {})
