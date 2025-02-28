@@ -37,10 +37,10 @@ class TrialMix(QWidget):
     def on_enter(self):
         """Prepare widget when it becomes visible."""
 
-        # Get the used method
-        method = self.data_model.method
+        method = self.data_model.method # Get the used method
+        unit = self.data_model.units # and the current unit system
 
-        self.create_table_columns(method)
+        self.create_table_columns(unit)
         self.create_table_rows(method)
         self.adjust_table_height()
         if self.data_model.method == "MCE":
@@ -56,16 +56,16 @@ class TrialMix(QWidget):
 
         self.mce_data_model.reset()
 
-    def create_table_columns(self, method):
+    def create_table_columns(self, unit):
         """
-        Create table columns based on selected calculation method.
-        Dynamically configures vertical headers according to the active calculation method (MCE/ACI/DoE).
+        Create table columns based on selected unit system.
+        Dynamically configures vertical headers according to the current unit system (MKS/SI).
 
-        :param method: The active method (e.g., "MCE", "ACI", "DoE")
+        :param str unit: The current unit system (e.g., "MKS", "SI")
         """
 
-        # Define column headers based on the method.
-        if method == "MCE":
+        # Define column headers based on the current unit system.
+        if unit == "MKS":
             column_headers = [
                 "Volumen absoluto (L)",
                 "Peso (kgf/m³)",
@@ -73,7 +73,7 @@ class TrialMix(QWidget):
                 "Peso para la prueba (kgf/m³)",
                 "Volumen para la prueba (L/m³)"
             ]
-        elif method in ("ACI", "DoE"):
+        elif unit == "SI":
             column_headers = [
                 "Volumen absoluto (L)",
                 "Masa (kg/m³)",
