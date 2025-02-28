@@ -103,8 +103,7 @@ class Validation:
                         new_passing_data[key] = None
                 self.data_model.update_design_data(f"{aggregate_type}.gradation.passing", new_passing_data)
 
-    @staticmethod
-    def calculate_nominal_maximum_size(grading, threshold=95):
+    def calculate_nominal_maximum_size(self, grading, threshold=95):
         """
         Calculate the nominal maximum size of the aggregate from a given particle size distribution (grading),
         which must be a grading with passing percentages.
@@ -121,6 +120,8 @@ class Validation:
         for sieve, percentage in grading.items():
             if percentage is not None and percentage >= threshold:
                 smallest_sieve = sieve
+
+        self.data_model.update_design_data('coarse_aggregate.NMS', smallest_sieve) # Update the data model
         return smallest_sieve
 
     @staticmethod
@@ -330,7 +331,7 @@ class Validation:
         fineness_modulus = self.calculate_fineness_modulus(sieves, cumulative_retained_grading)
 
         # Update the data model
-        self.data_model.update_design_data('validation.fineness_modulus', fineness_modulus)
+        self.data_model.update_design_data('fine_aggregate.fineness_modulus', fineness_modulus)
 
         # Retrieve the limits according to the method
         fm_max = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MAXIMUM")
@@ -343,7 +344,7 @@ class Validation:
 
         # Otherwise, check if the calculated fineness modulus is within the required ranges
         if fm_min <= fineness_modulus <= fm_max:
-            self.logger.debug("Fineness modulus is within the required range.")
+            self.logger.debug("Fineness modulus is within the required range")
             return round(fineness_modulus, 2), True
         else:
             error_message = (

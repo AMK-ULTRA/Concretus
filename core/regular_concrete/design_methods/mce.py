@@ -39,9 +39,6 @@ class Cement(CementitiousMaterial):
             raise ZeroDivisionError(error_msg)
         return cement_content / (relative_density * water_density)
 
-    def cement_volume(self):
-        pass
-
     def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, theta=None, k=117.2, n=0.16, m=1.3):
         """
         Calculate the cement content in kilogram-force per cubic meter of mixture (kgf/m³) using the triangular_relationship.
@@ -486,7 +483,7 @@ class StandardDeviation:
         :param bool std_dev_unknown: True if the standard deviation is unknown.
         :param str quality_control: A string indicating the level of quality control
                                     ("Excelente", "Aceptable", "Sin control").
-        :return: The target strength value in kilogram-force per square centimetre (kgf/cm^2).
+        :return: The target strength (in kgf/cm^2).
         :rtype: float
         """
 
@@ -541,7 +538,7 @@ class StandardDeviation:
                 f_cr = design_strength + margin
             else:
                 # If no margin was assigned, raises a value error exception
-                error_msg = f"No margin found for the design strength={design_strength}"
+                error_msg = f"No margin found for the design strength: {design_strength}"
                 self.mce_data_model.add_calculation_error('Target strength', error_msg)
                 raise ValueError(error_msg)
 
