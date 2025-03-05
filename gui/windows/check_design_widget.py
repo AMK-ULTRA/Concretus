@@ -259,15 +259,17 @@ class CheckDesign(QWidget):
     def show_nms(self):
         """Display the nominal maximum size of the coarse aggregate."""
 
-        # Retrieve the grading list from the data model
+        # Retrieve values from the data model
+        method = self.data_model.method
+        coarse_category = self.data_model.get_design_value('validation.coarse_category')
         grading_list = self.data_model.get_design_value('coarse_aggregate.gradation.passing')
 
         # Calculate the nominal maximum size
-        nms = self.validation.calculate_nominal_maximum_size(grading_list)
+        nms = self.validation.calculate_nominal_maximum_size(grading_list, method, coarse_category)
 
         # Update the fields in the GUI
         if nms is None:
-            self.ui.lineEdit_NMS.setText('No hay granulometría')
+            self.ui.lineEdit_NMS.setText('Granulometría incompleta')
         else:
             self.ui.lineEdit_NMS.setText(str(nms))
 
@@ -369,15 +371,13 @@ class CheckDesign(QWidget):
         method = self.data_model.method
         exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
         nms = self.data_model.get_design_value('coarse_aggregate.NMS')
-        coarse_category = self.data_model.get_design_value('validation.coarse_category')
         entrained_air = self.data_model.get_design_value('field_requirements.air_content.user_defined')
 
         # Get the required minimum entrained air content and associated parameters.
-        valid, minimum_entrained_air, exp_class, nms_val = self.validation.required_entrained_air(
+        valid, minimum_entrained_air, exp_class = self.validation.required_entrained_air(
             method,
             list(exposure_classes.values()),
             nms,
-            coarse_category,
             entrained_air
         )
 
@@ -389,10 +389,10 @@ class CheckDesign(QWidget):
 
         # Update the UI fields
         self.ui.lineEdit_exposure_class_2.setText(exp_class_text)
-        if nms_val is None:
-            self.ui.lineEdit_air_NMS.setText("No hay granulometría")
+        if nms is None:
+            self.ui.lineEdit_air_NMS.setText("Granulometría incompleta")
         else:
-            self.ui.lineEdit_air_NMS.setText(nms_val)
+            self.ui.lineEdit_air_NMS.setText(nms)
 
         self.ui.lineEdit_air_actual.setText(str(entrained_air))
         self.ui.lineEdit_air_min.setText(str(minimum_entrained_air))

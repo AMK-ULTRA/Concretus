@@ -103,25 +103,41 @@ class Validation:
                         new_passing_data[key] = None
                 self.data_model.update_design_data(f"{aggregate_type}.gradation.passing", new_passing_data)
 
-    def calculate_nominal_maximum_size(self, grading, threshold=95):
+    def calculate_nominal_maximum_size(self, grading, method=None, coarse_category=None, threshold=95):
         """
-        Calculate the nominal maximum size of the aggregate from a given particle size distribution (grading),
-        which must be a grading with passing percentages.
+        Calculate the Nominal Maximum Size (NMS) of the aggregate based on its particle size distribution.
 
-        :param dict[str, float | None] grading: It must be arranged in descending order (from the largest sieve to the smallest).
-        :param int threshold: The minimum passing percentage that establishes the maximum nominal size.
-        :return: The smallest sieve size through which the indicated percentage (95% by default) of the aggregate must pass.
+        This method determines the NMS through two potential approaches:
+        1. Category-specific lookup: If a method and coarse category are provided, it checks for a predefined NMS value.
+        2. Grading analysis: Finds the smallest sieve size where the specified percentage of particles pass through.
+
+        :param dict[str, float | None] grading: Particle size distribution with sieve sizes as keys and passing
+                                       percentages as values. Must be arranged in descending order (from largest to smallest sieve).
+        :param str method: Design method used for NMS determination (e.g. "MCE", "ACI", "DoE").
+        :param str coarse_category: Coarse aggregate category used for category-specific NMS lookup.
+        :param int threshold: The minimum passing percentage that establishes the maximum nominal size (95% by default).
+        :return: The nominal maximum size of the aggregate, either from category lookup or
+                 the smallest sieve where the threshold percentage is met.
         :rtype: str | None
         """
 
-        smallest_sieve = None
+        # Check for a category-specific NMS (highest priority)
+        if method and coarse_category:
+            nms_category = NMS_BY_CATEGORY.get(method, {}).get(coarse_category)
+            if nms_category is not None:
+                self.data_model.update_design_data('coarse_aggregate.NMS', nms_category)
+                return nms_category
 
-        # Iterate through the grading and return the smallest sieve (coincidence)
+        # Find the smallest sieve meeting the threshold requirement
+        smallest_sieve = None
         for sieve, percentage in grading.items():
+            # Skip None values to handle potentially incomplete grading data
             if percentage is not None and percentage >= threshold:
                 smallest_sieve = sieve
 
-        self.data_model.update_design_data('coarse_aggregate.NMS', smallest_sieve) # Update the data model
+        # Update data model with the determined NMS
+        self.data_model.update_design_data('coarse_aggregate.NMS', smallest_sieve)
+
         return smallest_sieve
 
     @staticmethod
@@ -222,6 +238,70 @@ class Validation:
         return fine_category, coarse_category
 
     @staticmethod
+    def calculate_fineness_modulus(sieves, cumulative_retained_grading):
+        """
+        Calculates the fineness modulus of a fine aggregate based on sieve analysis data.
+
+        :param list[str] sieves: A list of specified series of sieves according to regulations.
+        :param dict[str, float | None] cumulative_retained_grading: A dictionary mapping each sieve
+                                                                    with its cumulative retained percentage
+        :return: The calculated fineness modulus.
+        :rtype: float
+        """
+
+        # Create a list with the percentage of valid sieves, making sure that if the value is None, 0 is taken
+        cumulative_retained = [cumulative_retained_grading.get(sieve, 0) or 0 for sieve in sieves]
+
+        # The fineness modulus is calculated by adding the cumulative percentages (by mass) retained on each
+        # of a specified series of sieves and dividing the sum by 100
+        return sum(cumulative_retained) / 100
+
+    def required_fineness_modulus(self, method, cumulative_retained_grading):
+        """
+        Checks if the calculated fineness modulus is within the required range.
+
+        :param str method: The method used for the calculation.
+        :param dict[str, float | None] cumulative_retained_grading: A dictionary containing the sieve analysis data
+                                                                    (cumulative retained percentage).
+        :return: The fineness modulus (rounded to 2 digits) and:
+                 - True if the fineness modulus is within the range,
+                 - False if the fineness modulus is not within the range,
+                 - None if there were no limits for the fineness modulus for the given method.
+        :rtype: tuple[float, bool | None]
+        """
+
+        # Predefined dictionary with all valid sieves for each method
+        sieves = FINENESS_MODULUS_SIEVES.get(method, [])
+        # Calculate the fineness modulus
+        fineness_modulus = self.calculate_fineness_modulus(sieves, cumulative_retained_grading)
+
+        # Update the data model
+        self.data_model.update_design_data('fine_aggregate.fineness_modulus', fineness_modulus)
+
+        # Retrieve the limits according to the method
+        fm_max = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MAXIMUM")
+        fm_min = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MINIMUM")
+
+        # If there were no limits for the fineness modulus in the given method
+        if fm_max is None and fm_min is None:
+            self.logger.debug(f"No limits exits for the fineness modulus for the method {method}")
+            return round(fineness_modulus, 2), None
+
+        # Otherwise, check if the calculated fineness modulus is within the required ranges
+        if fm_min <= fineness_modulus <= fm_max:
+            self.logger.debug("Fineness modulus is within the required range")
+            return round(fineness_modulus, 2), True
+        else:
+            error_message = (
+                f"Fineness modulus out of range. "
+                f"Minimum: {fm_min}, Maximum: {fm_max}, "
+                f"Calculated: {fineness_modulus}"
+            )
+            # Add validation error
+            self.data_model.add_validation_error("Fineness modulus", error_message)
+            return round(fineness_modulus, 2), False
+
+    @staticmethod
     def get_max_exposure_value(method, units, exposure_classes):
         """
         Get the most demanding exposure class with its specified minimum compressive strength at 28 days.
@@ -291,70 +371,6 @@ class Validation:
         else:
             self.logger.debug('The specified compressive strength is greater than the minimum required by regulations')
             return True, required_strength, exposure_class
-
-    @staticmethod
-    def calculate_fineness_modulus(sieves, cumulative_retained_grading):
-        """
-        Calculates the fineness modulus of a fine aggregate based on sieve analysis data.
-
-        :param list[str] sieves: A list of specified series of sieves according to regulations.
-        :param dict[str, float | None] cumulative_retained_grading: A dictionary mapping each sieve
-                                                                    with its cumulative retained percentage
-        :return: The calculated fineness modulus.
-        :rtype: float
-        """
-
-        # Create a list with the percentage of valid sieves, making sure that if the value is None, 0 is taken
-        cumulative_retained = [cumulative_retained_grading.get(sieve, 0) or 0 for sieve in sieves]
-
-        # The fineness modulus is calculated by adding the cumulative percentages (by mass) retained on each
-        # of a specified series of sieves and dividing the sum by 100
-        return sum(cumulative_retained) / 100
-
-    def required_fineness_modulus(self, method, cumulative_retained_grading):
-        """
-        Checks if the calculated fineness modulus is within the required range.
-
-        :param str method: The method used for the calculation.
-        :param dict[str, float | None] cumulative_retained_grading: A dictionary containing the sieve analysis data
-                                                                    (cumulative retained percentage).
-        :return: The fineness modulus (rounded to 2 digits) and:
-                 - True if the fineness modulus is within the range,
-                 - False if the fineness modulus is not within the range,
-                 - None if there were no limits for the fineness modulus for the given method.
-        :rtype: tuple[float, bool | None]
-        """
-
-        # Predefined dictionary with all valid sieves for each method
-        sieves = FINENESS_MODULUS_SIEVES.get(method, [])
-        # Calculate the fineness modulus
-        fineness_modulus = self.calculate_fineness_modulus(sieves, cumulative_retained_grading)
-
-        # Update the data model
-        self.data_model.update_design_data('fine_aggregate.fineness_modulus', fineness_modulus)
-
-        # Retrieve the limits according to the method
-        fm_max = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MAXIMUM")
-        fm_min = FINENESS_MODULUS_LIMITS.get(method, {}).get("FM_MINIMUM")
-
-        # If there were no limits for the fineness modulus in the given method
-        if fm_max is None and fm_min is None:
-            self.logger.debug(f"No limits exits for the fineness modulus for the method {method}")
-            return round(fineness_modulus, 2), None
-
-        # Otherwise, check if the calculated fineness modulus is within the required ranges
-        if fm_min <= fineness_modulus <= fm_max:
-            self.logger.debug("Fineness modulus is within the required range")
-            return round(fineness_modulus, 2), True
-        else:
-            error_message = (
-                f"Fineness modulus out of range. "
-                f"Minimum: {fm_min}, Maximum: {fm_max}, "
-                f"Calculated: {fineness_modulus}"
-            )
-            # Add validation error
-            self.data_model.add_validation_error("Fineness modulus", error_message)
-            return round(fineness_modulus, 2), False
 
     @staticmethod
     def get_max_scm_content(method, exposure_classes, scm_type):
@@ -436,29 +452,20 @@ class Validation:
             return True, threshold_value
 
     @staticmethod
-    def get_entrained_air(method, exposure_classes, nms, coarse_category):
+    def get_entrained_air(method, exposure_classes, nms):
         """
-        Determine the required minimum entrained air content based on the design method,
-        a list of exposure classes, and a given nominal maximum size (NMS). If a category-specific NMS is available
-        (via NMS_BY_CATEGORY), it is used instead of the provided NMS.
+        Determine the required minimum entrained air content based on the design method, a list of exposure classes,
+        and a given nominal maximum size (NMS).
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
         :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
                                            or ["XF2", "XF3", "XF4"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
-        :param str coarse_category: The coarse aggregate category; if available, used to look up a
-                                    different NMS value from NMS_BY_CATEGORY.
-        :return: A tuple (minimum_entrained_air, exposure_class(es), NMS) where:
+        :return: A tuple (minimum_entrained_air, exposure_class(es)) where:
                  - minimum_entrained_air is the required entrained air content or None if was none found.
                  - exposure_class(es) is the associated exposure class (or all exposure classes if none have requirements).
-                 - NMS is the nominal maximum size used (just for the ACI method).
-        :rtype: tuple[float | None, str | list[str], str]
+        :rtype: tuple[float | None, str | list[str]]
         """
-
-        # Check for a category-specific NMS (if available)
-        nms_category = NMS_BY_CATEGORY.get(method, {}).get(coarse_category)
-        if nms_category is not None:
-            nms = nms_category
 
         max_value = None
         max_exposure = None
@@ -485,39 +492,37 @@ class Validation:
                     max_exposure = exposure_class
 
         if max_value is not None and max_exposure is not None:
-            return max_value, max_exposure, nms
+            return max_value, max_exposure
         else:
             # If no valid entry was found, return None and the full list of exposure classes for reference.
-            return None, exposure_classes, nms
+            return None, exposure_classes
 
-    def required_entrained_air(self, method, exposure_classes, nms, coarse_category, entrained_air):
+    def required_entrained_air(self, method, exposure_classes, nms, entrained_air):
         """
         Checks whether the provided entrained air content meets the required minimum value based on
-        the design method, a list of exposure classes, and a given nominal maximum size (or its category-specific alternative).
+        the design method, a list of exposure classes, and a given nominal maximum size.
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
         :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
                                            or ["XF2", "XF3", "XF4"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
-        :param str coarse_category: The coarse aggregate category, which may override the provided nms via NMS_BY_CATEGORY.
         :param float entrained_air: The entrained air content (in %) to evaluate.
-        :return: A tuple (valid, minimum_entrained_air, exposure_class, nms) where:
+        :return: A tuple (valid, minimum_entrained_air, exposure_class) where:
                  - valid is True if entrained_air meets or exceeds the required minimum,
                    False if it is below the required minimum,
                    or None if no minimum requirement was found.
                  - minimum_entrained_air is the required entrained air content.
                  - exposure_class is the exposure class (or list of exposure classes) associated with the requirement.
-                 - nms is the nominal maximum size used.
-        :rtype: tuple[bool | None, float | int, str | list[str], str]
+        :rtype: tuple[bool | None, float | int, str | list[str]]
         """
 
-        minimum_entrained_air, exposure_used, nms = self.get_entrained_air(method, exposure_classes, nms, coarse_category)
+        minimum_entrained_air, exposure_used = self.get_entrained_air(method, exposure_classes, nms)
 
         if minimum_entrained_air is None:
             self.logger.debug(
                 f"There is no minimum requirement for entrained air for these exposure classes: {exposure_classes}"
             )
-            return None, 0, exposure_classes, nms
+            return None, 0, exposure_classes
 
         if entrained_air < minimum_entrained_air:
             self.data_model.add_validation_error(
@@ -525,7 +530,7 @@ class Validation:
                 f"Does not meet the minimum for the given exposure class ({exposure_used}). "
                 f"Required: {minimum_entrained_air}%."
             )
-            return False, minimum_entrained_air, exposure_used, nms
+            return False, minimum_entrained_air, exposure_used
         else:
             self.logger.debug("The given entrained air meets the minimum requirement of the exposure class.")
-            return True, minimum_entrained_air, exposure_used, nms
+            return True, minimum_entrained_air, exposure_used
