@@ -21,7 +21,7 @@ class MCEDataModel:
                     'correction_factor_1': None,
                     'correction_factor_2': None,
                     'corrected_cement_content': None,
-                    'max_cement_content': None,
+                    'min_cement_content': None,
                     'cement_content': None,
                     'cement_abs_volume': None,
                     'cement_volume': None
@@ -29,8 +29,7 @@ class MCEDataModel:
                 'scm': {
                     'scm_content': None,
                     'scm_abs_volume': None,
-                    'scm_volume': None,
-                    'air_entraining_admixture_content': None
+                    'scm_volume': None
                 }
             },
             'water': {
@@ -41,7 +40,8 @@ class MCEDataModel:
             },
             'air': {
                 'entrapped_air': None,
-                'entrained_air': None
+                'entrained_air': None,
+                'air_entraining_admixture_content': None
             },
             'fine_aggregate': {
                 'fine_content': None,
@@ -92,7 +92,7 @@ class MCEDataModel:
         """
         Update a specific value using dot notation to access nested keys.
 
-        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.max_cement_content'.
+        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.min_cement_content'.
         :param any value: The new value to update.
         """
 

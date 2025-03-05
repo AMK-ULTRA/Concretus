@@ -5,7 +5,7 @@ from math import log10
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
 from Concretus.logger import Logger
-from Concretus.settings import COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MAX_CEMENT, K_FACTOR, QUARTILES, \
+from Concretus.settings import COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT, K_FACTOR, QUARTILES, \
     CONSTANTS, ALFA_FACTOR_1, ALFA_FACTOR_2, MAX_ALFA, CONVERSION_FACTORS
 
 
@@ -48,11 +48,10 @@ class Cement(CementitiousMaterial):
         :param int slump: The required slump of the concrete in fresh state (in mm).
         :param float alpha: The ratio of water to cement used.
         :param str nms: The nominal maximum size of the coarse aggregate.
-        :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
-                               (e.g., ("Triturado", "Natural")).
-        :param list[str, str, str, str] exposure_classes: A list containing all possible exposure classes,
-                                         in no particular order,
-                                         (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
+        :param tuple[str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
+                                     (e.g., ("Triturado", "Natural")).
+        :param list[str] exposure_classes: A list containing all possible exposure classes, in no particular order,
+                                           (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
         :param float k: Constant (default 117.2).
         :param float n: Constant (default 0.16).
         :param float m: Constant (default 1.3).
@@ -91,14 +90,14 @@ class Cement(CementitiousMaterial):
             # Calculate corrected cement content
             corrected_cement_content = correction_factor_1 * correction_factor_2 * design_cement_content
 
-            # Determine maximum cement content based on exposure classes
-            max_cement_content = [MAX_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
-            max_cement_content = max(max_cement_content)
+            # Determine minimum cement content based on exposure classes
+            min_cement_content = [MIN_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
+            min_cement_content = max(min_cement_content)
 
             # The final cement content is the maximum between the corrected cement content and the maximum cement content
-            cement_content = max(corrected_cement_content, max_cement_content)
+            cement_content = max(corrected_cement_content, min_cement_content)
 
-            # Update the MCE data model with all intermediate values
+            # Store intermediate calculation results in the MCE data model for reference
             self.mce_data_model.update_data('cementitious_material.cement.design_cement_content',
                                             design_cement_content)
             self.mce_data_model.update_data('cementitious_material.cement.correction_factor_1',
@@ -107,24 +106,24 @@ class Cement(CementitiousMaterial):
                                             correction_factor_2)
             self.mce_data_model.update_data('cementitious_material.cement.corrected_cement_content',
                                             corrected_cement_content)
-            self.mce_data_model.update_data('cementitious_material.cement.max_cement_content',
-                                            max_cement_content)
+            self.mce_data_model.update_data('cementitious_material.cement.min_cement_content',
+                                            min_cement_content)
         else:
             # When theta is provided, use a different relationship
             design_cement_content = theta * alpha ** (-m)
 
-            # Determine maximum cement content based on exposure classes
-            max_cement_content = [MAX_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
-            max_cement_content = max(max_cement_content)
+            # Determine minimum cement content based on exposure classes
+            min_cement_content = [MIN_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
+            min_cement_content = max(min_cement_content)
 
             # The final cement content is the maximum between the design cement content and the maximum cement content
-            cement_content = max(design_cement_content, max_cement_content)
+            cement_content = max(design_cement_content, min_cement_content)
 
             # Update only the available values in the MCE data model.
             self.mce_data_model.update_data('cementitious_material.cement.design_cement_content',
                                             design_cement_content)
-            self.mce_data_model.update_data('cementitious_material.cement.max_cement_content',
-                                            max_cement_content)
+            self.mce_data_model.update_data('cementitious_material.cement.min_cement_content',
+                                            min_cement_content)
 
         return cement_content
 
@@ -206,7 +205,7 @@ class Air:
         """
         Calculate the entrapped air in cubic meter (m³).
 
-        :param str nms: The nominal maximum size (e.g., '2-1/2" (63 mm)').
+        :param str nms: The nominal maximum size of the coarse aggregate (e.g., '2-1/2" (63 mm)').
         :param float cement_content: The cement content in kgf/m³.
         :return: The entrapped air volumen in cubic meter (m³).
         :rtype: float
@@ -682,11 +681,10 @@ class AbramsLaw:
         :param str target_strength_time: The expected time to reach the target strength,
                                          also known as the age of the test (e.g., "7 días", "27 días", "90 días").
         :param str nms: The nominal maximum size of the coarse aggregate.
-        :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
-                               (e.g., ("Triturado", "Natural")).
-        :param list[str, str, str, str] exposure_classes: A list containing all possible exposure classes,
-                                         in no particular order,
-                                         (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
+        :param tuple[str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
+                                     (e.g., ("Triturado", "Natural")).
+        :param list[str] exposure_classes: A list containing all possible exposure classes, in no particular order,
+                                           (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
         :param float m: A constant.
         :param float n: A constant.
         :return: The water-cement ratio (also known as alpha).
@@ -730,7 +728,7 @@ class AbramsLaw:
         # The final alpha is the minimum between the corrected alpha and the minimum allowed alpha
         alpha = min(corrected_alpha, min_alpha)
 
-        # Update the MCE data model with all intermediate values
+        # Store intermediate calculation results in the MCE data model for reference
         self.mce_data_model.update_data('water_cement_ratio.design_alpha', design_alpha)
         self.mce_data_model.update_data('water_cement_ratio.correction_factor_1', correction_factor_1)
         self.mce_data_model.update_data('water_cement_ratio.correction_factor_2', correction_factor_2)
