@@ -373,7 +373,7 @@ class CheckDesign(QWidget):
         nms = self.data_model.get_design_value('coarse_aggregate.NMS')
         entrained_air = self.data_model.get_design_value('field_requirements.air_content.user_defined')
 
-        # Get the required minimum entrained air content and associated parameters.
+        # Get the required minimum entrained air content and associated parameters
         valid, minimum_entrained_air, exp_class = self.validation.required_entrained_air(
             method,
             list(exposure_classes.values()),

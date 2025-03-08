@@ -35,7 +35,6 @@ class MCEDataModel:
             'water': {
                 'water_content': None,
                 'water_content_correction': None,
-                'water_abs_volume': None,
                 'water_volume': None
             },
             'air': {
@@ -44,13 +43,13 @@ class MCEDataModel:
                 'air_entraining_admixture_content': None
             },
             'fine_aggregate': {
-                'fine_content': None,
+                'fine_content_ssd': None,
                 'fine_content_wet': None,
                 'fine_abs_volume': None,
                 'fine_volume': None
             },
             'coarse_aggregate': {
-                'coarse_content': None,
+                'coarse_content_ssd': None,
                 'coarse_content_wet': None,
                 'coarse_abs_volume': None,
                 'coarse_volume': None

@@ -213,7 +213,7 @@ class TrialMix(QWidget):
 
         # Column 1 values: Absolute volumes
         col1 = [
-            current_method_data_model.get_data('water.water_abs_volume'),
+            current_method_data_model.get_data('water.water_volume'),
             current_method_data_model.get_data('cementitious_material.cement.cement_abs_volume'),
             current_method_data_model.get_data('cementitious_material.scm.scm_abs_volume'),
             current_method_data_model.get_data('fine_aggregate.fine_abs_volume'),
@@ -233,7 +233,7 @@ class TrialMix(QWidget):
             current_method_data_model.get_data('coarse_aggregate.coarse_content_wet'),
             "-",  # For entrapped air
             "-",  # For entrained air
-            current_method_data_model.get_data('cementitious_material.scm.air_entraining_admixture_content'),
+            current_method_data_model.get_data('air.air_entraining_admixture_content'),
             current_method_data_model.get_data('summation.total_content')
         ]
 

@@ -132,7 +132,7 @@ class Water:
     density: float
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
-    def water_abs_volume(self, water_content, density):
+    def water_volume(self, water_content, density):
         """
         Calculates the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
 
@@ -152,17 +152,6 @@ class Water:
             raise ValueError(error_msg)
 
         return water_content / density
-
-    @staticmethod
-    def water_volume(water_abs_volume):
-        """
-        Convert the absolute volume of water from cubic meters (m³) to liters (L).
-
-        :param water_abs_volume: The absolute volume of water in cubic meters (m³).
-        :return: The volume of water in liters.
-        """
-
-        return 1000 * water_abs_volume
 
     @staticmethod
     def water_content(cement_content, alpha):
@@ -322,9 +311,9 @@ class Aggregate:
             self.mce_data_model.add_calculation_error(f"{aggregate_type} apparent volumen", error_msg)
             raise ZeroDivisionError(error_msg)
 
-        LITERS_PER_CUBIC_METER = 1000
+        liters_per_cubic_meter = 1000
         # The loose bulk density is in kg/m³, so it is converted to kg/(L) by dividing by 1000
-        return content / (loose_bulk_density / LITERS_PER_CUBIC_METER)
+        return content / (loose_bulk_density / liters_per_cubic_meter)
 
     def absolute_volume(self, content, water_density, relative_density, aggregate_type="aggregate"):
         """
@@ -389,8 +378,8 @@ class FineAggregate(Aggregate):
         :param float cement_abs_volume: Absolute volume of cement (m³).
         :param float water_volume: Volume of water (m³).
         :param float water_density: Water density.
-        :param float fine_relative_density: Fine aggregate relative density.
-        :param float coarse_relative_density: Coarse aggregate relative density.
+        :param float fine_relative_density: Fine aggregate relative density (SSD).
+        :param float coarse_relative_density: Coarse aggregate relative density (SSD).
         :param float beta_value: Beta relationship factor.
         :return: Fine aggregate content (kgf/m³).
         :rtype: float
@@ -930,8 +919,7 @@ class MCE:
             water_content = self.water.water_content(cement_content, alpha)
 
             # H. Water (Absolute) Volume
-            water_abs_volume = self.water.water_abs_volume(water_content, water_density)
-            water_volume = self.water.water_volume(water_abs_volume)
+            water_volume = self.water.water_volume(water_content, water_density)
 
             # I. Aggregate Content
             # Calculate beta: use the economic approach
@@ -942,22 +930,22 @@ class MCE:
             fine_relative_density = self.fine_agg.relative_density
             coarse_relative_density = self.coarse_agg.relative_density
 
-            fine_content = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_abs_volume,
-                                                      water_density, fine_relative_density, coarse_relative_density,
-                                                      beta_value)
-            coarse_content = self.coarse_agg.coarse_content(fine_content, beta_value)
+            fine_content_ssd = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_volume,
+                                                          water_density, fine_relative_density, coarse_relative_density,
+                                                          beta_value)
+            coarse_content_ssd = self.coarse_agg.coarse_content(fine_content_ssd, beta_value)
 
             # J. Aggregate Absolute Volume
-            fine_abs_volume = self.fine_agg.absolute_volume(fine_content, water_density, fine_relative_density, "fine")
-            coarse_abs_volume = self.coarse_agg.absolute_volume(coarse_content, water_density, coarse_relative_density,
+            fine_abs_volume = self.fine_agg.absolute_volume(fine_content_ssd, water_density, fine_relative_density, "fine")
+            coarse_abs_volume = self.coarse_agg.absolute_volume(coarse_content_ssd, water_density, coarse_relative_density,
                                                                 "coarse")
 
             # K. Aggregate Volume
             fine_loose_bulk_density = self.fine_agg.loose_bulk_density
             coarse_loose_bulk_density = self.coarse_agg.loose_bulk_density
 
-            fine_volume = self.fine_agg.apparent_volume(fine_content, fine_loose_bulk_density, "fine")
-            coarse_volume = self.coarse_agg.apparent_volume(coarse_content, coarse_loose_bulk_density, "coarse")
+            fine_volume = self.fine_agg.apparent_volume(fine_content_ssd, fine_loose_bulk_density, "fine")
+            coarse_volume = self.coarse_agg.apparent_volume(coarse_content_ssd, coarse_loose_bulk_density, "coarse")
 
             # Moisture adjustments
             fine_moisture_content = self.fine_agg.moisture_content
@@ -965,23 +953,22 @@ class MCE:
             fine_moisture_absorption = self.fine_agg.moisture_absorption
             coarse_moisture_absorption = self.coarse_agg.moisture_absorption
 
-            fine_content_wet = self.fine_agg.content_moisture_correction(fine_content, fine_moisture_content,
+            fine_content_wet = self.fine_agg.content_moisture_correction(fine_content_ssd, fine_moisture_content,
                                                                          fine_moisture_absorption)
-            coarse_content_wet = self.coarse_agg.content_moisture_correction(coarse_content, coarse_moisture_content,
+            coarse_content_wet = self.coarse_agg.content_moisture_correction(coarse_content_ssd, coarse_moisture_content,
                                                                              coarse_moisture_absorption)
-            water_content_correction = self.water.water_content_correction(water_content, fine_content,
-                                                                           fine_content_wet, coarse_content,
+            water_content_correction = self.water.water_content_correction(water_content, fine_content_ssd,
+                                                                           fine_content_wet, coarse_content_ssd,
                                                                            coarse_content_wet)
 
             # Since the water and aggregate contents (fine and coarse) were adjusted,
             # their apparent volumes change accordingly.
-            water_abs_volume = self.water.water_abs_volume(water_content_correction, water_density)
-            water_volume = self.water.water_volume(water_abs_volume)
+            water_volume = self.water.water_volume(water_content_correction, water_density)
             fine_volume = self.fine_agg.apparent_volume(fine_content_wet, fine_loose_bulk_density, "fine")
             coarse_volume = self.coarse_agg.apparent_volume(coarse_content_wet, coarse_loose_bulk_density, "coarse")
 
             # Convert absolute from m3 to L
-            water_abs_volume = 1000 * water_abs_volume
+            water_volume = 1000 * water_volume
             cement_abs_volume = 1000 * cement_abs_volume
             fine_abs_volume = 1000 * fine_abs_volume
             coarse_abs_volume = 1000 * coarse_abs_volume
@@ -989,7 +976,7 @@ class MCE:
 
             # Add up all absolute volumes and contents
             total_abs_volume = sum(
-                [water_abs_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_volume])
+                [water_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_volume])
             total_content = sum([water_content_correction, cement_content, fine_content_wet, coarse_content_wet])
 
             # Store all the results in a dictionary
@@ -1002,16 +989,15 @@ class MCE:
                 "entrapped_air": entrapped_air_volume,
                 "water_content": water_content,
                 "water_content_correction": water_content_correction,
-                "water_abs_volume": water_abs_volume,
                 "water_volume": water_volume,
                 "cement_content": cement_content,
                 "cement_abs_volume": cement_abs_volume,
                 "cement_volume": "-",
-                "fine_content": fine_content,
+                "fine_content_ssd": fine_content_ssd,
                 "fine_content_wet": fine_content_wet,
                 "fine_abs_volume": fine_abs_volume,
                 "fine_volume": fine_volume,
-                "coarse_content": coarse_content,
+                "coarse_content_ssd": coarse_content_ssd,
                 "coarse_content_wet": coarse_content_wet,
                 "coarse_abs_volume": coarse_abs_volume,
                 "coarse_volume": coarse_volume,
@@ -1045,7 +1031,7 @@ class MCE:
                 data_key = f"beta.{key}"
             elif key == "entrapped_air":
                 data_key = "air.entrapped_air"
-            elif key in ("water_content", "water_content_correction", "water_abs_volume", "water_volume"):
+            elif key in ("water_content", "water_content_correction", "water_volume"):
                 data_key = f"water.{key}"
             elif key in ("cement_content", "cement_abs_volume", "cement_volume"):
                 data_key = f"cementitious_material.cement.{key}"

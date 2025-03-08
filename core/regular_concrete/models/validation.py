@@ -1,7 +1,7 @@
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.logger import Logger
 from Concretus.settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES,
-                                MAXIMUM_SCM, NMS_BY_CATEGORY, MINIMUM_ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
+                                MAXIMUM_SCM, NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
 
 
 class Validation:
@@ -458,8 +458,8 @@ class Validation:
         and a given nominal maximum size (NMS).
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
-        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
-                                           or ["XF2", "XF3", "XF4"] for DoE).
+        :param list[str] exposure_classes: List of exposure classes (e.g. ["S1", "F2", "W0", "S0"] for ACI,
+                                           or ["XC1", "XD2", "XF4", "XA2"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
         :return: A tuple (minimum_entrained_air, exposure_class(es)) where:
                  - minimum_entrained_air is the required entrained air content or None if was none found.
@@ -473,7 +473,7 @@ class Validation:
         # Iterate through the list of exposure classes in the provided list
         for exposure_class in exposure_classes:
             # Get the entry from MINIMUM_ENTRAINED_AIR for the given method and exposure class
-            entry = MINIMUM_ENTRAINED_AIR.get(method, {}).get(exposure_class)
+            entry = ENTRAINED_AIR.get(method, {}).get(exposure_class)
             if entry is None:
                 continue
 
@@ -503,8 +503,8 @@ class Validation:
         the design method, a list of exposure classes, and a given nominal maximum size.
 
         :param str method: Design method (e.g. "MCE", "ACI", "DoE").
-        :param list[str] exposure_classes: List of exposure classes (e.g. ["F1", "F2", "F3"] for ACI,
-                                           or ["XF2", "XF3", "XF4"] for DoE).
+        :param list[str] exposure_classes: List of exposure classes (e.g. ["S1", "F2", "W0", "S0"] for ACI,
+                                           or ["XC1", "XD2", "XF4", "XA2"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
         :param float entrained_air: The entrained air content (in %) to evaluate.
         :return: A tuple (valid, minimum_entrained_air, exposure_class) where:
@@ -513,7 +513,7 @@ class Validation:
                    or None if no minimum requirement was found.
                  - minimum_entrained_air is the required entrained air content.
                  - exposure_class is the exposure class (or list of exposure classes) associated with the requirement.
-        :rtype: tuple[bool | None, float | int, str | list[str]]
+        :rtype: tuple[bool | None, float | str, str | list[str]]
         """
 
         minimum_entrained_air, exposure_used = self.get_entrained_air(method, exposure_classes, nms)
@@ -522,7 +522,7 @@ class Validation:
             self.logger.debug(
                 f"There is no minimum requirement for entrained air for these exposure classes: {exposure_classes}"
             )
-            return None, 0, exposure_classes
+            return None, "N/A", exposure_classes
 
         if entrained_air < minimum_entrained_air:
             self.data_model.add_validation_error(
