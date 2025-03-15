@@ -7,6 +7,7 @@ from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
 from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
 from Concretus.core.regular_concrete.models.doe_data_model import DoEDataModel
 from Concretus.core.regular_concrete.design_methods.mce import MCE
+from Concretus.core.regular_concrete.design_methods.aci import ACI
 from Concretus.logger import Logger
 
 
@@ -22,7 +23,7 @@ class TrialMix(QWidget):
         self.data_model: RegularConcreteDataModel = data_model
         # Connect to the data model of each method
         self.mce_data_model = MCEDataModel()
-        self.aci_data_model = None
+        self.aci_data_model = ACIDataModel()
         self.doe_data_model = None
 
         # Create an empty reference to the calculation engines
@@ -105,7 +106,7 @@ class TrialMix(QWidget):
         # Retrieve needed values from the data model
         scm_is_enabled = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
         scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
-        entrained_air_is_enabled = self.data_model.get_design_value('field_requirements.air_content.air_content_checked')
+        entrained_air_is_enabled = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
 
         # Define row headers based on the method and enabled flags.
         if method == "MCE":
@@ -126,18 +127,23 @@ class TrialMix(QWidget):
                 "Agregado grueso",
                 "Aire atrapado",
                 "Aire incorporado",
-                "Incorporador de aire",
                 "Total"
             ]
             # If scm_is_enabled is False, delete the row corresponding to SCM
             if not scm_is_enabled:
                 if scm_type in row_headers:
                     row_headers.remove(scm_type)
-            # if entrained_air_is_enabled is False, delete "Aire incorporado" and "Incorporador de aire"
+            # if entrained_air_is_enabled is False, delete "Aire incorporado"
             if not entrained_air_is_enabled:
-                for label in ["Aire incorporado", "Incorporador de aire"]:
+                for label in ["Aire incorporado"]:
                     if label in row_headers:
                         row_headers.remove(label)
+            # Otherwise, delete "Aire atrapado"
+            else:
+                for label in ["Aire atrapado"]:
+                    if label in row_headers:
+                        row_headers.remove(label)
+
         else:
             row_headers = []
 
@@ -176,7 +182,10 @@ class TrialMix(QWidget):
         self.mce.run()
 
     def aci_calculation_engine(self):
-        pass
+        """Run the ACI calculation engine."""
+
+        self.aci = ACI(self.data_model, self.aci_data_model)
+        self.aci.run()
 
     def doe_calculation_engine(self):
         pass
@@ -213,14 +222,13 @@ class TrialMix(QWidget):
 
         # Column 1 values: Absolute volumes
         col1 = [
-            current_method_data_model.get_data('water.water_volume'),
+            current_method_data_model.get_data('water.water_abs_volume'),
             current_method_data_model.get_data('cementitious_material.cement.cement_abs_volume'),
             current_method_data_model.get_data('cementitious_material.scm.scm_abs_volume'),
             current_method_data_model.get_data('fine_aggregate.fine_abs_volume'),
             current_method_data_model.get_data('coarse_aggregate.coarse_abs_volume'),
-            current_method_data_model.get_data('air.entrapped_air'),
-            current_method_data_model.get_data('air.entrained_air'),
-            "-", # For air-entraining admixture
+            current_method_data_model.get_data('air.entrapped_air_content'),
+            current_method_data_model.get_data('air.entrained_air_content'),
             current_method_data_model.get_data('summation.total_abs_volume')
         ]
 
@@ -233,7 +241,6 @@ class TrialMix(QWidget):
             current_method_data_model.get_data('coarse_aggregate.coarse_content_wet'),
             "-",  # For entrapped air
             "-",  # For entrained air
-            current_method_data_model.get_data('air.air_entraining_admixture_content'),
             current_method_data_model.get_data('summation.total_content')
         ]
 
@@ -244,9 +251,8 @@ class TrialMix(QWidget):
             current_method_data_model.get_data('cementitious_material.scm.scm_volume'),
             current_method_data_model.get_data('fine_aggregate.fine_volume'),
             current_method_data_model.get_data('coarse_aggregate.coarse_volume'),
-            current_method_data_model.get_data('air.entrapped_air'),
-            current_method_data_model.get_data('air.entrained_air'),
-            "-", # For air-entraining admixture
+            current_method_data_model.get_data('air.entrapped_air_content'),
+            current_method_data_model.get_data('air.entrained_air_content'),
             "-" # For total volume
         ]
 
@@ -263,7 +269,10 @@ class TrialMix(QWidget):
                     text = ""
                 else:
                     if isinstance(value, (float, int)):
-                        text = f"{value:.2f}"
+                        if j == 0:
+                            text = f"{value:.2f}"
+                        else:
+                            text = f"{value:.0f}"
                     else:
                         text = str(value)
                 item = QTableWidgetItem(text)

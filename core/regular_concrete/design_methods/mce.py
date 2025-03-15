@@ -411,7 +411,7 @@ class FineAggregate(Aggregate):
 
 @dataclass
 class CoarseAggregate(Aggregate):
-    nominal_max_size: float
+    nominal_max_size: str
 
     def coarse_content(self, fine_content, beta_value):
         """
@@ -435,7 +435,7 @@ class CoarseAggregate(Aggregate):
 
 @dataclass
 class FreshConcrete:
-    slump: float
+    slump: int
 
 @dataclass
 class HardenedConcrete:
@@ -802,7 +802,8 @@ class MCE:
 
             # Instantiate the components with their corresponding data
             self.cement = Cement(
-                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density'))
+                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density')
+            )
             self.water = Water(density=self.data_model.get_design_value('water.water_density'))
             self.air = Air()
             self.fine_agg = FineAggregate(
@@ -825,7 +826,6 @@ class MCE:
                 grading=self.data_model.get_design_value("coarse_aggregate.gradation.passing"),
                 nominal_max_size=self.data_model.get_design_value("coarse_aggregate.NMS")
             )
-
             self.fresh_concrete = FreshConcrete(slump=self.data_model.get_design_value("field_requirements.slump"))
             self.hardened_concrete = HardenedConcrete(
                 design_strength=design_strength,
@@ -873,7 +873,7 @@ class MCE:
         """
 
         try:
-            # A. Target strength
+            # A. Target Strength
             design_strength = self.hardened_concrete.design_strength
             std_dev_known = self.std_deviation.std_dev_known
             std_dev_value = self.std_deviation.std_dev_value
@@ -893,6 +893,11 @@ class MCE:
 
             beta_min, beta_max = self.beta.get_beta(nominal_max_size, coarse_grading, fine_grading)
 
+            # B.1. Calculating beta using the economic approach
+            beta_mean = (beta_min + beta_max) / 2
+            beta_economic = (beta_mean + beta_min) / 2
+            beta_value = beta_economic / 100
+
             # C. Water-Cement ratio, aka alpha or a/c (using abrams' law)
             target_strength_time = self.hardened_concrete.spec_strength_time
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
@@ -901,56 +906,40 @@ class MCE:
             alpha = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nominal_max_size,
                                                        agg_types, exposure_classes)
 
-            # D. Cement Content (using triangular relationship)
+            # D. Cement Content and Absolute Volume
             slump = self.fresh_concrete.slump
-
-            cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes)
-
-            # E. Cement Absolute Volume
             cement_relative_density = self.cement.relative_density
             water_density = self.water.density
 
+            cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes)
             cement_abs_volume = self.cement.cement_abs_volume(cement_content, water_density, cement_relative_density)
 
-            # F. Entrapped Air Volume
-            entrapped_air_volume = self.air.entrapped_air_volume(nominal_max_size, cement_content)
+            # E. Air Content
+            entrapped_air_content = self.air.entrapped_air_volume(nominal_max_size, cement_content)
 
-            # G. Water Content
+            # F. Water Content and Absolute Volume
             water_content = self.water.water_content(cement_content, alpha)
+            water_abs_volume = self.water.water_volume(water_content, water_density)
 
-            # H. Water (Absolute) Volume
-            water_volume = self.water.water_volume(water_content, water_density)
-
-            # I. Aggregate Content
-            # Calculate beta: use the economic approach
-            beta_mean = (beta_min + beta_max) / 2
-            beta_economic = (beta_mean + beta_min) / 2
-            beta_value = beta_economic / 100
-
+            # G. Aggregate Content and Absolute Volume
             fine_relative_density = self.fine_agg.relative_density
+            fine_loose_bulk_density = self.fine_agg.loose_bulk_density
             coarse_relative_density = self.coarse_agg.relative_density
+            coarse_loose_bulk_density = self.coarse_agg.loose_bulk_density
 
-            fine_content_ssd = self.fine_agg.fine_content(entrapped_air_volume, cement_abs_volume, water_volume,
+            fine_content_ssd = self.fine_agg.fine_content(entrapped_air_content, cement_abs_volume, water_abs_volume,
                                                           water_density, fine_relative_density, coarse_relative_density,
                                                           beta_value)
-            coarse_content_ssd = self.coarse_agg.coarse_content(fine_content_ssd, beta_value)
-
-            # J. Aggregate Absolute Volume
             fine_abs_volume = self.fine_agg.absolute_volume(fine_content_ssd, water_density, fine_relative_density, "fine")
+
+            coarse_content_ssd = self.coarse_agg.coarse_content(fine_content_ssd, beta_value)
             coarse_abs_volume = self.coarse_agg.absolute_volume(coarse_content_ssd, water_density, coarse_relative_density,
                                                                 "coarse")
 
-            # K. Aggregate Volume
-            fine_loose_bulk_density = self.fine_agg.loose_bulk_density
-            coarse_loose_bulk_density = self.coarse_agg.loose_bulk_density
-
-            fine_volume = self.fine_agg.apparent_volume(fine_content_ssd, fine_loose_bulk_density, "fine")
-            coarse_volume = self.coarse_agg.apparent_volume(coarse_content_ssd, coarse_loose_bulk_density, "coarse")
-
             # Moisture adjustments
             fine_moisture_content = self.fine_agg.moisture_content
-            coarse_moisture_content = self.coarse_agg.moisture_content
             fine_moisture_absorption = self.fine_agg.moisture_absorption
+            coarse_moisture_content = self.coarse_agg.moisture_content
             coarse_moisture_absorption = self.coarse_agg.moisture_absorption
 
             fine_content_wet = self.fine_agg.content_moisture_correction(fine_content_ssd, fine_moisture_content,
@@ -961,23 +950,26 @@ class MCE:
                                                                            fine_content_wet, coarse_content_ssd,
                                                                            coarse_content_wet)
 
-            # Since the water and aggregate contents (fine and coarse) were adjusted,
-            # their apparent volumes change accordingly.
+            # Water Volume (adjusted by moisture correction)
             water_volume = self.water.water_volume(water_content_correction, water_density)
+
+            # Aggregate Apparent Volume (adjusted by moisture correction)
             fine_volume = self.fine_agg.apparent_volume(fine_content_wet, fine_loose_bulk_density, "fine")
             coarse_volume = self.coarse_agg.apparent_volume(coarse_content_wet, coarse_loose_bulk_density, "coarse")
 
             # Convert absolute from m3 to L
+            water_abs_volume = 1000 * water_abs_volume
             water_volume = 1000 * water_volume
             cement_abs_volume = 1000 * cement_abs_volume
             fine_abs_volume = 1000 * fine_abs_volume
             coarse_abs_volume = 1000 * coarse_abs_volume
-            entrapped_air_volume = 1000 * entrapped_air_volume
+            entrapped_air_content = 1000 * entrapped_air_content
 
             # Add up all absolute volumes and contents
             total_abs_volume = sum(
-                [water_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_volume])
-            total_content = sum([water_content_correction, cement_content, fine_content_wet, coarse_content_wet])
+                [water_abs_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_content])
+            total_content = [water_content_correction, cement_content, fine_content_wet, coarse_content_wet]
+            total_sum = sum(round(value) for value in total_content)
 
             # Store all the results in a dictionary
             self.calculation_results = {
@@ -986,9 +978,10 @@ class MCE:
                 "beta_mean": beta_mean,
                 "beta_economic": beta_economic,
                 "beta": beta_value,
-                "entrapped_air": entrapped_air_volume,
+                "entrapped_air_content": entrapped_air_content,
                 "water_content": water_content,
                 "water_content_correction": water_content_correction,
+                "water_abs_volume": water_abs_volume,
                 "water_volume": water_volume,
                 "cement_content": cement_content,
                 "cement_abs_volume": cement_abs_volume,
@@ -1002,7 +995,7 @@ class MCE:
                 "coarse_abs_volume": coarse_abs_volume,
                 "coarse_volume": coarse_volume,
                 "total_abs_volume": total_abs_volume,
-                "total_content": total_content
+                "total_content": total_sum
             }
 
             self.logger.info(f"Calculations completed successfully.")
@@ -1029,15 +1022,15 @@ class MCE:
                 data_key = "water_cement_ratio.alpha"
             elif key in ("beta_mean", "beta_economic", "beta"):
                 data_key = f"beta.{key}"
-            elif key == "entrapped_air":
-                data_key = "air.entrapped_air"
-            elif key in ("water_content", "water_content_correction", "water_volume"):
+            elif key == "entrapped_air_content":
+                data_key = "air.entrapped_air_content"
+            elif key in ("water_content", "water_content_correction", "water_abs_volume", "water_volume"):
                 data_key = f"water.{key}"
             elif key in ("cement_content", "cement_abs_volume", "cement_volume"):
                 data_key = f"cementitious_material.cement.{key}"
-            elif key in ("fine_content", "fine_content_wet", "fine_abs_volume", "fine_volume"):
+            elif key in ("fine_content_ssd", "fine_content_wet", "fine_abs_volume", "fine_volume"):
                 data_key = f"fine_aggregate.{key}"
-            elif key in ("coarse_content", "coarse_content_wet", "coarse_abs_volume", "coarse_volume"):
+            elif key in ("coarse_content_ssd", "coarse_content_wet", "coarse_abs_volume", "coarse_volume"):
                 data_key = f"coarse_aggregate.{key}"
             elif key in ("total_abs_volume", "total_content"):
                 data_key = f"summation.{key}"

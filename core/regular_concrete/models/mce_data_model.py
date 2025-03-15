@@ -35,11 +35,12 @@ class MCEDataModel:
             'water': {
                 'water_content': None,
                 'water_content_correction': None,
-                'water_volume': None
+                'water_volume': None,
+                'water_abs_volume': None
             },
             'air': {
-                'entrapped_air': None,
-                'entrained_air': None,
+                'entrapped_air_content': None,
+                'entrained_air_content': None,
                 'air_entraining_admixture_content': None
             },
             'fine_aggregate': {

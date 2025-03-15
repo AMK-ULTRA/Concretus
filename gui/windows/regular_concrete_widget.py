@@ -120,17 +120,16 @@ class RegularConcrete(QWidget):
             (self.ui.comboBox_3, 'field_requirements.exposure_class.items_3', 'currentText'),
             (self.ui.label_4, 'field_requirements.exposure_class.group_4', 'text'),
             (self.ui.comboBox_4, 'field_requirements.exposure_class.items_4', 'currentText'),
-            (self.ui.groupBox_air, 'field_requirements.air_content.air_content_checked', 'isChecked'),
-            (self.ui.doubleSpinBox_user_defined, 'field_requirements.air_content.user_defined', 'value'),
-            (self.ui.radioButton_exposure_defined, 'field_requirements.air_content.exposure_defined', 'isChecked'),
+            (self.ui.groupBox_air, 'field_requirements.entrained_air_content.is_checked', 'isChecked'),
+            (self.ui.doubleSpinBox_user_defined, 'field_requirements.entrained_air_content.user_defined', 'value'),
+            (self.ui.radioButton_exposure_defined, 'field_requirements.entrained_air_content.exposure_defined', 'isChecked'),
             (self.ui.spinBox_spec_strength, 'field_requirements.strength.spec_strength', 'value'),
             (self.ui.comboBox_spec_strength_time, 'field_requirements.strength.spec_strength_time', 'currentText'),
             (self.ui.groupBox_std_dev_known, 'field_requirements.strength.std_dev_known.std_dev_known_enabled',
              'isChecked'),
             (self.ui.doubleSpinBox_std_dev_value, 'field_requirements.strength.std_dev_known.std_dev_value', 'value'),
             (self.ui.spinBox_test_nro, 'field_requirements.strength.std_dev_known.test_nro', 'value'),
-            (self.ui.comboBox_defective_level, 'field_requirements.strength.std_dev_known.defective_level',
-             lambda cb: float(cb.currentText())),
+            (self.ui.comboBox_defective_level, 'field_requirements.strength.std_dev_known.defective_level', 'currentText'),
             (self.ui.groupBox_std_dev_unknown, 'field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled',
              'isEnabled'),
             (self.ui.comboBox_qual_control, 'field_requirements.strength.std_dev_unknown.quality_control', 'currentText'),
@@ -185,17 +184,16 @@ class RegularConcrete(QWidget):
         # a widget, a data path, and a method to get the value from the widget.
         for widget, data_path, value_getter in field_mappings:
             try:
-                # Checks if the value_getter is a callable object (e.g., a function).
+                # Checks if the value_getter is a callable object (e.g., a function)
                 if callable(value_getter):
-                    # If it is, call the function with the widget as an argument to get the value.
+                    # If it is, call the function with the widget as an argument to get the value
                     value = value_getter(widget)
-                # If value_getter is not a callable object,
-                # assume it's the name of a method of the widget.
+                # If value_getter is not a callable object, assume it's the name of a method of the widget
                 else:
-                    # Use getattr() to dynamically retrieve and call the method.
+                    # Use getattr() to dynamically retrieve and call the method
                     value = getattr(widget, value_getter)()
 
-                # Update the data model with the retrieved value.
+                # Update the data model with the retrieved value
                 self.data_model.update_design_data(data_path, value)
 
             except AttributeError as e:
@@ -452,6 +450,18 @@ class RegularConcrete(QWidget):
         # Populate the grading table
         self.populate_tables(method)
 
+        # Update ranges for specified compressive strength
+        min_spec_strength = MIN_SPEC_STRENGTH[self.data_model.units][
+            # "MCE" acts as a placeholder since the default value of "method" property in the data model is "None"
+            "MCE" if not method else method
+        ]
+        max_spec_strength = MAX_SPEC_STRENGTH[self.data_model.units][
+            # Avoid an error when accessing the dictionary
+            "MCE" if not method else method
+        ]
+        self.ui.spinBox_spec_strength.setMinimum(min_spec_strength)
+        self.ui.spinBox_spec_strength.setMaximum(max_spec_strength)
+
         # Update default values
         self.ui.spinBox_slump.setMinimum(25 if method == 'ACI' else 10)
         self.ui.spinBox_slump.setMaximum(175 if method == 'ACI' else 210)
@@ -600,6 +610,6 @@ class RegularConcrete(QWidget):
             self.ui.comboBox_coarse_type.addItems(config["coarse_types"])
             self.ui.chemical_admixtures.setEnabled(config["chemical_admixtures_enabled"])
 
-            self.logger.info(f'A complete update of the current method to "{method}" has been made')
+            self.logger.info(f'A complete update of the current method "{method}" has been made')
         else:
             self.logger.warning('An invalid configuration dictionary has been selected')

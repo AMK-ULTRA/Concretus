@@ -1682,6 +1682,8 @@
   <tabstop>doubleSpinBox_coarse_relative_density</tabstop>
   <tabstop>doubleSpinBox_coarse_pus</tabstop>
   <tabstop>doubleSpinBox_coarse_puc</tabstop>
+  <tabstop>doubleSpinBox_coarse_mc</tabstop>
+  <tabstop>doubleSpinBox_coarse_abs</tabstop>
   <tabstop>radioButton_coarse_retained</tabstop>
   <tabstop>tableWidget_coarse</tabstop>
   <tabstop>comboBox_water_type</tabstop>
@@ -1692,8 +1694,6 @@
   <tabstop>doubleSpinBox_admixture_relative_density</tabstop>
   <tabstop>doubleSpinBox_admixture_dosage</tabstop>
   <tabstop>spinBox_admixture_effectiveness</tabstop>
-  <tabstop>doubleSpinBox_coarse_mc</tabstop>
-  <tabstop>doubleSpinBox_coarse_abs</tabstop>
  </tabstops>
  <resources/>
  <connections>

@@ -472,7 +472,7 @@ class Validation:
 
         # Iterate through the list of exposure classes in the provided list
         for exposure_class in exposure_classes:
-            # Get the entry from MINIMUM_ENTRAINED_AIR for the given method and exposure class
+            # Get the entry from ENTRAINED_AIR for the given method and exposure class
             entry = ENTRAINED_AIR.get(method, {}).get(exposure_class)
             if entry is None:
                 continue

@@ -47,9 +47,8 @@ class CheckDesign(QWidget):
             if self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'):
                 self.ui.groupBox_SCM.setEnabled(True)
                 self.maximum_scm_content()
-            if self.data_model.get_design_value(
-                    'field_requirements.air_content.air_content_checked') and not self.data_model.get_design_value(
-                    'field_requirements.air_content.exposure_defined'):
+            if (self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
+                    and not self.data_model.get_design_value('field_requirements.entrained_air_content.exposure_defined')):
                 self.ui.groupBox_air_content.setEnabled(True)
                 self.minimum_entrained_air()
 
@@ -185,7 +184,7 @@ class CheckDesign(QWidget):
         # Check for additional error categories
         if self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'):
             max_errors += 1
-        if self.data_model.get_design_value('field_requirements.air_content.air_content_checked'):
+        if self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked'):
             max_errors += 1
 
         # Calculate the progress percentage
@@ -371,7 +370,7 @@ class CheckDesign(QWidget):
         method = self.data_model.method
         exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
         nms = self.data_model.get_design_value('coarse_aggregate.NMS')
-        entrained_air = self.data_model.get_design_value('field_requirements.air_content.user_defined')
+        entrained_air = self.data_model.get_design_value('field_requirements.entrained_air_content.user_defined')
 
         # Get the required minimum entrained air content and associated parameters
         valid, minimum_entrained_air, exp_class = self.validation.required_entrained_air(

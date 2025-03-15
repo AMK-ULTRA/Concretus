@@ -880,13 +880,14 @@ MAXIMUM_SCM = {
 }
 
 # Minimum entrained air content (by percentage) according to the exposure class
-# (only applies to concrete exposed to cycles of freezing and thawing).
-# For ACI method, the maximum nominal aggregate size is required
-MINIMUM_ENTRAINED_AIR = {
+# Only applies to concrete exposed to cycles of freezing and thawing
+ENTRAINED_AIR = {
     "MCE": None,
-    "ACI": {
+    "ACI": { # For ACI method, the maximum nominal aggregate size is required
         "F1": {
+            '3-1/2" (90 mm)': 3.43, # It was not originally stipulated, it was obtained by interpolation
             '3" (75 mm)': 3.50,
+            '2-1/2" (63 mm)': 3.74, # It was not originally stipulated, it was obtained by interpolation
             '2" (50 mm)': 4.00,
             '1-1/2" (37,5 mm)': 4.50,
             '1" (25 mm)': 4.50,
@@ -895,7 +896,9 @@ MINIMUM_ENTRAINED_AIR = {
             '3/8" (9,5 mm)': 6.00
         },
         "F2": {
+            '3-1/2" (90 mm)': 4.35, # It was not originally stipulated, it was obtained by interpolation
             '3" (75 mm)': 4.50,
+            '2-1/2" (63 mm)': 4.74, # It was not originally stipulated, it was obtained by interpolation
             '2" (50 mm)': 5.00,
             '1-1/2" (37,5 mm)': 5.50,
             '1" (25 mm)': 6.00,
@@ -904,7 +907,9 @@ MINIMUM_ENTRAINED_AIR = {
             '3/8" (9,5 mm)': 7.50
         },
         "F3": {
+            '3-1/2" (90 mm)': 4.35, # It was not originally stipulated, it was obtained by interpolation
             '3" (75 mm)': 4.50,
+            '2-1/2" (63 mm)': 4.74, # It was not originally stipulated, it was obtained by interpolation
             '2" (50 mm)': 5.00,
             '1-1/2" (37,5 mm)': 5.50,
             '1" (25 mm)': 6.00,
@@ -961,10 +966,10 @@ NMS_BY_CATEGORY = {
 # The key is the target unit system
 CONVERSION_FACTORS = {
     "MKS": {
-        "stress": 0.0980665 # MPa -> kgf/cm^2
+        "stress": 1.0 # MPa -> kgf/cm^2 (real factor -> 0.0980665)
     },
     "SI": {
-        "stress": 10.1972 # kgf/cm^2 -> MPa
+        "stress": 10.0 # kgf/cm^2 -> MPa (real factor -> 10.1972)
     }
 }
 
@@ -1187,8 +1192,8 @@ CEMENT_FACTOR_2 = {
     }
 }
 
-# Maximum cement content according to exposure class
-MAX_CEMENT = {
+# Minimum cement content according to exposure class
+MIN_CEMENT = {
     "Despreciable": 270,
     "Agua dulce": 270,
     "Agua salobre o de mar": 350,
@@ -1303,3 +1308,179 @@ MAX_ALFA = {
 # ACI method settings
 # -----------------------------------------------------------------------------
 
+# Approximate mixing water for different slumps and nominal maximum sizes of aggregate
+# Non-air-entrained
+WATER_CONTENT_NAE = {
+    '25-50': {
+        '3-1/2" (90 mm)': 130,
+        '3" (75 mm)': 130,
+        '2-1/2" (63 mm)': 143,
+        '2" (50 mm)': 154,
+        '1-1/2" (37,5 mm)': 166,
+        '1" (25 mm)': 179,
+        '3/4" (19 mm)': 190,
+        '1/2" (12,5 mm)': 199,
+        '3/8" (9,5 mm)': 207
+    },
+    '75-100': {
+        '3-1/2" (90 mm)': 144,
+        '3" (75 mm)': 145,
+        '2-1/2" (63 mm)': 157,
+        '2" (50 mm)': 169,
+        '1-1/2" (37,5 mm)': 181,
+        '1" (25 mm)': 193,
+        '3/4" (19 mm)': 205,
+        '1/2" (12,5 mm)': 216,
+        '3/8" (9,5 mm)': 228
+    },
+    '125-150': {
+        '3-1/2" (90 mm)': 146,
+        '3" (75 mm)': 151,
+        '2-1/2" (63 mm)': 160,
+        '2" (50 mm)': 172,
+        '1-1/2" (37,5 mm)': 183,
+        '1" (25 mm)': 196,
+        '3/4" (19 mm)': 208,
+        '1/2" (12,5 mm)': 222,
+        '3/8" (9,5 mm)': 237
+    },
+    '150-175': {
+        '3-1/2" (90 mm)': 154,
+        '3" (75 mm)': 160,
+        '2-1/2" (63 mm)': 168,
+        '2" (50 mm)': 178,
+        '1-1/2" (37,5 mm)': 190,
+        '1" (25 mm)': 202,
+        '3/4" (19 mm)': 216,
+        '1/2" (12,5 mm)': 228,
+        '3/8" (9,5 mm)': 243
+    }
+}
+
+# Air-entrained
+WATER_CONTENT_AE = {
+    '25-50': {
+        '3-1/2" (90 mm)': 123,
+        '3" (75 mm)': 122,
+        '2-1/2" (63 mm)': 133,
+        '2" (50 mm)': 142,
+        '1-1/2" (37,5 mm)': 150,
+        '1" (25 mm)': 160,
+        '3/4" (19 mm)': 168,
+        '1/2" (12,5 mm)': 175,
+        '3/8" (9,5 mm)': 181
+    },
+    '75-100': {
+        '3-1/2" (90 mm)': 134,
+        '3" (75 mm)': 133,
+        '2-1/2" (63 mm)': 145,
+        '2" (50 mm)': 157,
+        '1-1/2" (37,5 mm)': 165,
+        '1" (25 mm)': 175,
+        '3/4" (19 mm)': 184,
+        '1/2" (12,5 mm)': 193,
+        '3/8" (9,5 mm)': 202
+    },
+    '125-150': {
+        '3-1/2" (90 mm)': 138,
+        '3" (75 mm)': 142,
+        '2-1/2" (63 mm)': 149,
+        '2" (50 mm)': 160,
+        '1-1/2" (37,5 mm)': 166,
+        '1" (25 mm)': 178,
+        '3/4" (19 mm)': 187,
+        '1/2" (12,5 mm)': 199,
+        '3/8" (9,5 mm)': 211
+    },
+    '150-175': {
+        '3-1/2" (90 mm)': 148,
+        '3" (75 mm)': 154,
+        '2-1/2" (63 mm)': 159,
+        '2" (50 mm)': 166,
+        '1-1/2" (37,5 mm)': 174,
+        '1" (25 mm)': 184,
+        '3/4" (19 mm)': 197,
+        '1/2" (12,5 mm)': 205,
+        '3/8" (9,5 mm)': 216
+    }
+}
+
+# Water-cementitious materials ratio, by durability
+W_CM = {
+    "S0": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "S1": 0.50,
+    "S2": 0.45,
+    "S3": 0.40,
+    "F0": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "F1": 0.55,
+    "F2": 0.45,
+    "F3": 0.40,
+    "W0": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "W1": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "W2": 0.50,
+    "C0": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "C1": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
+    "C2": 0.40
+}
+
+# Minimum requirements of cementing materials for concrete used in flatwork
+MINIMUM_CEMENTITIOUS_CONTENT = {
+    '1-1/2" (37,5 mm)': 280,
+    '1" (25 mm)': 310,
+    '3/4" (19 mm)': 320,
+    '1/2" (12,5 mm)': 350,
+    '3/8" (9,5 mm)': 360
+}
+
+# Estimated amount of entrapped air (by percentage) in non-air-entrained concrete
+ENTRAPPED_AIR = {
+    '3-1/2" (90 mm)': 0.15, # It was not originally stipulated, it was obtained by interpolation
+    '3" (75 mm)': 0.30,
+    '2-1/2" (63 mm)': 0.40, # It was not originally stipulated, it was obtained by interpolation
+    '2" (50 mm)': 0.50,
+    '1-1/2" (37,5 mm)': 1.00,
+    '1" (25 mm)': 1.50,
+    '3/4" (19 mm)': 2.00,
+    '1/2" (12,5 mm)': 2.50,
+    '3/8" (9,5 mm)': 3.00
+}
+
+# Linear regression coefficients
+COEFFICIENTS = {
+    '3-1/2" (90 mm)': {
+        'a': -0.1,
+        'b': 1.1106
+    },
+    '3" (75 mm)': {
+        'a': -0.1,
+        'b': 1.06
+    },
+    '2-1/2" (63 mm)': {
+        'a': -0.1,
+        'b': 1.058
+    },
+    '2" (50 mm)': {
+        'a': -0.1,
+        'b': 1.02
+    },
+    '1-1/2" (37,5 mm)': {
+        'a': -0.1,
+        'b': 0.99
+    },
+    '1" (25 mm)': {
+        'a': -0.1,
+        'b': 0.95
+    },
+    '3/4" (19 mm)': {
+        'a': -0.1,
+        'b': 0.9
+    },
+    '1/2" (12,5 mm)': {
+        'a': -0.1,
+        'b': 0.83
+    },
+    '3/8" (9,5 mm)': {
+        'a': -0.1,
+        'b': 0.74
+    }
+}

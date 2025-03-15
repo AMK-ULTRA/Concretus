@@ -10,7 +10,6 @@ class RegularConcreteDataModel(QObject):
     """
 
     # Create the main custom signals
-    data_updated = pyqtSignal()  # Emit when any data changes
     language_changed = pyqtSignal(str)  # Emit when the system language changes
     units_changed = pyqtSignal(str)  # Emit when the system of units changes
     method_changed = pyqtSignal(str) # Emit when the method for the specific regular procedure changes
@@ -107,8 +106,8 @@ class RegularConcreteDataModel(QObject):
                     'group_4': None,
                     "items_4": None,
                 },
-                'air_content': {
-                    'air_content_checked': None,
+                'entrained_air_content': {
+                    'is_checked': None,
                     'user_defined': None,
                     'exposure_defined': None
                 },
@@ -225,7 +224,6 @@ class RegularConcreteDataModel(QObject):
             for key in keys[:-1]:
                 data = data[key]
             data[keys[-1]] = value
-            self.data_updated.emit()
             self.logger.info(f"Updated {key_path} -> {value}")
         except KeyError as e:
             self.logger.error(f"Invalid key path: {key_path} ({str(e)})")
@@ -289,4 +287,3 @@ class RegularConcreteDataModel(QObject):
         self.trial_mix_results = {}
         self.current_step = 0
         self.logger.info("All data has been restored")
-        self.data_updated.emit()

@@ -16,12 +16,9 @@ class ACIDataModel:
 
         return {
             'cementitious_material': {
+                'base_content': None,
+                'min_content': None,
                 'cement': {
-                    'design_cement_content': None,
-                    'correction_factor_1': None,
-                    'correction_factor_2': None,
-                    'corrected_cement_content': None,
-                    'max_cement_content': None,
                     'cement_content': None,
                     'cement_abs_volume': None,
                     'cement_volume': None
@@ -30,37 +27,38 @@ class ACIDataModel:
                     'scm_content': None,
                     'scm_abs_volume': None,
                     'scm_volume': None,
-                    'air_entraining_admixture_content': None
                 }
             },
             'water': {
-                'water_content': None,
+                'water_content': {
+                    'base': None,
+                    'coarse_aggregate_correction': None,
+                    'fine_aggregate_correction': None,
+                    'scm_correction': None,
+                    'final_content': None
+                },
                 'water_content_correction': None,
-                'water_abs_volume': None,
-                'water_volume': None
+                'water_volume': None,
+                'water_abs_volume': None
             },
             'air': {
-                'entrapped_air': None,
-                'entrained_air': None
+                'entrapped_air_content': None,
+                'entrained_air_content': None,
+                'air_entraining_admixture_content': None
             },
             'fine_aggregate': {
-                'fine_content': None,
+                'fine_content_ssd': None,
                 'fine_content_wet': None,
                 'fine_abs_volume': None,
                 'fine_volume': None
             },
             'coarse_aggregate': {
-                'coarse_content': None,
+                'oven_dry_rodded_bulk_volume': None,
+                'coarse_content_oven_dry': None,
+                'coarse_content_ssd': None,
                 'coarse_content_wet': None,
                 'coarse_abs_volume': None,
                 'coarse_volume': None
-            },
-            'beta': {
-                'beta_min': None,
-                'beta_max': None,
-                'beta_mean': None,
-                'beta_economic': None,
-                'beta': None
             },
             'spec_strength': {
                 'target_strength': {
@@ -72,15 +70,10 @@ class ACIDataModel:
                     'margin': None
                 },
             },
-            'water_cement_ratio': {
-                'alpha': None,
-                'design_alpha': None,
-                'correction_factor_1': None,
-                'correction_factor_2': None,
-                'corrected_alpha': None,
-                'min_alpha': None,
-                'm': None,
-                'n': None
+            'water_cementitious_materials_ratio': {
+                'w_cm': None,
+                'w_cm_by_strength': None,
+                'w_cm_by_durability': None
             },
             'summation': {
                 'total_abs_volume': None,
@@ -92,7 +85,7 @@ class ACIDataModel:
         """
         Update a specific value using dot notation to access nested keys.
 
-        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.max_cement_content'.
+        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.min_cement_content'.
         :param any value: The new value to update.
         """
 

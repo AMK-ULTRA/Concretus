@@ -815,7 +815,9 @@ class Ui_RegularConcreteWidget(object):
         RegularConcreteWidget.setTabOrder(self.comboBox_coarse_type, self.doubleSpinBox_coarse_relative_density)
         RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_relative_density, self.doubleSpinBox_coarse_pus)
         RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_pus, self.doubleSpinBox_coarse_puc)
-        RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_puc, self.radioButton_coarse_retained)
+        RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_puc, self.doubleSpinBox_coarse_mc)
+        RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_mc, self.doubleSpinBox_coarse_abs)
+        RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_abs, self.radioButton_coarse_retained)
         RegularConcreteWidget.setTabOrder(self.radioButton_coarse_retained, self.tableWidget_coarse)
         RegularConcreteWidget.setTabOrder(self.tableWidget_coarse, self.comboBox_water_type)
         RegularConcreteWidget.setTabOrder(self.comboBox_water_type, self.lineEdit_water_source)
@@ -825,8 +827,6 @@ class Ui_RegularConcreteWidget(object):
         RegularConcreteWidget.setTabOrder(self.lineEdit_admixture_name, self.doubleSpinBox_admixture_relative_density)
         RegularConcreteWidget.setTabOrder(self.doubleSpinBox_admixture_relative_density, self.doubleSpinBox_admixture_dosage)
         RegularConcreteWidget.setTabOrder(self.doubleSpinBox_admixture_dosage, self.spinBox_admixture_effectiveness)
-        RegularConcreteWidget.setTabOrder(self.spinBox_admixture_effectiveness, self.doubleSpinBox_coarse_mc)
-        RegularConcreteWidget.setTabOrder(self.doubleSpinBox_coarse_mc, self.doubleSpinBox_coarse_abs)
 
     def retranslateUi(self, RegularConcreteWidget):
         _translate = QtCore.QCoreApplication.translate
