@@ -15,29 +15,31 @@ class CementitiousMaterial:
     relative_density: float
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
-@dataclass
-class Cement(CementitiousMaterial):
-
-    def cement_abs_volume(self, cement_content, water_density, relative_density=3.33):
+    def absolute_volume(self, content, water_density, relative_density, cementitious_type=None):
         """
-        Calculates the absolute volume of cement grains in cubic meters (m³).
+        Calculates the absolute volume of a cementitious material in cubic meters (m³).
 
-        The cement content and water density must use consistent units:
-        - If cement content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
-        - If cement content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+        The cementitious material content and water density must use consistent units:
+        - If the cementitious material content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
+        - If the cementitious material content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
 
-        :param float cement_content: The cement content (kg or kgf).
-        :param float water_density: The water density (kg/m³ or kgf/m³).
-        :param float relative_density: The relative density of cement (default 3.33).
+        :param float content: Cementitious material content (kg or kgf).
+        :param float water_density: Water density (kg/m³ or kgf/m³).
+        :param float relative_density: Relative density of cementitious material.
+        :param str cementitious_type: Type of cementitious material (e.g., 'Cement', 'SCM').
         :return: The absolute volume (in m³).
         :rtype: float
         """
 
         if water_density == 0 or relative_density == 0:
-            error_msg = f"The relative density ({relative_density}) or the water density ({water_density}) cannot be zero"
-            self.mce_data_model.add_calculation_error('Cement volume', error_msg)
+            error_msg = (f"The relative density of {cementitious_type} is {relative_density}. "
+                         f"The water density is {water_density}. None can be zero")
+            self.mce_data_model.add_calculation_error('Cementitious volume', error_msg)
             raise ZeroDivisionError(error_msg)
-        return cement_content / (relative_density * water_density)
+        return content / (relative_density * water_density)
+
+@dataclass
+class Cement(CementitiousMaterial):
 
     def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, theta=None, k=117.2, n=0.16, m=1.3):
         """
@@ -912,7 +914,7 @@ class MCE:
             water_density = self.water.density
 
             cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes)
-            cement_abs_volume = self.cement.cement_abs_volume(cement_content, water_density, cement_relative_density)
+            cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
 
             # E. Air Content
             entrapped_air_content = self.air.entrapped_air_volume(nominal_max_size, cement_content)

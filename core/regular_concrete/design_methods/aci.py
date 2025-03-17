@@ -127,7 +127,7 @@ class Water:
         :param str nms: The nominal maximum size of the coarse aggregate.
         :param bool entrained_air: True if the concrete is entrained air, otherwise False.
         :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
-                               (e.g., ("Triturado", "Natural")).
+                               (e.g., ("Angular", "Natural")).
         :param str scm: Type of SCM (e.g., "Cenizas volantes", "Cemento de escoria", "Humo de sílice").
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
         :return: The water content (in kg/m³).
@@ -144,7 +144,7 @@ class Water:
             slump_range = '75-100'
         elif 125 <= slump <= 150:
             slump_range = '125-150'
-        elif 150 <= slump <= 175:
+        elif 150 < slump <= 175:
             slump_range = '150-175'
         else:
             error_msg = f"The slump value ({slump} mm) is outside the valid ranges"
@@ -913,7 +913,7 @@ class ACI:
                 "total_content": total_sum
             }
 
-            self.logger.info(f"Calculations completed successfully.")
+            self.logger.info(f"Calculations completed successfully")
             return True
 
         except Exception: # Capturing all exceptions to ensure robust calculation process

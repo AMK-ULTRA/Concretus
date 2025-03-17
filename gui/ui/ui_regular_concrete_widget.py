@@ -235,7 +235,7 @@ class Ui_RegularConcreteWidget(object):
         self.label_test_nro.setObjectName("label_test_nro")
         self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_test_nro)
         self.spinBox_test_nro = QtWidgets.QSpinBox(parent=self.groupBox_std_dev_known)
-        self.spinBox_test_nro.setMinimum(1)
+        self.spinBox_test_nro.setMinimum(15)
         self.spinBox_test_nro.setMaximum(100)
         self.spinBox_test_nro.setObjectName("spinBox_test_nro")
         self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.ItemRole.FieldRole, self.spinBox_test_nro)

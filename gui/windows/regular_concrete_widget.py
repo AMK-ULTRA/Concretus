@@ -431,7 +431,7 @@ class RegularConcrete(QWidget):
         self.ui.spinBox_spec_strength.setValue(default_spec_strength)
 
         # Update default value for known standard deviation
-        self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if units == 'SI' else 100)
+        self.ui.doubleSpinBox_std_dev_value.setMaximum(7 if units == 'SI' else 70)
 
         # Update the labels
         self.ui.label_spec_strength.setText(f"Resistencia de cálculo especificada ({unit_suffix})")
