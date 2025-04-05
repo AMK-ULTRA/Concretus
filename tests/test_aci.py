@@ -12,9 +12,10 @@ class TestCementitiousMaterial(unittest.TestCase):
         self.cementitious = CementitiousMaterial(relative_density=3.15)
         self.cementitious.aci_data_model = self.aci_data_model
 
-    def test_cementitious_content_without_scm_multiple_nms(self):
+    def test_cementitious_content_without_scm(self):
         water_content = 175
         w_cm = 0.5
+        scm_checked = False
         test_cases = [
             ('2" (50 mm)', 350),
             ('1-1/2" (37,5 mm)', 350),
@@ -24,17 +25,18 @@ class TestCementitiousMaterial(unittest.TestCase):
             ('3/8" (9,5 mm)', 360),
         ]
 
-        for nms, expected in test_cases:
+        for nms, cement_content_expected in test_cases:
             with self.subTest(nms=nms):
-                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm, nms)
-                self.assertEqual(cement_content, expected)
+                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm, nms,
+                                                                                     scm_checked)
+                self.assertEqual(cement_content, cement_content_expected)
                 self.assertEqual(scm_content, 0)
 
     def test_cementitious_content_with_scm(self):
         water_content = 200
         w_cm = 0.5
         nms = '2" (50 mm)' # Do not have minimum cementitious content
-        scm = "Cenizas volantes"
+        scm_checked = True
         test_cases = [
             (5, 380, 20),
             (10, 360, 40),
@@ -45,8 +47,8 @@ class TestCementitiousMaterial(unittest.TestCase):
 
         for scm_percentage, cement_content_expected, scm_content_expected in test_cases:
             with self.subTest(scm_percentage=scm_percentage):
-                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm, nms, scm,
-                                                                             scm_percentage)
+                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm, nms,
+                                                                                     scm_checked, scm_percentage)
                 self.assertEqual(cement_content, cement_content_expected)
                 self.assertEqual(scm_content, scm_content_expected)
 
@@ -290,7 +292,8 @@ class TestCoarseAggregate(unittest.TestCase):
 
         for nms, fineness_modulus, coarse_content_expected in test_cases:
             with self.subTest(nms=nms, fineness_modulus=fineness_modulus):
-                coarse_content = self.coarse_agg.coarse_content(nms, fineness_modulus, compacted_bulk_density, absorption)
+                coarse_content = self.coarse_agg.coarse_content(nms, fineness_modulus, compacted_bulk_density,
+                                                                absorption)
                 self.assertAlmostEqual(coarse_content, coarse_content_expected, delta=0.001)
 
 class TestStandardDeviation(unittest.TestCase):
