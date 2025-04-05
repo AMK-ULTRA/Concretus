@@ -461,41 +461,36 @@ class Validation:
         :param list[str] exposure_classes: List of exposure classes (e.g. ["S1", "F2", "W0", "S0"] for ACI,
                                            or ["XC1", "XD2", "XF4", "XA2"] for DoE).
         :param str nms: The nominal maximum size used to look up the required value (only for the ACI method).
-        :return: A tuple (minimum_entrained_air, exposure_class(es)) where:
-                 - minimum_entrained_air is the required entrained air content or None if was none found.
-                 - exposure_class(es) is the associated exposure class (or all exposure classes if none have requirements).
+        :return: A tuple (minimum_entrained_air, exposure_class) where:
+                 - minimum_entrained_air is the required entrained air content as a percentage or None if none found.
+                 - exposure_class is the governing exposure class or the full list of exposure classes if none have requirements.
         :rtype: tuple[float | None, str | list[str]]
         """
 
         max_value = None
         max_exposure = None
 
-        # Iterate through the list of exposure classes in the provided list
+        # Iterate through the list of exposure classes
         for exposure_class in exposure_classes:
             # Get the entry from ENTRAINED_AIR for the given method and exposure class
             entry = ENTRAINED_AIR.get(method, {}).get(exposure_class)
             if entry is None:
                 continue
 
-            # If the retrieved value is a dictionary, then look up the required entrained air by NMS
+            # Handle dictionary entries (NMS-based lookup)
             if isinstance(entry, dict):
                 result = entry.get(nms)
-                if result is not None:
-                    if max_value is None or result > max_value:
-                        max_value = result
-                        max_exposure = exposure_class
-            # If the retrieved value is numeric (float or int), return it directly
+                if result is not None and (max_value is None or result > max_value):
+                    max_value = result
+                    max_exposure = exposure_class
+            # Handle numeric entries (direct values)
             elif isinstance(entry, (float, int)):
-                numeric_value = float(entry)
-                if max_value is None or numeric_value > max_value:
-                    max_value = numeric_value
+                if max_value is None or entry > max_value:
+                    max_value = float(entry)
                     max_exposure = exposure_class
 
-        if max_value is not None and max_exposure is not None:
-            return max_value, max_exposure
-        else:
-            # If no valid entry was found, return None and the full list of exposure classes for reference.
-            return None, exposure_classes
+        # Return the result, defaulting to the full exposure list if no matching criteria found
+        return (max_value, max_exposure) if max_value is not None else (None, exposure_classes)
 
     def required_entrained_air(self, method, exposure_classes, nms, entrained_air):
         """
