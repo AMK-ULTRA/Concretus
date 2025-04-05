@@ -13,7 +13,8 @@ from Concretus.gui.windows.about_dialog import AboutDialog
 from Concretus.gui.windows.config_dialog import ConfigDialog
 from Concretus.core.regular_concrete.plots.grading_curve import PlotDialog
 from Concretus.logger import Logger
-from Concretus.settings import ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX
+from Concretus.settings import ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, \
+    ICON_RESTART, ICON_HELP_MANUAL
 
 
 class MainWindow(QMainWindow):
@@ -86,6 +87,8 @@ class MainWindow(QMainWindow):
         self.ui.action_about.setIcon(QIcon(str(ICON_ABOUT)))
         self.ui.action_check_design.setIcon(QIcon(str(ICON_CHECK_DESIGN)))
         self.ui.action_trial_mix.setIcon(QIcon(str(ICON_TRIAL_MIX)))
+        self.ui.action_restart.setIcon(QIcon(str(ICON_RESTART)))
+        self.ui.action_manual.setIcon(QIcon(str(ICON_HELP_MANUAL)))
 
     def setup_connections(self):
         """Set up the menu connections."""
