@@ -85,7 +85,7 @@ class ACIDataModel:
         """
         Update a specific value using dot notation to access nested keys.
 
-        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.min_cement_content'.
+        :param str key_path: The key path to update, e.g. 'cementitious_material.cement.cement_content'.
         :param any value: The new value to update.
         """
 
