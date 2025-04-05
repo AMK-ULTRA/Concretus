@@ -5,9 +5,10 @@ from Concretus.gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
 from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
-from Concretus.core.regular_concrete.models.doe_data_model import DoEDataModel
+from Concretus.core.regular_concrete.models.doe_data_model import DOEDataModel
 from Concretus.core.regular_concrete.design_methods.mce import MCE
 from Concretus.core.regular_concrete.design_methods.aci import ACI
+from Concretus.core.regular_concrete.design_methods.doe import DOE
 from Concretus.logger import Logger
 
 
@@ -24,7 +25,7 @@ class TrialMix(QWidget):
         # Connect to the data model of each method
         self.mce_data_model = MCEDataModel()
         self.aci_data_model = ACIDataModel()
-        self.doe_data_model = None
+        self.doe_data_model = DOEDataModel()
 
         # Create an empty reference to the calculation engines
         self.mce = None
@@ -41,15 +42,16 @@ class TrialMix(QWidget):
         method = self.data_model.method # Get the used method
         unit = self.data_model.units # and the current unit system
 
-        self.create_table_columns(unit)
-        self.create_table_rows(method)
-        self.adjust_table_height()
         if self.data_model.method == "MCE":
             self.mce_calculation_engine()
         elif self.data_model.method == "ACI":
             self.aci_calculation_engine()
         elif self.data_model.method == "DoE":
             self.doe_calculation_engine()
+
+        self.create_table_columns(unit)
+        self.create_table_rows(method)
+        self.adjust_table_height()
         self.load_results(method)
 
     def on_exit(self):
@@ -108,7 +110,7 @@ class TrialMix(QWidget):
         scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
         entrained_air_is_enabled = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
 
-        # Define row headers based on the method and enabled flags.
+        # Define row headers based on the method and enabled flags
         if method == "MCE":
             row_headers = [
                 "Agua",
@@ -133,7 +135,7 @@ class TrialMix(QWidget):
             if not scm_is_enabled:
                 if scm_type in row_headers:
                     row_headers.remove(scm_type)
-            # if entrained_air_is_enabled is False, delete "Aire incorporado"
+            # if entrained_air_is_enabled is False or its entrained air content is zero, delete "Aire incorporado"
             if not entrained_air_is_enabled:
                 for label in ["Aire incorporado"]:
                     if label in row_headers:
@@ -188,7 +190,10 @@ class TrialMix(QWidget):
         self.aci.run()
 
     def doe_calculation_engine(self):
-        pass
+        """Run the DoE calculation engine."""
+
+        self.doe = DOE(self.data_model, self.doe_data_model)
+        self.doe.run()
 
     def load_results(self, method):
         """
@@ -215,7 +220,7 @@ class TrialMix(QWidget):
         elif method == "ACI":
             current_method_data_model: ACIDataModel = self.aci_data_model
         elif method == "DoE":
-            current_method_data_model: DoEDataModel = self.doe_data_model
+            current_method_data_model: DOEDataModel = self.doe_data_model
         else:
             self.logger.error(f"Unknown method: {method}")
             return
@@ -256,7 +261,7 @@ class TrialMix(QWidget):
             "-" # For total volume
         ]
 
-        # Filter out rows where any column value is None
+        # Filter out rows where any column value is None (or False, 0, ""; basically a falsy value)
         # If ANY of the three columns at a given index is None, that row is not valid.
         valid_indices = [i for i in range(len(col1)) if all([col1[i], col2[i], col3[i]])]
 

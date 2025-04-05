@@ -33,6 +33,8 @@ ICON_EXIT = IMAGES_DIR / "exit.png"
 ICON_ABOUT = IMAGES_DIR / "about.png"
 ICON_CHECK_DESIGN = IMAGES_DIR / "check_design.png"
 ICON_TRIAL_MIX = IMAGES_DIR / "trial_mix.png"
+ICON_RESTART = IMAGES_DIR / "restart.png"
+ICON_HELP_MANUAL = IMAGES_DIR / "help_manual.png"
 
 # Images
 # IMAGE_LOGO = IMAGES_DIR / "logo.png"
@@ -283,7 +285,6 @@ MINIMUM_SPEC_STRENGTH = {
 # ASTM C33-C33M (23) (ACI) and PD 6682-1-2009 (DoE)
 # KEEP THE FOLLOWING FORMAT -> (upper limit, lower limit) | When both limits are equal, simply write the number
 
-# Coarse aggregate
 COARSE_RANGES = {
     "MCE": {
         "Nro. 0": {
@@ -723,8 +724,7 @@ COARSE_RANGES = {
             "No. 18 (1 mm)": (5, 0)
         }
     }
-}
-# Fine aggregate
+} # Coarse aggregate
 FINE_RANGES = {
     "MCE": {
         "COVENIN 0277": {
@@ -812,7 +812,7 @@ FINE_RANGES = {
             "No. 230 (0,063 mm)": None
         }
     }
-}
+} # Fine aggregate
 
 # Threshold values for the fineness modulus
 FINENESS_MODULUS_LIMITS = {
@@ -966,11 +966,51 @@ NMS_BY_CATEGORY = {
 # The key is the target unit system
 CONVERSION_FACTORS = {
     "MKS": {
-        "stress": 1.0 # MPa -> kgf/cm^2 (real factor -> 0.0980665)
+        "stress": 0.1 # MPa -> kgf/cm^2 (real factor -> 0.0980665)
     },
     "SI": {
         "stress": 10.0 # kgf/cm^2 -> MPa (real factor -> 10.1972)
     }
+}
+
+# z values for preset quartiles
+QUARTILES = {
+    "0,5": -2.576,
+    "1": -2.326,
+    "2": -2.054,
+    "2,5": -1.960,
+    "3": -1.881,
+    "4": -1.751,
+    "5": -1.645,
+    "6": -1.555,
+    "7": -1.476,
+    "8": -1.405,
+    "9": -1.341,
+    "10": -1.282,
+    "15": -1.036,
+    "20": -0.842,
+    "25": -0.674
+}
+
+# k-factor for increasing sample standard deviation for number of strength tests
+# considered in calculating standard deviation
+K_FACTOR = {
+    15: 1.16,
+    16: 1.144,
+    17: 1.128,
+    18: 1.112,
+    19: 1.096,
+    20: 1.08,
+    21: 1.07,
+    22: 1.06,
+    23: 1.05,
+    24: 1.04,
+    25: 1.03,
+    26: 1.024,
+    27: 1.018,
+    28: 1.012,
+    29: 1.006,
+    30: 1.00
 }
 
 # -----------------------------------------------------------------------------
@@ -1163,7 +1203,6 @@ COMBINED_GRADING = {
 }
 
 # Correction factor for cement content
-# According to the nominal maximum size
 CEMENT_FACTOR_1 = {
     '3" (75 mm)': 0.82,
     '2-1/2" (63 mm)': 0.85,
@@ -1174,9 +1213,7 @@ CEMENT_FACTOR_1 = {
     '1/2" (12,5 mm)': 1.14,
     '3/8" (9,5 mm)': 1.20,
     '1/4" (6,3 mm)': 1.33
-}
-
-# According to aggregate type
+} # According to the nominal maximum size
 CEMENT_FACTOR_2 = {
     "Triturado": {
         "Natural": 1.00,
@@ -1190,10 +1227,10 @@ CEMENT_FACTOR_2 = {
         "Natural": 0.90,
         "Triturada": 0.96
     }
-}
+} # According to aggregate type
 
 # Minimum cement content according to exposure class
-MIN_CEMENT = {
+MIN_CEMENT_MCE = {
     "Despreciable": 270,
     "Agua dulce": 270,
     "Agua salobre o de mar": 350,
@@ -1203,46 +1240,6 @@ MIN_CEMENT = {
     "Alta": 270,
     "Atmósfera común": 270,
     "Litoral": 350
-}
-
-# z values for preset quartiles
-QUARTILES = {
-    "0,5": -2.576,
-    "1": -2.326,
-    "2": -2.054,
-    "2,5": -1.960,
-    "3": -1.881,
-    "4": -1.751,
-    "5": -1.645,
-    "6": -1.555,
-    "7": -1.476,
-    "8": -1.405,
-    "9": -1.341,
-    "10": -1.282,
-    "15": -1.036,
-    "20": -0.842,
-    "25": -0.674
-}
-
-# k-factor for increasing sample standard deviation for number of strength tests
-# considered in calculating standard deviation
-K_FACTOR = {
-    15: 1.16,
-    16: 1.144,
-    17: 1.128,
-    18: 1.112,
-    19: 1.096,
-    20: 1.08,
-    21: 1.07,
-    22: 1.06,
-    23: 1.05,
-    24: 1.04,
-    25: 1.03,
-    26: 1.024,
-    27: 1.018,
-    28: 1.012,
-    29: 1.006,
-    30: 1.00
 }
 
 # Constants values for M and N in the Abrams Law.
@@ -1262,7 +1259,6 @@ CONSTANTS = {
 }
 
 # Correction factor for water-cement ratio
-# According to the nominal maximum size
 ALFA_FACTOR_1 = {
     '3" (75 mm)': 0.74,
     '2-1/2" (63 mm)': 0.78,
@@ -1273,9 +1269,7 @@ ALFA_FACTOR_1 = {
     '1/2" (12,5 mm)': 1.10,
     '3/8" (9,5 mm)': 1.30,
     '1/4" (6,3 mm)': 1.60
-}
-
-# According to aggregate type
+} # According to the nominal maximum size
 ALFA_FACTOR_2 = {
     "Triturado": {
         "Natural": 1.00,
@@ -1289,10 +1283,10 @@ ALFA_FACTOR_2 = {
         "Natural": 0.91,
         "Triturada": 0.93
     }
-}
+} # According to aggregate type
 
 # Maximum water-cement ratio according to exposure class
-MAX_ALFA = {
+MAX_W_C_MCE = {
     "Despreciable": 1.00,
     "Agua dulce": 0.50,
     "Agua salobre o de mar": 0.40,
@@ -1309,7 +1303,6 @@ MAX_ALFA = {
 # -----------------------------------------------------------------------------
 
 # Approximate mixing water for different slumps and nominal maximum sizes of aggregate
-# Non-air-entrained
 WATER_CONTENT_NAE = {
     '25-50': {
         '3-1/2" (90 mm)': 130,
@@ -1355,9 +1348,7 @@ WATER_CONTENT_NAE = {
         '1/2" (12,5 mm)': 228,
         '3/8" (9,5 mm)': 243
     }
-}
-
-# Air-entrained
+} # Non-air-entrained
 WATER_CONTENT_AE = {
     '25-50': {
         '3-1/2" (90 mm)': 123,
@@ -1403,10 +1394,10 @@ WATER_CONTENT_AE = {
         '1/2" (12,5 mm)': 205,
         '3/8" (9,5 mm)': 216
     }
-}
+} # Air-entrained
 
-# Water-cementitious materials ratio, by durability
-W_CM = {
+# Maximum water-cementitious materials ratio, by durability
+MAX_W_CM_ACI = {
     "S0": 1.00, # It does not have minimum w_cm ratio; therefore, it is 1.00 by default
     "S1": 0.50,
     "S2": 0.45,
@@ -1424,7 +1415,7 @@ W_CM = {
 }
 
 # Minimum requirements of cementing materials for concrete used in flatwork
-MINIMUM_CEMENTITIOUS_CONTENT = {
+MIN_CEMENTITIOUS_CONTENT_ACI = {
     '1-1/2" (37,5 mm)': 280,
     '1" (25 mm)': 310,
     '3/4" (19 mm)': 320,
@@ -1483,4 +1474,283 @@ COEFFICIENTS = {
         'a': -0.1,
         'b': 0.74
     }
+}
+
+# -----------------------------------------------------------------------------
+# DoE method settings
+# -----------------------------------------------------------------------------
+
+# Approximate compressive strengths (N/mm2) of concrete mixes made with a free-water/cement ratio of 0.5
+STARTING_STRENGTH = {
+    "42.5": {
+        "No triturada": {
+            "3 días": 22,
+            "7 días": 30,
+            "28 días": 42,
+            "91 días": 49
+        },
+        "Triturada": {
+            "3 días": 27,
+            "7 días": 36,
+            "28 días": 49,
+            "91 días": 56
+        }
+    },
+    "52.5": {
+        "No triturada": {
+            "3 días": 29,
+            "7 días": 37,
+            "28 días": 48,
+            "91 días": 54
+        },
+        "Triturada": {
+            "3 días": 34,
+            "7 días": 43,
+            "28 días": 55,
+            "91 días": 61
+        }
+    }
+}
+
+# Coefficients of a third-degree polynomial of the form ax³ + bx² + cx + d = 0
+# Water-cementitious materials ratio
+W_CM_COEFFICIENTS = {
+    "Line 1": [52.591, -186.45, 231.87, -97.003], # The coefficients are in the ascending order [d, c, b, a]
+    "Line 2": [72.12, -227.68, 257.04, -98.99],
+    "Line 3": [112.93, -371.56, 440.46, -179.83],
+    "Line 4": [133.43, -417.35, 475.38, -187.39],
+    "Line 5": [139.1, -397.38, 413.46, -148.54],
+    "Line 6": [155.65, -442.45, 469.06, -174.84],
+    "Line 7": [145.73, -329.21, 277.12, -82.835],
+    "Line 8": [149.82, -282.76, 181.17, -31.69],
+    "Line 9": [142.99, -194.11, 41.43, 31.652],
+    "Line 10": [162.07, -220.79, 62.71, 23.234]
+}
+
+# Maximum water-cementitious materials ratio, by durability
+MAX_W_CM_DOE = {
+    "XC1": 0.65,
+    "XC2": 0.60,
+    "XC3": 0.55,
+    "XC4": 0.50,
+    "XS1": 0.50,
+    "XS2": 0.45,
+    "XS3": 0.45,
+    "XD1": 0.55,
+    "XD2": 0.55,
+    "XD3": 0.45,
+    "XF1": 0.55,
+    "XF2": 0.55,
+    "XF3": 0.50,
+    "XF4": 0.45,
+    "XA1": 0.55,
+    "XA2": 0.50,
+    "XA3": 0.45
+}
+
+# Approximate free-water contents (kg/m3) required to give various levels of workability
+WATER_CONTENT = {
+    "N/A (10 mm)": {
+        "No triturada": {
+            '0-10': 150,
+            '10-30': 180,
+            '30-60': 205,
+            '60-180': 225
+        },
+        "Triturada": {
+            '0-10': 180,
+            '10-30': 205,
+            '30-60': 230,
+            '60-180': 250
+        }
+    },
+    "N/A (20 mm)": {
+        "No triturada": {
+            '0-10': 135,
+            '10-30': 160,
+            '30-60': 180,
+            '60-180': 195
+        },
+        "Triturada": {
+            '0-10': 170,
+            '10-30': 190,
+            '30-60': 210,
+            '60-180': 225
+        }
+    },
+    "N/A (40 mm)": {
+        "No triturada": {
+            '0-10': 115,
+            '10-30': 140,
+            '30-60': 160,
+            '60-180': 175
+        },
+        "Triturada": {
+            '0-10': 155,
+            '10-30': 175,
+            '30-60': 190,
+            '60-180': 205
+        }
+    },
+}
+
+# Reductions in free-water content (kg/m3) due to SCM used
+WATER_CONTENT_REDUCTION = {
+    '10-20': {
+        '0-10': 5,
+        '10-30': 5,
+        '30-60': 5,
+        '60-180': 10
+        },
+    '20-30': {
+        '0-10': 10,
+        '10-30': 10,
+        '30-60': 10,
+        '60-180': 15
+        },
+    '30-40': {
+        '0-10': 15,
+        '10-30': 15,
+        '30-60': 20,
+        '60-180': 20
+        },
+    '40-50': {
+        '0-10': 20,
+        '10-30': 20,
+        '30-60': 25,
+        '60-180': 25
+        },
+    '50': {
+        '0-10': 25,
+        '10-30': 25,
+        '30-60': 30,
+        '60-180': 30
+        }
+}
+
+# Minimum cement content, by durability
+MIN_CEMENTITIOUS_CONTENT_DOE = {
+    "XC1": 260,
+    "XC2": 280,
+    "XC3": 280,
+    "XC4": 300,
+    "XS1": 300,
+    "XS2": 320,
+    "XS3": 340,
+    "XD1": 300,
+    "XD2": 300,
+    "XD3": 320,
+    "XF1": 300,
+    "XF2": 300,
+    "XF3": 320,
+    "XF4": 340,
+    "XA1": 300,
+    "XA2": 320,
+    "XA3": 360
+}
+
+# Coefficients of a one-degree polynomial of the form ax + b = 0
+# Wet density of fully compacted concrete
+DENSITY_COEFFICIENTS = {
+    2.40: [2403.75, -0.9375], # The coefficients are in the ascending order [b, a]
+    2.50: [2496.25, -1.0625],
+    2.60: [2605, -1.25],
+    2.70: [2697.5, -1.375],
+    2.80: [2812.5, -1.625],
+    2.90: [2905, -1.75],
+}
+
+# Coefficients of a one-degree polynomial of the form ax + b = 0
+# Fine proportion
+FINE_PROPORTION = {
+    "N/A (10 mm)": {
+        '0-10': {
+            100: [20.1667, 12.1667], # The coefficients are in the ascending order [b, a]
+            80: [22.8333, 14.3333],
+            60: [28.4333, 16.3333],
+            40: [31.7667, 24.6667],
+            15: [42.6333, 27.3333]
+        },
+        '10-30': {
+            100: [21.1333, 11.8333],
+            80: [24.9, 13.5],
+            60: [29.2667, 17.6667],
+            40: [33.0333, 25.8333],
+            15: [44.6667, 27.1667]
+        },
+        '30-60': {
+            100: [22, 14],
+            80: [26.9333, 13.8333],
+            60: [32.8333, 15.8333],
+            40: [37.1333, 22.8333],
+            15: [49.2667, 26.1667]
+        },
+        '60-180': {
+            100: [25.7, 13],
+            80: [30, 14.5],
+            60: [36.3, 17.5],
+            40: [43.7, 23],
+            15: [55.0333, 28.8333]
+        }
+    },
+    "N/A (20 mm)": {
+        '0-10': {
+            100: [13.6, 12.5],
+            80: [15.7, 15],
+            60: [18.7333, 18.8333],
+            40: [21.6333, 23.3333],
+            15: [29, 27.5]
+        },
+        '10-30': {
+            100: [15.3667, 12.1667],
+            80: [16.7333, 16.3333],
+            60: [19.9, 19],
+            40: [24.4, 23],
+            15: [31.7333, 27.3333]
+        },
+        '30-60': {
+            100: [17.4667, 11.6667],
+            80: [19.8333, 14.3333],
+            60: [23.4333, 17.8333],
+            40: [27.1333, 22.8333],
+            15: [34.8667, 29.1667]
+        },
+        '60-180': {
+            100: [19.7333, 13.8333],
+            80: [22.2, 16.5],
+            60: [26.4, 20],
+            40: [33.4667, 22.1667],
+            15: [42, 28]
+        }
+    },
+    "N/A (40 mm)": {
+        '0-10': {
+            100: [9.9, 12.5],
+            80: [12.1667, 14.6667],
+            60: [13.9667, 18.1667],
+            40: [16.1333, 24.8333],
+            15: [22.3667, 27.1667]
+        },
+        '10-30': {
+            100: [12.4667, 11.1667],
+            80: [13.9, 13.5],
+            60: [15.7667, 17.6667],
+            40: [18.5, 24],
+            15: [23.9333, 28.3333]
+        },
+        '30-60': {
+            100: [14.4667, 11.1667],
+            80: [17.2333, 11.8333],
+            60: [19.5, 16.5],
+            40: [24.4333, 19.8333],
+            15: [28.8, 27.5]
+        },
+        '60-180': {
+            100: [16.9, 12.5],
+            80: [19.6, 15],
+            60: [22.5667, 18.6667],
+            40: [28.1667, 22.1667],
+            15: [35.2667, 28.1667]
+        }
+    },
 }
