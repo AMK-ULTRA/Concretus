@@ -4,8 +4,8 @@ from math import log, exp
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
 from Concretus.logger import Logger
-from Concretus.settings import K_FACTOR, QUARTILES, WATER_CONTENT_NAE, WATER_CONTENT_AE, W_CM, \
-    MINIMUM_CEMENTITIOUS_CONTENT, ENTRAPPED_AIR, ENTRAINED_AIR, COEFFICIENTS, CONVERSION_FACTORS
+from Concretus.settings import K_FACTOR, QUARTILES, WATER_CONTENT_NAE, WATER_CONTENT_AE, MAX_W_CM_ACI, \
+    MIN_CEMENTITIOUS_CONTENT_ACI, ENTRAPPED_AIR, ENTRAINED_AIR, COEFFICIENTS, CONVERSION_FACTORS
 
 
 # ------------------------------------------------ Class for materials ------------------------------------------------
@@ -37,7 +37,7 @@ class CementitiousMaterial:
             raise ZeroDivisionError(error_msg)
         return content / (relative_density * water_density)
 
-    def cementitious_content(self, water_content, w_cm, nms, scm=None, scm_percentage=None):
+    def cementitious_content(self, water_content, w_cm, nms, scm_checked, scm_percentage=None):
         """
         Calculate the cementitious material content based on water content, water-to-cementitious
         materials ratio (w/cm). If supplementary cementitious materials (SCM) are used,
@@ -46,37 +46,37 @@ class CementitiousMaterial:
         :param float water_content: The water content in kg/m³ for the concrete mix.
         :param float w_cm: The water-to-cementitious materials ratio.
         :param str nms: The nominal maximum size of the coarse aggregate.
-        :param str scm: Type of supplementary cementitious material (if used).
+        :param bool scm_checked: True if a supplementary cementitious material is used, otherwise False.
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
         :return: A tuple containing the cement content and SCM content (in kg/m³).
         :rtype: tuple[float, float]
         """
 
         # Calculate the total cementitious content from water content and w/cm ratio
-        cementitious_content = water_content / w_cm
+        initial_cementitious_content = water_content / w_cm
 
         # Check if the calculated cementitious content meets minimum requirements based on NMS
-        min_cementitious_content = MINIMUM_CEMENTITIOUS_CONTENT.get(nms, 0)
+        min_cementitious_content = MIN_CEMENTITIOUS_CONTENT_ACI.get(nms, 0)
 
         # Ensure cementitious content is not less than the minimum required
-        cementitious_content = max(cementitious_content, min_cementitious_content)
+        cementitious_content_final = max(initial_cementitious_content, min_cementitious_content)
 
         # Store intermediate values in the data model
-        self.aci_data_model.update_data('cementitious_material.base_content', cementitious_content)
+        self.aci_data_model.update_data('cementitious_material.base_content', initial_cementitious_content)
         self.aci_data_model.update_data('cementitious_material.min_content', min_cementitious_content)
 
         # If SCM is used, calculate SCM content and cement content separately
-        if scm and scm_percentage is not None:
+        if scm_checked and scm_percentage is not None:
             # Calculate SCM content based on the specified percentage
-            scm_content = cementitious_content * (scm_percentage / 100)
+            scm_content = cementitious_content_final * (scm_percentage / 100)
 
             # Calculate cement content (total cementitious content minus SCM content)
-            cement_content = cementitious_content - scm_content
+            cement_content = cementitious_content_final - scm_content
 
             return cement_content, scm_content
         else:
             # If no SCM is used, cement content equals total cementitious content
-            cement_content = cementitious_content
+            cement_content = cementitious_content_final
             scm_content = 0
 
             return cement_content, scm_content
@@ -361,7 +361,7 @@ class Aggregate:
 
         This function converts the aggregate content measured under SSD conditions to its equivalent
         wet condition value. The adjustment accounts for the moisture content and absorption capacity
-        of the aggregate. Both the moisture_content and absorption should be provided as percentages
+        of the aggregate. Both the moisture content and absorption should be provided as percentages
         (e.g., 2 for 2%).
 
         :param float ssd_content: Aggregate content under SSD conditions.
@@ -393,7 +393,7 @@ class FineAggregate(Aggregate):
         :param float water_volume: Volume of water (in m³).
         :param float air_volume: Volume of air (in m³).
         :param float cement_abs_volume: Absolute volume of cement (in m³).
-        :param float | None scm_abs_volume: Absolute volume of supplementary cementitious materials (in m³).
+        :param float scm_abs_volume: Absolute volume of supplementary cementitious materials (in m³).
         :param float coarse_abs_volume: Absolute volume of coarse aggregate (in m³).
         :param float fine_relative_density: Fine aggregate relative density (SSD).
         :param float water_density: Water density in kg/m³.
@@ -410,9 +410,6 @@ class FineAggregate(Aggregate):
             error_msg = f"The water density is {water_density}. It cannot can be zero"
             self.aci_data_model.add_calculation_error('Fine content', error_msg)
             raise ValueError(error_msg)
-
-        if scm_abs_volume is None:
-            scm_abs_volume = 0
 
         # Total volume except for fine aggregate
         partial_volume = water_volume + air_volume + cement_abs_volume + scm_abs_volume + coarse_abs_volume
@@ -598,7 +595,7 @@ class AbramsLaw:
 
         # Calculate w/cm ratio based on durability requirements
         # The most restrictive (lowest) w/cm from all exposure classes is selected
-        w_cm_by_durability = [W_CM.get(exposure_class, 1.0) for exposure_class in exposure_classes]
+        w_cm_by_durability = [MAX_W_CM_ACI.get(exposure_class, 1.0) for exposure_class in exposure_classes]
         w_cm_by_durability = min(w_cm_by_durability)
 
         # Store intermediate calculation results in the ACI data model for reference
@@ -796,16 +793,25 @@ class ACI:
             scm_checked = self.scm.scm_checked
 
             cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm,
-                                                                                          nominal_max_size, scm,
+                                                                                          nominal_max_size, scm_checked,
                                                                                           scm_percentage)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
             if scm_checked:
-                scm_abs_volume = self.cement.absolute_volume(scm_content,water_density,scm_relative_density, scm_type)
+                scm_abs_volume = self.cement.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
             else:
-                scm_content = None
-                scm_abs_volume = None
+                scm_abs_volume = 0
+
+            # D.1. Review the Water-Cementitious Materials ratio
+            w_cm_recalculated = water_content / (cement_content + scm_content)
+
+            # If the minimum cementitious material has been selected, adjust the w/cm ratio
+            if w_cm_recalculated != w_cm:
+                w_cm = w_cm_recalculated
 
             # E. Air Content
+            entrained_air_content = 0
+            entrapped_air_content = 0
+
             if entrained_air:
                 if self.air.exposure_defined:
                     entrained_air_content = self.air.entrained_air_volume(nominal_max_size, exposure_classes)
@@ -867,9 +873,9 @@ class ACI:
             water_abs_volume = 1000 * water_abs_volume
             water_volume = 1000 * water_volume
             cement_abs_volume = 1000 * cement_abs_volume
-            scm_abs_volume = 1000 * scm_abs_volume
             fine_abs_volume = 1000 * fine_abs_volume
             coarse_abs_volume = 1000 * coarse_abs_volume
+            scm_abs_volume = 1000 * scm_abs_volume
             if entrained_air:
                 entrained_air_content = 1000 * entrained_air_content
             else:
