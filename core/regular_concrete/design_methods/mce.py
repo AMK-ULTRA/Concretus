@@ -5,8 +5,8 @@ from math import log10
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
 from Concretus.logger import Logger
-from Concretus.settings import COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT, K_FACTOR, QUARTILES, \
-    CONSTANTS, ALFA_FACTOR_1, ALFA_FACTOR_2, MAX_ALFA, CONVERSION_FACTORS
+from Concretus.settings import COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT_MCE, K_FACTOR, QUARTILES, \
+    CONSTANTS, ALFA_FACTOR_1, ALFA_FACTOR_2, MAX_W_C_MCE, CONVERSION_FACTORS
 
 
 # ------------------------------------------------ Class for materials ------------------------------------------------
@@ -71,7 +71,7 @@ class Cement(CementitiousMaterial):
             design_cement_content = k * slump ** n * alpha ** (-m)
 
             if nms is None:
-                error_msg = f'The nominal maximum size is {nms}. it cannot be None'
+                error_msg = f'The nominal maximum size is {nms}. It cannot be None'
                 self.mce_data_model.add_calculation_error('Cement content', error_msg)
                 raise ValueError(error_msg)
 
@@ -93,7 +93,7 @@ class Cement(CementitiousMaterial):
             corrected_cement_content = correction_factor_1 * correction_factor_2 * design_cement_content
 
             # Determine minimum cement content based on exposure classes
-            min_cement_content = [MIN_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
+            min_cement_content = [MIN_CEMENT_MCE.get(exposure_class, 0) for exposure_class in exposure_classes]
             min_cement_content = max(min_cement_content)
 
             # The final cement content is the maximum between the corrected cement content and the maximum cement content
@@ -115,7 +115,7 @@ class Cement(CementitiousMaterial):
             design_cement_content = theta * alpha ** (-m)
 
             # Determine minimum cement content based on exposure classes
-            min_cement_content = [MIN_CEMENT.get(exposure_class, 0) for exposure_class in exposure_classes]
+            min_cement_content = [MIN_CEMENT_MCE.get(exposure_class, 0) for exposure_class in exposure_classes]
             min_cement_content = max(min_cement_content)
 
             # The final cement content is the maximum between the design cement content and the maximum cement content
@@ -345,7 +345,7 @@ class Aggregate:
 
         This function converts the aggregate content measured under SSD conditions to its equivalent
         wet condition value. The adjustment accounts for the moisture content and absorption capacity
-        of the aggregate. Both the moisture_content and absorption should be provided as percentages
+        of the aggregate. Both the moisture content and absorption should be provided as percentages
         (e.g., 2 for 2%).
 
         :param float ssd_content: Aggregate content under SSD conditions.
@@ -367,7 +367,7 @@ class Aggregate:
 class FineAggregate(Aggregate):
     fineness_modulus: float = None
 
-    def fine_content(self, entrapped_air, cement_abs_volume, water_volume, water_density, fine_relative_density,
+    def fine_content(self, entrapped_air_volume, cement_abs_volume, water_volume, water_density, fine_relative_density,
                      coarse_relative_density, beta_value):
         """
         Calculate the fine content in kilogram-force per cubic meter (kgf/m³).
@@ -376,10 +376,10 @@ class FineAggregate(Aggregate):
         entrapped air, cement, and water (in m³) from 1 m³ (total volume of the mixture), then dividing by
         an expression that involves the relative densities and beta relationship.
 
-        :param float entrapped_air: Volume of entrapped air (m³).
+        :param float entrapped_air_volume: Volume of entrapped air (m³).
         :param float cement_abs_volume: Absolute volume of cement (m³).
         :param float water_volume: Volume of water (m³).
-        :param float water_density: Water density.
+        :param float water_density: Water density (kg/m³).
         :param float fine_relative_density: Fine aggregate relative density (SSD).
         :param float coarse_relative_density: Coarse aggregate relative density (SSD).
         :param float beta_value: Beta relationship factor.
@@ -402,7 +402,7 @@ class FineAggregate(Aggregate):
             raise ValueError(error_msg)
 
         # Calculate numerator
-        numerator = 1 - (entrapped_air + cement_abs_volume + water_volume)
+        numerator = 1 - (entrapped_air_volume + cement_abs_volume + water_volume)
 
         # Calculate denominator
         denominator = (1 / water_density) * (
@@ -713,7 +713,7 @@ class AbramsLaw:
         corrected_alpha = correction_factor_1 * correction_factor_2 * design_alpha
 
         # Determine the minimum alpha based on exposure classes
-        min_alpha_values = [MAX_ALFA.get(exposure_class, 1) for exposure_class in exposure_classes]
+        min_alpha_values = [MAX_W_C_MCE.get(exposure_class, 1) for exposure_class in exposure_classes]
         min_alpha = min(min_alpha_values)
 
         # The final alpha is the minimum between the corrected alpha and the minimum allowed alpha
