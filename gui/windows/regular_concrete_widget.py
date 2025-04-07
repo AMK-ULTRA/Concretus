@@ -111,7 +111,8 @@ class RegularConcrete(QWidget):
             (self.ui.dateEdit_date, 'general_info.date', lambda de: de.date().toString("dd-MM-yyyy")),
 
             # Field Requirements
-            (self.ui.spinBox_slump, 'field_requirements.slump', 'value'),
+            (self.ui.spinBox_slump_value, 'field_requirements.slump_value', 'value'),
+            (self.ui.comboBox_slump_range, 'field_requirements.slump_range', 'currentText'),
             (self.ui.label_1, 'field_requirements.exposure_class.group_1', 'text'),
             (self.ui.comboBox_1, 'field_requirements.exposure_class.items_1', 'currentText'),
             (self.ui.label_2, 'field_requirements.exposure_class.group_2', 'text'),
@@ -431,7 +432,10 @@ class RegularConcrete(QWidget):
         self.ui.spinBox_spec_strength.setValue(default_spec_strength)
 
         # Update default value for known standard deviation
-        self.ui.doubleSpinBox_std_dev_value.setMaximum(7 if units == 'SI' else 70)
+        if self.data_model.method in ["MCE", "ACI"]:
+            self.ui.doubleSpinBox_std_dev_value.setMaximum(7 if units == 'SI' else 70)
+        elif self.data_model.method == "DoE":
+            self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if units == 'SI' else 100)
 
         # Update the labels
         self.ui.label_spec_strength.setText(f"Resistencia de cálculo especificada ({unit_suffix})")
@@ -462,14 +466,18 @@ class RegularConcrete(QWidget):
         self.ui.spinBox_spec_strength.setMinimum(min_spec_strength)
         self.ui.spinBox_spec_strength.setMaximum(max_spec_strength)
 
-        # Update default values
-        self.ui.spinBox_slump.setMinimum(25 if method == 'ACI' else 10)
-        self.ui.spinBox_slump.setMaximum(175 if method == 'ACI' else 210)
-        self.ui.spinBox_slump.setValue(25 if method == 'ACI' else 10)
+        # Update default value for known standard deviation
+        if method in ["MCE", "ACI"]:
+            self.ui.doubleSpinBox_std_dev_value.setMaximum(7 if self.data_model.units == 'SI' else 70)
+        elif method == "DoE":
+            self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if self.data_model.units == 'SI' else 100)
 
         # A dictionary to map all method configurations
         method_config = {
             "MCE": {
+                "slump_ranges": (),
+                "slump_ranges_enabled": False,
+                "slump_value_enabled": True,
                 "exposure_class": {
                     "group_1": "Exposición al agua",
                     "items_1": ("Despreciable", "Agua dulce", "Agua salobre o de mar"),
@@ -501,6 +509,9 @@ class RegularConcrete(QWidget):
                 "chemical_admixtures_enabled": False
             },
             "ACI": {
+                "slump_ranges": ("25 mm - 50 mm", "75 mm - 100 mm", "125 mm - 150 mm", "150 mm - 175 mm"),
+                "slump_ranges_enabled": True,
+                "slump_value_enabled": False,
                 "exposure_class": {
                     "group_1": "Exposición a sulfatos",
                     "items_1": ("S0", "S1", "S2", "S3"),
@@ -533,6 +544,9 @@ class RegularConcrete(QWidget):
                 "chemical_admixtures_enabled": True
             },
             "DoE": {
+                "slump_ranges": ("0 mm - 10 mm", "10 mm - 30 mm", "30 mm - 60 mm", "60 mm - 180 mm"),
+                "slump_ranges_enabled": True,
+                "slump_value_enabled": False,
                 "exposure_class": {
                     "group_1": "Corrosión inducida por carbonatación",
                     "items_1": ("N/A", "XC1", "XC2", "XC3", "XC4"),
@@ -569,6 +583,10 @@ class RegularConcrete(QWidget):
         config = method_config.get(method, {})
         if config:
             self.ui.comboBox_method.setCurrentText(method)
+            self.ui.comboBox_slump_range.clear()
+            self.ui.comboBox_slump_range.addItems(config["slump_ranges"])
+            self.ui.comboBox_slump_range.setEnabled(config["slump_ranges_enabled"])
+            self.ui.spinBox_slump_value.setEnabled(config["slump_value_enabled"])
             self.ui.label_1.setText(config["exposure_class"]["group_1"])
             self.ui.label_2.setText(config["exposure_class"]["group_2"])
             self.ui.label_3.setText(config["exposure_class"]["group_3"])

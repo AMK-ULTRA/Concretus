@@ -117,14 +117,14 @@ class Water:
 
         return water_content / density
 
-    def water_content(self, slump, nms, entrained_air, agg_types, scm=None, scm_percentage=None):
+    def water_content(self, slump_range, nms, entrained_air, agg_types, scm=None, scm_percentage=None):
         """
         Calculates the required water content for concrete, adjusting based on slump, nominal maximum
         size of aggregate (NMS), air entrained and aggregate types. If SCM is used, it is also taken into account for
         water calculation.
 
-        :param int slump: The required slump of the concrete in fresh state (in mm).
-        :param str nms: The nominal maximum size of the coarse aggregate.
+        :param str slump_range: Slump range of the concrete in fresh state (in mm).
+        :param str nms: Nominal maximum size of the coarse aggregate.
         :param bool entrained_air: True if the concrete is entrained air, otherwise False.
         :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
                                (e.g., ("Angular", "Natural")).
@@ -136,20 +136,6 @@ class Water:
 
         # Select the correct dictionary according to the type of concrete (with or without entrained air)
         water_content_table = WATER_CONTENT_AE if entrained_air else WATER_CONTENT_NAE
-
-        # Determine the slump range
-        if 25 <= slump <= 50:
-            slump_range = '25-50'
-        elif 75 <= slump <= 100:
-            slump_range = '75-100'
-        elif 125 <= slump <= 150:
-            slump_range = '125-150'
-        elif 150 < slump <= 175:
-            slump_range = '150-175'
-        else:
-            error_msg = f"The slump value ({slump} mm) is outside the valid ranges"
-            self.aci_data_model.add_calculation_error('Water content', error_msg)
-            raise ValueError(error_msg)
 
         # Get the base water content
         water_content = water_content_table.get(slump_range, {}).get(nms)
@@ -482,7 +468,7 @@ class CoarseAggregate(Aggregate):
 
 @dataclass
 class FreshConcrete:
-    slump: int
+    slump_range: str
 
 @dataclass
 class HardenedConcrete:
@@ -713,7 +699,7 @@ class ACI:
                 grading=self.data_model.get_design_value("coarse_aggregate.gradation.passing"),
                 nominal_max_size=self.data_model.get_design_value("coarse_aggregate.NMS")
             )
-            self.fresh_concrete = FreshConcrete(slump=self.data_model.get_design_value("field_requirements.slump"))
+            self.fresh_concrete = FreshConcrete(slump_range=self.data_model.get_design_value("field_requirements.slump_range"))
             self.hardened_concrete = HardenedConcrete(
                 design_strength=design_strength,
                 spec_strength_time=self.data_model.get_design_value("field_requirements.strength.spec_strength_time"),
@@ -770,7 +756,7 @@ class ACI:
                                                                  sample_size, defective_level, std_dev_unknown)
 
             # B. Water Content and Absolute Volume
-            slump = self.fresh_concrete.slump
+            slump_range = self.fresh_concrete.slump_range
             nominal_max_size = self.coarse_agg.nominal_max_size
             entrained_air = self.air.entrained_air
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
@@ -778,7 +764,7 @@ class ACI:
             scm_percentage = self.scm.scm_percentage
             water_density = self.water.density
 
-            water_content = self.water.water_content(slump, nominal_max_size, entrained_air, agg_types, scm, scm_percentage)
+            water_content = self.water.water_content(slump_range, nominal_max_size, entrained_air, agg_types, scm, scm_percentage)
             water_abs_volume = self.water.water_volume(water_content, water_density)
 
             # C. Water-Cementitious Materials ratio, aka alpha or a/cm
@@ -937,7 +923,7 @@ class ACI:
 
         for key, value in self.calculation_results.items():
             # The key paths according to ACI data model schema
-            if key == "target_strength":
+            if key == "target_strength_value":
                 data_key = "spec_strength.target_strength.target_strength_value"
             elif key == "w_cm":
                 data_key = "water_cementitious_materials_ratio.w_cm"

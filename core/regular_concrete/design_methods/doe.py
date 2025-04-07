@@ -138,13 +138,13 @@ class Water:
 
         return water_content / density
 
-    def water_content(self, slump, nms, agg_types, entrained_air, scm_checked, scm_percentage=None):
+    def water_content(self, slump_range, nms, agg_types, entrained_air, scm_checked, scm_percentage=None):
         """
         Calculates the required water content for concrete, adjusting based on slump, nominal maximum
         size of aggregate (NMS) and aggregate types. If SCM is used, it is also taken into account for
         water calculation.
 
-        :param int slump: The required slump of the concrete in fresh state (in mm).
+        :param str slump_range: Slump range of the concrete in fresh state (in mm).
         :param str nms: The nominal maximum size of the coarse aggregate.
         :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
                                (e.g., ("No triturada", "Triturada")).
@@ -156,21 +156,8 @@ class Water:
         """
 
         # Slump ranges
-        slump_ranges = ['0-10', '10-30', '30-60', '60-180']
-
-        # Determine the slump range
-        if 0 <= slump <= 10:
-            index = 0
-        elif 10 < slump <= 30:
-            index = 1
-        elif 30 < slump <= 60:
-            index = 2
-        elif 60 < slump <= 180:
-            index = 3
-        else:
-            error_msg = f"The slump value ({slump} mm) is outside the valid ranges"
-            self.doe_data_model.add_calculation_error('Water content', error_msg)
-            raise ValueError(error_msg)
+        slump_ranges = ["0 mm - 10 mm", "10 mm - 30 mm", "30 mm - 60 mm", "60 mm - 180 mm"]
+        index = slump_ranges.index(slump_range)
 
         # Reduce the slump range if the mix is air-entrained
         if entrained_air and index != 0:
@@ -314,8 +301,7 @@ class Aggregate:
     grading: dict
     doe_data_model: DOEDataModel = field(init=False, repr=False)
 
-    @staticmethod
-    def total_agg_content(cement_content, scm_content, water_content, entrained_air_content, combined_relative_density):
+    def total_agg_content(self, cement_content, scm_content, water_content, entrained_air_content, combined_relative_density):
         """
         Calculates the total aggregate content based on cement content, SCM, water and
         the wet density of fully compacted concrete.
@@ -368,6 +354,9 @@ class Aggregate:
         # If the mixture is air-entrained, modify the calculated density
         if entrained_air_content:
             concrete_density = concrete_density - 10 * (entrained_air_content * 100) * combined_relative_density
+
+        # Store intermediate values in the data model
+        self.doe_data_model.update_data('concrete.wet_density', concrete_density)
 
         # Calculate the total aggregate content
         total_aggregates = concrete_density - (cement_content + scm_content) - water_content
@@ -451,33 +440,19 @@ class Aggregate:
 class FineAggregate(Aggregate):
     fineness_modulus: float
 
-    def fine_content(self, passing_600, w_cm, slump, nms, total_agg_content):
+    def fine_content(self, passing_600, w_cm, slump_range, nms, total_agg_content):
         """
         Calculate the fine aggregate content in kilogram per cubic meter (kg/m³)
 
         :param float | int passing_600: Fine percentage passing 600 µm sieve.
         :param float w_cm: Water-to-cementitious materials ratio (w/cm).
-        :param int slump: Slump value in mm.
+        :param int slump_range: Slump range of the concrete in fresh state (in mm).
         :param str nms: Nominal maximum size designation (e.g., "N/A (10 mm)")
         :param float total_agg_content: Total aggregate content in kg/m³.
 
         :return: The mass of saturated surface-dry (SSD) fine aggregate for a cubic meter of concrete in kg.
         :rtype: float
         """
-
-        # Determine the slump range
-        if 0 <= slump <= 10:
-            slump_range = '0-10'
-        elif 10 < slump <= 30:
-            slump_range = '10-30'
-        elif 30 < slump <= 60:
-            slump_range = '30-60'
-        elif 60 < slump <= 180:
-            slump_range = '60-180'
-        else:
-            error_msg = f"The slump value ({slump} mm) is outside the valid ranges"
-            self.doe_data_model.add_calculation_error('Fine content', error_msg)
-            raise ValueError(error_msg)
 
         # Find the coefficients for the given percentage passing 600 µm sieve
         fine_proportion_coeff = FINE_PROPORTION.get(nms, {}).get(slump_range, {}).get(passing_600)
@@ -515,6 +490,9 @@ class FineAggregate(Aggregate):
             # Calculate the fine proportion using the polynomial coefficients
             fine_proportion = fine_proportion_coeff[1] * w_cm + fine_proportion_coeff[0]
 
+        # Store intermediate values in the data model
+        self.doe_data_model.update_data('fine_aggregate.fine_proportion', fine_proportion)
+
         # Calculate the total fine content (in SSD condition)
         fine_content_ssd = total_agg_content * (fine_proportion / 100.0)  # Convert percentage to fraction
 
@@ -541,7 +519,7 @@ class CoarseAggregate(Aggregate):
 
 @dataclass
 class FreshConcrete:
-    slump: int
+    slump_range: str
 
 @dataclass
 class HardenedConcrete:
@@ -824,7 +802,7 @@ class DOE:
                 grading=self.data_model.get_design_value("coarse_aggregate.gradation.passing"),
                 nominal_max_size=self.data_model.get_design_value("coarse_aggregate.NMS")
             )
-            self.fresh_concrete = FreshConcrete(slump=self.data_model.get_design_value("field_requirements.slump"))
+            self.fresh_concrete = FreshConcrete(slump_range=self.data_model.get_design_value("field_requirements.slump_range"))
             self.hardened_concrete = HardenedConcrete(
                 design_strength=design_strength,
                 spec_strength_time=self.data_model.get_design_value("field_requirements.strength.spec_strength_time"),
@@ -909,12 +887,12 @@ class DOE:
                                                                       scm_checked)
 
             # D. Water Content and Absolute Volume
-            slump = self.fresh_concrete.slump
+            slump_range = self.fresh_concrete.slump_range
             nominal_max_size = self.coarse_agg.nominal_max_size
             scm_percentage = self.scm.scm_percentage
             water_density = self.water.density
 
-            water_content = self.water.water_content(slump, nominal_max_size, agg_types, entrained_air, scm_checked,
+            water_content = self.water.water_content(slump_range, nominal_max_size, agg_types, entrained_air, scm_checked,
                                                      scm_percentage)
             water_abs_volume = self.water.water_volume(water_content, water_density)
 
@@ -957,10 +935,10 @@ class DOE:
             passing_600 = self.fine_agg.grading["No. 30 (0,600 mm)"]
 
             # G.1. Determine the total aggregate content
-            total_agg_content = Aggregate.total_agg_content(cement_content, scm_content, water_content,
-                                                            entrained_air_content, combined_relative_density)
+            total_agg_content = self.fine_agg.total_agg_content(cement_content, scm_content, water_content,
+                                                                entrained_air_content, combined_relative_density)
 
-            fine_content_ssd = self.fine_agg.fine_content(passing_600, w_cm, slump, nominal_max_size, total_agg_content)
+            fine_content_ssd = self.fine_agg.fine_content(passing_600, w_cm, slump_range, nominal_max_size, total_agg_content)
             fine_abs_volume = self.fine_agg.absolute_volume(fine_content_ssd, water_density, fine_relative_density,
                                                             'fine')
 
@@ -1061,7 +1039,7 @@ class DOE:
 
         for key, value in self.calculation_results.items():
             # The key paths according to DoE data model schema
-            if key == "target_strength":
+            if key == "target_strength_value":
                 data_key = "spec_strength.target_strength.target_strength_value"
             elif key == "w_cm":
                 data_key = "water_cementitious_materials_ratio.w_cm"

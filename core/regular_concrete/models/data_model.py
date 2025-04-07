@@ -95,7 +95,8 @@ class RegularConcreteDataModel(QObject):
                 'date': None
             },
             'field_requirements': {
-                'slump': None,
+                'slump_value': None,
+                'slump_range': None,
                 'exposure_class': {
                     'group_1': None,
                     "items_1": None,

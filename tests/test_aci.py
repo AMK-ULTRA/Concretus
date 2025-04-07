@@ -61,80 +61,80 @@ class TestWater(unittest.TestCase):
     def test_water_content_without_corrections(self):
         agg_types = ("Angular", "Natural")
         test_cases_for_non_air_entrained_concrete = [
-            (25, '3/8" (9,5 mm)', 207),
-            (25, '1/2" (12,5 mm)', 199),
-            (25, '3/4" (19 mm)', 190),
-            (25, '1" (25 mm)', 179),
-            (25, '1-1/2" (37,5 mm)', 166),
-            (25, '2" (50 mm)', 154),
-            (25, '3" (75 mm)', 130),
+            ("25 mm - 50 mm", '3/8" (9,5 mm)', 207),
+            ("25 mm - 50 mm", '1/2" (12,5 mm)', 199),
+            ("25 mm - 50 mm", '3/4" (19 mm)', 190),
+            ("25 mm - 50 mm", '1" (25 mm)', 179),
+            ("25 mm - 50 mm", '1-1/2" (37,5 mm)', 166),
+            ("25 mm - 50 mm", '2" (50 mm)', 154),
+            ("25 mm - 50 mm", '3" (75 mm)', 130),
 
-            (75, '3/8" (9,5 mm)', 228),
-            (75, '1/2" (12,5 mm)', 216),
-            (75, '3/4" (19 mm)', 205),
-            (75, '1" (25 mm)', 193),
-            (75, '1-1/2" (37,5 mm)', 181),
-            (75, '2" (50 mm)', 169),
-            (75, '3" (75 mm)', 145),
+            ("75 mm - 100 mm", '3/8" (9,5 mm)', 228),
+            ("75 mm - 100 mm", '1/2" (12,5 mm)', 216),
+            ("75 mm - 100 mm", '3/4" (19 mm)', 205),
+            ("75 mm - 100 mm", '1" (25 mm)', 193),
+            ("75 mm - 100 mm", '1-1/2" (37,5 mm)', 181),
+            ("75 mm - 100 mm", '2" (50 mm)', 169),
+            ("75 mm - 100 mm", '3" (75 mm)', 145),
 
-            (125, '3/8" (9,5 mm)', 237),
-            (125, '1/2" (12,5 mm)', 222),
-            (125, '3/4" (19 mm)', 208),
-            (125, '1" (25 mm)', 196),
-            (125, '1-1/2" (37,5 mm)', 183),
-            (125, '2" (50 mm)', 172),
-            (125, '3" (75 mm)', 151),
+            ("125 mm - 150 mm", '3/8" (9,5 mm)', 237),
+            ("125 mm - 150 mm", '1/2" (12,5 mm)', 222),
+            ("125 mm - 150 mm", '3/4" (19 mm)', 208),
+            ("125 mm - 150 mm", '1" (25 mm)', 196),
+            ("125 mm - 150 mm", '1-1/2" (37,5 mm)', 183),
+            ("125 mm - 150 mm", '2" (50 mm)', 172),
+            ("125 mm - 150 mm", '3" (75 mm)', 151),
 
-            (175, '3/8" (9,5 mm)', 243),
-            (175, '1/2" (12,5 mm)', 228),
-            (175, '3/4" (19 mm)', 216),
-            (175, '1" (25 mm)', 202),
-            (175, '1-1/2" (37,5 mm)', 190),
-            (175, '2" (50 mm)', 178),
-            (175, '3" (75 mm)', 160),
+            ("150 mm - 175 mm", '3/8" (9,5 mm)', 243),
+            ("150 mm - 175 mm", '1/2" (12,5 mm)', 228),
+            ("150 mm - 175 mm", '3/4" (19 mm)', 216),
+            ("150 mm - 175 mm", '1" (25 mm)', 202),
+            ("150 mm - 175 mm", '1-1/2" (37,5 mm)', 190),
+            ("150 mm - 175 mm", '2" (50 mm)', 178),
+            ("150 mm - 175 mm", '3" (75 mm)', 160),
         ]
         test_cases_for_air_entrained_concrete = [
-            (25, '3/8" (9,5 mm)', 181),
-            (25, '1/2" (12,5 mm)', 175),
-            (25, '3/4" (19 mm)', 168),
-            (25, '1" (25 mm)', 160),
-            (25, '1-1/2" (37,5 mm)', 150),
-            (25, '2" (50 mm)', 142),
-            (25, '3" (75 mm)', 122),
+            ("25 mm - 50 mm", '3/8" (9,5 mm)', 181),
+            ("25 mm - 50 mm", '1/2" (12,5 mm)', 175),
+            ("25 mm - 50 mm", '3/4" (19 mm)', 168),
+            ("25 mm - 50 mm", '1" (25 mm)', 160),
+            ("25 mm - 50 mm", '1-1/2" (37,5 mm)', 150),
+            ("25 mm - 50 mm", '2" (50 mm)', 142),
+            ("25 mm - 50 mm", '3" (75 mm)', 122),
 
-            (75, '3/8" (9,5 mm)', 202),
-            (75, '1/2" (12,5 mm)', 193),
-            (75, '3/4" (19 mm)', 184),
-            (75, '1" (25 mm)', 175),
-            (75, '1-1/2" (37,5 mm)', 165),
-            (75, '2" (50 mm)', 157),
-            (75, '3" (75 mm)', 133),
+            ("75 mm - 100 mm", '3/8" (9,5 mm)', 202),
+            ("75 mm - 100 mm", '1/2" (12,5 mm)', 193),
+            ("75 mm - 100 mm", '3/4" (19 mm)', 184),
+            ("75 mm - 100 mm", '1" (25 mm)', 175),
+            ("75 mm - 100 mm", '1-1/2" (37,5 mm)', 165),
+            ("75 mm - 100 mm", '2" (50 mm)', 157),
+            ("75 mm - 100 mm", '3" (75 mm)', 133),
 
-            (125, '3/8" (9,5 mm)', 211),
-            (125, '1/2" (12,5 mm)', 199),
-            (125, '3/4" (19 mm)', 187),
-            (125, '1" (25 mm)', 178),
-            (125, '1-1/2" (37,5 mm)', 166),
-            (125, '2" (50 mm)', 160),
-            (125, '3" (75 mm)', 142),
+            ("125 mm - 150 mm", '3/8" (9,5 mm)', 211),
+            ("125 mm - 150 mm", '1/2" (12,5 mm)', 199),
+            ("125 mm - 150 mm", '3/4" (19 mm)', 187),
+            ("125 mm - 150 mm", '1" (25 mm)', 178),
+            ("125 mm - 150 mm", '1-1/2" (37,5 mm)', 166),
+            ("125 mm - 150 mm", '2" (50 mm)', 160),
+            ("125 mm - 150 mm", '3" (75 mm)', 142),
 
-            (175, '3/8" (9,5 mm)', 216),
-            (175, '1/2" (12,5 mm)', 205),
-            (175, '3/4" (19 mm)', 197),
-            (175, '1" (25 mm)', 184),
-            (175, '1-1/2" (37,5 mm)', 174),
-            (175, '2" (50 mm)', 166),
-            (175, '3" (75 mm)', 154),
+            ("150 mm - 175 mm", '3/8" (9,5 mm)', 216),
+            ("150 mm - 175 mm", '1/2" (12,5 mm)', 205),
+            ("150 mm - 175 mm", '3/4" (19 mm)', 197),
+            ("150 mm - 175 mm", '1" (25 mm)', 184),
+            ("150 mm - 175 mm", '1-1/2" (37,5 mm)', 174),
+            ("150 mm - 175 mm", '2" (50 mm)', 166),
+            ("150 mm - 175 mm", '3" (75 mm)', 154),
         ]
 
         for case, entrained_air in [(test_cases_for_non_air_entrained_concrete, False), (test_cases_for_air_entrained_concrete, True)]:
-            for slump, nms, water_content_expected in case:
-                with self.subTest(slump=slump, nms=nms, entrained_air=entrained_air):
-                    water_content = self.water.water_content(slump, nms, entrained_air, agg_types)
+            for slump_range, nms, water_content_expected in case:
+                with self.subTest(slump_range=slump_range, nms=nms, entrained_air=entrained_air):
+                    water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types)
                     self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_corrections(self):
-        slump = 150
+        slump_range = "125 mm - 150 mm"
         nms = '2" (50 mm)'
         entrained_air = True
         test_cases = [
@@ -145,7 +145,7 @@ class TestWater(unittest.TestCase):
 
         for agg_types, scm, scm_percentage, water_content_expected in test_cases:
             with self.subTest(agg_types=agg_types, scm=scm, scm_percentage=scm_percentage):
-                water_content = self.water.water_content(slump, nms, entrained_air, agg_types, scm, scm_percentage)
+                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm, scm_percentage)
                 self.assertAlmostEqual(water_content, water_content_expected, delta=0.001)
 
 class TestAir(unittest.TestCase):

@@ -828,7 +828,7 @@ class MCE:
                 grading=self.data_model.get_design_value("coarse_aggregate.gradation.passing"),
                 nominal_max_size=self.data_model.get_design_value("coarse_aggregate.NMS")
             )
-            self.fresh_concrete = FreshConcrete(slump=self.data_model.get_design_value("field_requirements.slump"))
+            self.fresh_concrete = FreshConcrete(slump=self.data_model.get_design_value("field_requirements.slump_value"))
             self.hardened_concrete = HardenedConcrete(
                 design_strength=design_strength,
                 spec_strength_time=self.data_model.get_design_value("field_requirements.strength.spec_strength_time"),

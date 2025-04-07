@@ -29,6 +29,9 @@ class DOEDataModel:
                     'scm_volume': None,
                 }
             },
+            'concrete': {
+                'wet_density': None
+            },
             'water': {
                 'water_content': {
                     'base': None,
@@ -48,7 +51,8 @@ class DOEDataModel:
                 'fine_content_ssd': None,
                 'fine_content_wet': None,
                 'fine_abs_volume': None,
-                'fine_volume': None
+                'fine_volume': None,
+                'fine_proportion': None
             },
             'coarse_aggregate': {
                 'coarse_content_ssd': None,

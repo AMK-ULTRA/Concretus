@@ -56,38 +56,38 @@ class TestWater(unittest.TestCase):
         scm_checked = False
         scm_percentage = 0
         test_cases = [
-            (0, "N/A (10 mm)", ("Triturada", "Triturada"), 180),
-            (10, "N/A (20 mm)", ("No triturada", "No triturada"), 135),
-            (15, "N/A (10 mm)", ("No triturada", "Triturada"), 590 / 3),
-            (30, "N/A (40 mm)", ("Triturada", "Triturada"), 175),
-            (35, "N/A (40 mm)", ("No triturada", "Triturada"), 180),
-            (60, "N/A (20 mm)", ("No triturada", "No triturada"), 180),
-            (65, "N/A (20 mm)", ("Triturada", "Triturada"), 225),
-            (180, "N/A (10 mm)", ("No triturada", "Triturada"), 725 / 3),
+            ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
+            ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 135),
+            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 590 / 3),
+            ("10 mm - 30 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 175),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 180),
+            ("30 mm - 60 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 180),
+            ("60 mm - 180 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 225),
+            ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 725 / 3),
         ]
 
-        for slump, nms, agg_types, water_content_expected in test_cases:
-            with self.subTest(slump=slump, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump, nms, agg_types, air_entrained, scm_checked, scm_percentage)
+        for slump_range, nms, agg_types, water_content_expected in test_cases:
+            with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked, scm_percentage)
                 self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_SCM(self):
         air_entrained = False
         scm_checked = True
         test_cases = [
-            (5, "N/A (10 mm)", ("Triturada", "Triturada"), 5, 180),
-            (10, "N/A (20 mm)", ("No triturada", "No triturada"), 10, 130),
-            (20, "N/A (10 mm)", ("No triturada", "Triturada"), 15, 575 / 3),
-            (30, "N/A (40 mm)", ("Triturada", "Triturada"), 20, 165),
-            (40, "N/A (40 mm)", ("No triturada", "Triturada"), 30, 160),
-            (60, "N/A (20 mm)", ("No triturada", "No triturada"), 39, 160),
-            (75, "N/A (20 mm)", ("Triturada", "Triturada"), 40, 200),
-            (170, "N/A (10 mm)", ("No triturada", "Triturada"), 50, 635 / 3),
+            ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 5, 180),
+            ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 10, 130),
+            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 15, 575 / 3),
+            ("10 mm - 30 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 20, 165),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 30, 160),
+            ("30 mm - 60 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 39, 160),
+            ("60 mm - 180 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 40, 200),
+            ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 50, 635 / 3),
         ]
 
-        for slump, nms, agg_types, scm_percentage, water_content_expected in test_cases:
-            with self.subTest(slump=slump, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump, nms, agg_types, air_entrained, scm_checked, scm_percentage)
+        for slump_range, nms, agg_types, scm_percentage, water_content_expected in test_cases:
+            with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked, scm_percentage)
                 self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_air_entrained(self):
@@ -95,19 +95,19 @@ class TestWater(unittest.TestCase):
         scm_checked = False
         scm_percentage = 0
         test_cases = [
-            (0, "N/A (10 mm)", ("Triturada", "Triturada"), 180),
-            (10, "N/A (20 mm)", ("No triturada", "No triturada"), 135),
-            (15, "N/A (10 mm)", ("No triturada", "Triturada"), 170),
-            (30, "N/A (40 mm)", ("Triturada", "Triturada"), 155),
-            (35, "N/A (40 mm)", ("No triturada", "Triturada"), 490 / 3),
-            (60, "N/A (20 mm)", ("No triturada", "No triturada"), 160),
-            (65, "N/A (20 mm)", ("Triturada", "Triturada"), 210),
-            (180, "N/A (10 mm)", ("No triturada", "Triturada"), 665 / 3),
+            ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
+            ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 135),
+            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 170),
+            ("10 mm - 30 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 155),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 490 / 3),
+            ("30 mm - 60 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 160),
+            ("60 mm - 180 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 210),
+            ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 665 / 3),
         ]
 
-        for slump, nms, agg_types, water_content_expected in test_cases:
-            with self.subTest(slump=slump, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump, nms, agg_types, air_entrained, scm_checked,
+        for slump_range, nms, agg_types, water_content_expected in test_cases:
+            with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
                                                          scm_percentage)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
@@ -210,110 +210,110 @@ class TestFineAggregate(unittest.TestCase):
         total_agg_content = 100
         w_cm = 0.4
         test_cases = [
-            (10, "N/A (10 mm)", 100, 24.8),
-            (10, "N/A (10 mm)", 80, 28.3),
-            (10, "N/A (10 mm)", 60, 34.7),
-            (10, "N/A (10 mm)", 40, 41.5),
-            (10, "N/A (10 mm)", 15, 53.4),
-            (10, "N/A (10 mm)", 55, 36.325),
-            (10, "N/A (10 mm)", 70, 31.45),
+            ("0 mm - 10 mm", "N/A (10 mm)", 100, 24.8),
+            ("0 mm - 10 mm", "N/A (10 mm)", 80, 28.3),
+            ("0 mm - 10 mm", "N/A (10 mm)", 60, 34.7),
+            ("0 mm - 10 mm", "N/A (10 mm)", 40, 41.5),
+            ("0 mm - 10 mm", "N/A (10 mm)", 15, 53.4),
+            ("0 mm - 10 mm", "N/A (10 mm)", 55, 36.325),
+            ("0 mm - 10 mm", "N/A (10 mm)", 70, 31.45),
 
-            (30, "N/A (10 mm)", 100, 25.8),
-            (30, "N/A (10 mm)", 80, 30.3),
-            (30, "N/A (10 mm)", 60, 36.1),
-            (30, "N/A (10 mm)", 40, 43.4),
-            (30, "N/A (10 mm)", 15, 55.3),
-            (30, "N/A (10 mm)", 95, 27.0),
-            (30, "N/A (10 mm)", 101, 25.8),
+            ("10 mm - 30 mm", "N/A (10 mm)", 100, 25.8),
+            ("10 mm - 30 mm", "N/A (10 mm)", 80, 30.3),
+            ("10 mm - 30 mm", "N/A (10 mm)", 60, 36.1),
+            ("10 mm - 30 mm", "N/A (10 mm)", 40, 43.4),
+            ("10 mm - 30 mm", "N/A (10 mm)", 15, 55.3),
+            ("10 mm - 30 mm", "N/A (10 mm)", 95, 27.0),
+            ("10 mm - 30 mm", "N/A (10 mm)", 101, 25.8),
 
-            (60, "N/A (10 mm)", 100, 27.7),
-            (60, "N/A (10 mm)", 80, 32.6),
-            (60, "N/A (10 mm)", 60, 39.2),
-            (60, "N/A (10 mm)", 40, 46.3),
-            (60, "N/A (10 mm)", 15, 59.9),
-            (60, "N/A (10 mm)", 45, 44.2),
-            (60, "N/A (10 mm)", 10, 59.9),
+            ("30 mm - 60 mm", "N/A (10 mm)", 100, 27.7),
+            ("30 mm - 60 mm", "N/A (10 mm)", 80, 32.6),
+            ("30 mm - 60 mm", "N/A (10 mm)", 60, 39.2),
+            ("30 mm - 60 mm", "N/A (10 mm)", 40, 46.3),
+            ("30 mm - 60 mm", "N/A (10 mm)", 15, 59.9),
+            ("30 mm - 60 mm", "N/A (10 mm)", 45, 44.2),
+            ("30 mm - 60 mm", "N/A (10 mm)", 10, 59.9),
 
-            (180, "N/A (10 mm)", 100, 30.9),
-            (180, "N/A (10 mm)", 80, 35.8),
-            (180, "N/A (10 mm)", 60, 43.2),
-            (180, "N/A (10 mm)", 40, 52.8),
-            (180, "N/A (10 mm)", 15, 66.5),
-            (180, "N/A (10 mm)", 85, 34.3),
-            (180, "N/A (10 mm)", 35, 55.5),
-
-            ##############################
-
-            (10, "N/A (20 mm)", 100, 18.5),
-            (10, "N/A (20 mm)", 80, 21.8),
-            (10, "N/A (20 mm)", 60, 26.2),
-            (10, "N/A (20 mm)", 40, 30.8),
-            (10, "N/A (20 mm)", 15, 39.9),
-            (10, "N/A (20 mm)", 90, 20.2),
-            (10, "N/A (20 mm)", 50, 28.8),
-
-            (30, "N/A (20 mm)", 100, 20.4),
-            (30, "N/A (20 mm)", 80, 23.3),
-            (30, "N/A (20 mm)", 60, 27.6),
-            (30, "N/A (20 mm)", 40, 33.7),
-            (30, "N/A (20 mm)", 15, 42.8),
-            (30, "N/A (20 mm)", 20, 40.6),
-            (30, "N/A (20 mm)", 85, 22.3),
-
-            (60, "N/A (20 mm)", 100, 22.0),
-            (60, "N/A (20 mm)", 80, 25.4),
-            (60, "N/A (20 mm)", 60, 30.4),
-            (60, "N/A (20 mm)", 40, 36.0),
-            (60, "N/A (20 mm)", 15, 46.2),
-            (60, "N/A (20 mm)", 50, 33.3),
-            (60, "N/A (20 mm)", 90, 23.6),
-
-            (180, "N/A (20 mm)", 100, 25.1),
-            (180, "N/A (20 mm)", 80, 28.7),
-            (180, "N/A (20 mm)", 60, 34.2),
-            (180, "N/A (20 mm)", 40, 42.2),
-            (180, "N/A (20 mm)", 15, 53.1),
-            (180, "N/A (20 mm)", 85, 27.7),
-            (180, "N/A (20 mm)", 35, 44.6),
+            ("60 mm - 180 mm", "N/A (10 mm)", 100, 30.9),
+            ("60 mm - 180 mm", "N/A (10 mm)", 80, 35.8),
+            ("60 mm - 180 mm", "N/A (10 mm)", 60, 43.2),
+            ("60 mm - 180 mm", "N/A (10 mm)", 40, 52.8),
+            ("60 mm - 180 mm", "N/A (10 mm)", 15, 66.5),
+            ("60 mm - 180 mm", "N/A (10 mm)", 85, 34.3),
+            ("60 mm - 180 mm", "N/A (10 mm)", 35, 55.5),
 
             ##############################
 
-            (10, "N/A (40 mm)", 100, 15.0),
-            (10, "N/A (40 mm)", 80, 18.0),
-            (10, "N/A (40 mm)", 60, 21.4),
-            (10, "N/A (40 mm)", 40, 26.2),
-            (10, "N/A (40 mm)", 15, 33.4),
-            (10, "N/A (40 mm)", 90, 16.7),
-            (10, "N/A (40 mm)", 50, 23.8),
+            ("0 mm - 10 mm", "N/A (20 mm)", 100, 18.5),
+            ("0 mm - 10 mm", "N/A (20 mm)", 80, 21.8),
+            ("0 mm - 10 mm", "N/A (20 mm)", 60, 26.2),
+            ("0 mm - 10 mm", "N/A (20 mm)", 40, 30.8),
+            ("0 mm - 10 mm", "N/A (20 mm)", 15, 39.9),
+            ("0 mm - 10 mm", "N/A (20 mm)", 90, 20.2),
+            ("0 mm - 10 mm", "N/A (20 mm)", 50, 28.8),
 
-            (30, "N/A (40 mm)", 100, 16.9),
-            (30, "N/A (40 mm)", 80, 19.2),
-            (30, "N/A (40 mm)", 60, 22.7),
-            (30, "N/A (40 mm)", 40, 28.0),
-            (30, "N/A (40 mm)", 15, 35.1),
-            (30, "N/A (40 mm)", 20, 33.5),
-            (30, "N/A (40 mm)", 90, 17.9),
+            ("10 mm - 30 mm", "N/A (20 mm)", 100, 20.4),
+            ("10 mm - 30 mm", "N/A (20 mm)", 80, 23.3),
+            ("10 mm - 30 mm", "N/A (20 mm)", 60, 27.6),
+            ("10 mm - 30 mm", "N/A (20 mm)", 40, 33.7),
+            ("10 mm - 30 mm", "N/A (20 mm)", 15, 42.8),
+            ("10 mm - 30 mm", "N/A (20 mm)", 20, 40.6),
+            ("10 mm - 30 mm", "N/A (20 mm)", 85, 22.3),
 
-            (60, "N/A (40 mm)", 100, 18.9),
-            (60, "N/A (40 mm)", 80, 21.8),
-            (60, "N/A (40 mm)", 60, 25.9),
-            (60, "N/A (40 mm)", 40, 32.1),
-            (60, "N/A (40 mm)", 15, 39.5),
-            (60, "N/A (40 mm)", 55, 27.7),
-            (60, "N/A (40 mm)", 90, 20.2),
+            ("30 mm - 60 mm", "N/A (20 mm)", 100, 22.0),
+            ("30 mm - 60 mm", "N/A (20 mm)", 80, 25.4),
+            ("30 mm - 60 mm", "N/A (20 mm)", 60, 30.4),
+            ("30 mm - 60 mm", "N/A (20 mm)", 40, 36.0),
+            ("30 mm - 60 mm", "N/A (20 mm)", 15, 46.2),
+            ("30 mm - 60 mm", "N/A (20 mm)", 50, 33.3),
+            ("30 mm - 60 mm", "N/A (20 mm)", 90, 23.6),
 
-            (180, "N/A (40 mm)", 100, 21.8),
-            (180, "N/A (40 mm)", 80, 25.5),
-            (180, "N/A (40 mm)", 60, 30.0),
-            (180, "N/A (40 mm)", 40, 36.9),
-            (180, "N/A (40 mm)", 15, 46.4),
-            (180, "N/A (40 mm)", 50, 33.6),
-            (180, "N/A (40 mm)", 20, 44.3),
+            ("60 mm - 180 mm", "N/A (20 mm)", 100, 25.1),
+            ("60 mm - 180 mm", "N/A (20 mm)", 80, 28.7),
+            ("60 mm - 180 mm", "N/A (20 mm)", 60, 34.2),
+            ("60 mm - 180 mm", "N/A (20 mm)", 40, 42.2),
+            ("60 mm - 180 mm", "N/A (20 mm)", 15, 53.1),
+            ("60 mm - 180 mm", "N/A (20 mm)", 85, 27.7),
+            ("60 mm - 180 mm", "N/A (20 mm)", 35, 44.6),
+
+            ##############################
+
+            ("0 mm - 10 mm", "N/A (40 mm)", 100, 15.0),
+            ("0 mm - 10 mm", "N/A (40 mm)", 80, 18.0),
+            ("0 mm - 10 mm", "N/A (40 mm)", 60, 21.4),
+            ("0 mm - 10 mm", "N/A (40 mm)", 40, 26.2),
+            ("0 mm - 10 mm", "N/A (40 mm)", 15, 33.4),
+            ("0 mm - 10 mm", "N/A (40 mm)", 90, 16.7),
+            ("0 mm - 10 mm", "N/A (40 mm)", 50, 23.8),
+
+            ("10 mm - 30 mm", "N/A (40 mm)", 100, 16.9),
+            ("10 mm - 30 mm", "N/A (40 mm)", 80, 19.2),
+            ("10 mm - 30 mm", "N/A (40 mm)", 60, 22.7),
+            ("10 mm - 30 mm", "N/A (40 mm)", 40, 28.0),
+            ("10 mm - 30 mm", "N/A (40 mm)", 15, 35.1),
+            ("10 mm - 30 mm", "N/A (40 mm)", 20, 33.5),
+            ("10 mm - 30 mm", "N/A (40 mm)", 90, 17.9),
+
+            ("30 mm - 60 mm", "N/A (40 mm)", 100, 18.9),
+            ("30 mm - 60 mm", "N/A (40 mm)", 80, 21.8),
+            ("30 mm - 60 mm", "N/A (40 mm)", 60, 25.9),
+            ("30 mm - 60 mm", "N/A (40 mm)", 40, 32.1),
+            ("30 mm - 60 mm", "N/A (40 mm)", 15, 39.5),
+            ("30 mm - 60 mm", "N/A (40 mm)", 55, 27.7),
+            ("30 mm - 60 mm", "N/A (40 mm)", 90, 20.2),
+
+            ("60 mm - 180 mm", "N/A (40 mm)", 100, 21.8),
+            ("60 mm - 180 mm", "N/A (40 mm)", 80, 25.5),
+            ("60 mm - 180 mm", "N/A (40 mm)", 60, 30.0),
+            ("60 mm - 180 mm", "N/A (40 mm)", 40, 36.9),
+            ("60 mm - 180 mm", "N/A (40 mm)", 15, 46.4),
+            ("60 mm - 180 mm", "N/A (40 mm)", 50, 33.6),
+            ("60 mm - 180 mm", "N/A (40 mm)", 20, 44.3),
         ]
 
-        for slump, nms, passing_600, fine_content_ssd_expected in test_cases:
-            with self.subTest(passing_600=passing_600, slump=slump, nms=nms):
-                fine_content_ssd = self.fine_agg.fine_content(passing_600, w_cm, slump, nms, total_agg_content)
+        for slump_range, nms, passing_600, fine_content_ssd_expected in test_cases:
+            with self.subTest(passing_600=passing_600, slump_range=slump_range, nms=nms):
+                fine_content_ssd = self.fine_agg.fine_content(passing_600, w_cm, slump_range, nms, total_agg_content)
                 self.assertAlmostEqual(fine_content_ssd, fine_content_ssd_expected, delta=0.35)
 
 class TestCoarseAggregate(unittest.TestCase):
