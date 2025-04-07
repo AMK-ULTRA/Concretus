@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>655</width>
-    <height>475</height>
+    <height>530</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>655</width>
-    <height>475</height>
+    <height>530</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -188,45 +188,51 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <layout class="QFormLayout" name="formLayout_7">
-         <property name="formAlignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        <widget class="QGroupBox" name="groupBox_slump">
+         <property name="title">
+          <string>Asentamiento</string>
          </property>
-         <property name="verticalSpacing">
-          <number>6</number>
+         <property name="checkable">
+          <bool>false</bool>
          </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_slump">
-           <property name="text">
-            <string>Asentamiento (mm)</string>
-           </property>
-           <property name="buddy">
-            <cstring>spinBox_slump</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSpinBox" name="spinBox_slump">
-           <property name="minimum">
-            <number>10</number>
-           </property>
-           <property name="maximum">
-            <number>210</number>
-           </property>
-           <property name="singleStep">
-            <number>5</number>
-           </property>
-           <property name="value">
-            <number>10</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         <layout class="QFormLayout" name="formLayout_7">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_slump_value">
+            <property name="text">
+             <string>Valor (mm)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spinBox_slump_value">
+            <property name="minimum">
+             <number>25</number>
+            </property>
+            <property name="maximum">
+             <number>150</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+            <property name="value">
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_slump_range">
+            <property name="text">
+             <string>Rango (mm)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBox_slump_range"/>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_class_exposure">
@@ -460,9 +466,6 @@
                </item>
                <item row="0" column="1">
                 <widget class="QDoubleSpinBox" name="doubleSpinBox_std_dev_value">
-                 <property name="minimum">
-                  <double>0.000000000000000</double>
-                 </property>
                  <property name="maximum">
                   <double>100.000000000000000</double>
                  </property>
@@ -1146,7 +1149,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje acumulado que pasa</string>
+              <string>Porcentaje acumulado pasante</string>
              </property>
              <property name="font">
               <font>
@@ -1157,7 +1160,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje de la fracción individual retenida</string>
+              <string>Porcentaje individual retenido</string>
              </property>
             </column>
            </widget>
@@ -1439,12 +1442,12 @@
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje acumulado que pasa</string>
+              <string>Porcentaje acumulado pasante</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Porcentaje de la fracción individual retenida</string>
+              <string>Porcentaje individual retenido</string>
              </property>
             </column>
            </widget>
@@ -1641,7 +1644,8 @@
   <tabstop>comboBox_method</tabstop>
   <tabstop>lineEdit_purchaser</tabstop>
   <tabstop>dateEdit_date</tabstop>
-  <tabstop>spinBox_slump</tabstop>
+  <tabstop>spinBox_slump_value</tabstop>
+  <tabstop>comboBox_slump_range</tabstop>
   <tabstop>comboBox_1</tabstop>
   <tabstop>comboBox_2</tabstop>
   <tabstop>comboBox_3</tabstop>

@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_CheckDesignWidget(object):
     def setupUi(self, CheckDesignWidget):
         CheckDesignWidget.setObjectName("CheckDesignWidget")
-        CheckDesignWidget.resize(655, 475)
+        CheckDesignWidget.resize(655, 530)
         CheckDesignWidget.setMinimumSize(QtCore.QSize(655, 475))
         CheckDesignWidget.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         self.verticalLayout = QtWidgets.QVBoxLayout(CheckDesignWidget)
