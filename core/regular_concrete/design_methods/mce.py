@@ -66,7 +66,7 @@ class Cement(CementitiousMaterial):
         # Convert slump to centimeters
         slump = 0.1 * slump
 
-        if not theta:
+        if theta is None or theta < 0:
             # Calculate the design cement content
             design_cement_content = k * slump ** n * alpha ** (-m)
 
@@ -682,7 +682,11 @@ class AbramsLaw:
         :rtype: float
         """
 
-        # Get the n and m constants for the given age of the test
+        # In case the correction factors are not applied
+        correction_factor_1 = 1
+        correction_factor_2 = 1
+
+        # If m and n were not provided, then get the n and m constants for the given age of the test
         if m is None and n is None:
             try:
                 n = CONSTANTS.get(target_strength_time, {})["n"]
@@ -692,22 +696,27 @@ class AbramsLaw:
                 self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
                 raise KeyError(error_msg)
 
+            # Only apply correction factors if m and n were not provided
+            correction_factor_1 = ALFA_FACTOR_1.get(nms, 0)  # according to the nominal maximum size
+            correction_factor_2 = ALFA_FACTOR_2.get(agg_types[0], {}).get(agg_types[1], 0)  # according to aggregate type
+
+            if correction_factor_1 == 0:
+                error_msg = (f"The NMS correction was not possible. No factor correction for {nms}. "
+                             f"Valid NMS values are: {list(ALFA_FACTOR_1.keys())}")
+                self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
+                raise ValueError(error_msg)
+            if correction_factor_2 == 0:
+                error_msg = (f"The aggregate type correction was not possible. "
+                             f"No factor correction for aggregate types -> {agg_types}")
+                self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
+                raise ValueError(error_msg)
+
+            # Store correction factors in the data model
+            self.mce_data_model.update_data('water_cement_ratio.correction_factor_1', correction_factor_1)
+            self.mce_data_model.update_data('water_cement_ratio.correction_factor_2', correction_factor_2)
+
         # Calculate the alpha according to Abrams' Law
         design_alpha = (log10(m) - log10(target_strength)) / log10(n)
-
-        # Retrieve correction factors from settings
-        correction_factor_1 = ALFA_FACTOR_1.get(nms, 0)  # according to the nominal maximum size
-        correction_factor_2 = ALFA_FACTOR_2.get(agg_types[0], {}).get(agg_types[1], 0)  # according to aggregate type
-
-        if correction_factor_1 == 0:
-            error_msg = (f"The NMS correction was not possible. No factor correction for {nms}. "
-                         f"Valid NMS values are: {list(ALFA_FACTOR_1.keys())}")
-            self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
-            raise ValueError(error_msg)
-        if correction_factor_2 == 0:
-            error_msg = f"The aggregate type correction was not possible. No factor correction for aggregate types -> {agg_types}"
-            self.mce_data_model.add_calculation_error('Water-cement ratio', error_msg)
-            raise ValueError(error_msg)
 
         # Calculate corrected alpha
         corrected_alpha = correction_factor_1 * correction_factor_2 * design_alpha
@@ -721,8 +730,6 @@ class AbramsLaw:
 
         # Store intermediate calculation results in the MCE data model for reference
         self.mce_data_model.update_data('water_cement_ratio.design_alpha', design_alpha)
-        self.mce_data_model.update_data('water_cement_ratio.correction_factor_1', correction_factor_1)
-        self.mce_data_model.update_data('water_cement_ratio.correction_factor_2', correction_factor_2)
         self.mce_data_model.update_data('water_cement_ratio.corrected_alpha', corrected_alpha)
         self.mce_data_model.update_data('water_cement_ratio.min_alpha', min_alpha)
         self.mce_data_model.update_data('water_cement_ratio.m', m)
