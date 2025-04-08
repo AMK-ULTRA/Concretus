@@ -21,12 +21,14 @@ class TestCement(unittest.TestCase):
             (50.8, 0.48, 394.686432),
             (60, 0.48, 405.338824),
             (80, 0.43, 489.680733),
+            (10, 0.50, 288.580251),
+            (0, 0.50, 270),
         ]
 
         for slump, alpha, cement_content_expected in test_cases:
             with self.subTest(slump=slump, alpha=alpha):
                 cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes)
-                self.assertAlmostEqual(cement_content, cement_content_expected, places=5)
+                self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.000001)
 
     def test_cement_content_with_correction(self):
         slump = 100
@@ -55,6 +57,25 @@ class TestCement(unittest.TestCase):
             with self.subTest(nms=nms, agg_types=agg_types):
                 cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, k=500, n=0, m=0)
                 self.assertEqual(cement_content, cement_content_expected)
+
+    def test_cement_content_with_theta(self):
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
+        slump = 40
+        test_cases = [
+            (134.8, 0.50, 331.9165),
+            (136.8, 0.55, 297.5874),
+            (141.8, 0.35, 555.1211),
+            (222, 0.60, 431.2771),
+            (0, 0.35, 270),
+            (-10, 0.50, 360.2435),
+        ]
+
+        for theta, alpha, cement_content_expected in test_cases:
+            with self.subTest(theta=theta, alpha=alpha):
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, theta)
+                self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.0001)
 
 class TestAir(unittest.TestCase):
     def setUp(self):
@@ -302,6 +323,23 @@ class TestAbramsLaw(unittest.TestCase):
                 water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
                                                                         agg_types, exposure_classes)
                 self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected)
+
+    def test_water_cement_ratio_with_different_constant(self):
+        target_strength = 300
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
+        test_cases = [
+            ('7 días', 945.6, 13.1, 0.4463),
+            ('28 días', 945.6, 8.69, 0.5310),
+            ('90 días', 945.6, 7.71, 0.5621),
+        ]
+
+        for target_strength_time, m, n, water_cement_ratio_expected in test_cases:
+            with self.subTest(target_strength_time=target_strength_time):
+                water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
+                                                                        agg_types, exposure_classes, m, n)
+                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.0001)
 
 ##############################################
 # Run all the tests
