@@ -273,10 +273,10 @@ class RegularConcreteDataModel(QObject):
 
         if section:
             key = section.upper()
-            # Remove the error for the specified section if it exists.
+            # Remove the error for the specified section if it exists
             self.validation_errors.pop(key, None)
         else:
-            # Clear all errors.
+            # Clear all errors
             self.validation_errors = {}
 
     # -------------------------------------------- Reset method --------------------------------------------

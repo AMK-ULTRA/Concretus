@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Concretus"))
         self.menu_start.setTitle(_translate("MainWindow", "Inicio"))
         self.menu_design.setTitle(_translate("MainWindow", "Diseño"))
         self.menu_regular_concrete.setTitle(_translate("MainWindow", "Concreto Normal"))

@@ -143,10 +143,10 @@ class DOEDataModel:
 
         if section:
             key = section.upper()
-            # Remove the error for the specified section if it exists.
+            # Remove the error for the specified section if it exists
             self.calculation_errors.pop(key, None)
         else:
-            # Clear all errors.
+            # Clear all errors
             self.calculation_errors = {}
 
     # -------------------------------------------- Reset method --------------------------------------------
