@@ -1,5 +1,5 @@
-from PyQt6.QtCore import QObject, QEvent, Qt
-from PyQt6.QtGui import QDoubleValidator
+from PyQt6.QtCore import QObject, QEvent, Qt, QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit
 
 from Concretus.gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
@@ -12,11 +12,13 @@ class NumericDelegate(QItemDelegate):
     """Override the createEditor method of QItemDelegate (inherited by QAbstractItemDelegate)."""
 
     def createEditor(self, parent, option, index):
-        # Create a QLineEdit and assign it a QDoubleValidator to allow numbers
         editor = QLineEdit(parent)
-        validator = QDoubleValidator(editor)
-        # Setting the validator range
-        validator.setBottom(0)  # only positive numbers
+        # Regular expression explanation:
+        #  - ^ and $ anchor the string from start to end.
+        #  - (100(\.\d+)?  allows exactly 100 with optional decimals (e.g., 100, 100.0, 100.00, etc.)
+        #  - |[1-9]?\d(\.\d+)?  allows numbers from 0 to 99 with optional decimals.
+        reg_ex = QRegularExpression(r"^(100(\.\d+)?|[1-9]?\d(\.\d+)?)$")
+        validator = QRegularExpressionValidator(reg_ex, editor)
         editor.setValidator(validator)
         return editor
 
