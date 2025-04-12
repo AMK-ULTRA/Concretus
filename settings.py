@@ -281,7 +281,7 @@ MINIMUM_SPEC_STRENGTH = {
     }
 }
 
-# Allowed ranges for the passing percentage (grading limits) according to COVENIN 0277-2000 (MCE),
+# Allowed ranges for the passing percentage (grading limits) according to COVENIN 0277-2021 (MCE),
 # ASTM C33-C33M (23) (ACI) and PD 6682-1-2009 (DoE)
 # KEEP THE FOLLOWING FORMAT -> (upper limit, lower limit) | When both limits are equal, simply write the number
 
@@ -727,16 +727,50 @@ COARSE_RANGES = {
 } # Coarse aggregate
 FINE_RANGES = {
     "MCE": {
-        "COVENIN 0277": {
+        "Gruesa": {
             '3/8" (9,5 mm)': 100,
-            "No. 4 (4,75 mm)": (100, 85),
-            "No. 8 (2,36 mm)": (95, 60),
-            "No. 16 (1,18 mm)": (80, 40),
-            "No. 30 (0,600 mm)": (60, 20),
-            "No. 50 (0,300 mm)": (30, 8),
-            "No. 100 (0,150 mm)": (10, 2),
+            '1/4" (6,3 mm)': (100, 85),
+            "No. 4 (4,75 mm)": (95, 70),
+            "No. 8 (2,36 mm)": (70, 40),
+            "No. 16 (1,18 mm)": (50, 25),
+            "No. 30 (0,600 mm)": (32, 15),
+            "No. 50 (0,300 mm)": (20, 5),
+            "No. 100 (0,150 mm)": (10, 0),
+            "No. 200 (0,075 mm)": (2.5, 0)
+        },
+        "Media": {
+            '3/8" (9,5 mm)': 100,
+            '1/4" (6,3 mm)': (100, 85),
+            "No. 4 (4,75 mm)": (100, 75),
+            "No. 8 (2,36 mm)": (90, 55),
+            "No. 16 (1,18 mm)": (75, 38),
+            "No. 30 (0,600 mm)": (55, 20),
+            "No. 50 (0,300 mm)": (35, 10),
+            "No. 100 (0,150 mm)": (20, 6),
             "No. 200 (0,075 mm)": (5, 0)
-        }
+        },
+        "Fino": {
+            '3/8" (9,5 mm)': 100,
+            '1/4" (6,3 mm)': 100,
+            "No. 4 (4,75 mm)": (100, 95),
+            "No. 8 (2,36 mm)": (99, 85),
+            "No. 16 (1,18 mm)": (95, 70),
+            "No. 30 (0,600 mm)": (85, 48),
+            "No. 50 (0,300 mm)": (60, 30),
+            "No. 100 (0,150 mm)": (30, 12),
+            "No. 200 (0,075 mm)": (5, 1)
+        },
+        "Muy finas": {
+            '3/8" (9,5 mm)': 100,
+            '1/4" (6,3 mm)': 100,
+            "No. 4 (4,75 mm)": 100,
+            "No. 8 (2,36 mm)": 100,
+            "No. 16 (1,18 mm)": (100, 95),
+            "No. 30 (0,600 mm)": (100, 85),
+            "No. 50 (0,300 mm)": (85, 40),
+            "No. 100 (0,150 mm)": (35, 8),
+            "No. 200 (0,075 mm)": (8, 0)
+        },
     },
     "ACI": {
         "ASTM C33": {
@@ -962,6 +996,15 @@ NMS_BY_CATEGORY = {
     },
 }
 
+# Maximum nominal sizes valid by method
+NMS_VALID = {
+    "MCE": ['3" (75 mm)', '2-1/2" (63 mm)', '2" (50 mm)', '1-1/2" (37,5 mm)', '1" (25 mm)', '3/4" (19 mm)',
+            '1/2" (12,5 mm)', '3/8" (9,5 mm)', '1/4" (6,3 mm)'],
+    "ACI": ['3-1/2" (90 mm)', '3" (75 mm)', '2-1/2" (63 mm)', '2" (50 mm)', '1-1/2" (37,5 mm)', '1" (25 mm)',
+            '3/4" (19 mm)', '1/2" (12,5 mm)', '3/8" (9,5 mm)'],
+    "DoE": ["N/A (40 mm)", "N/A (20 mm)", "N/A (10 mm)"],
+}
+
 # Conversion factors according to the unit system
 # The key is the target unit system
 CONVERSION_FACTORS = {
@@ -1012,6 +1055,11 @@ K_FACTOR = {
     29: 1.006,
     30: 1.00
 }
+
+# List of error keys for progress bar update
+ERROR_KEYS = ["GRADING REQUIREMENTS FOR COARSE AGGREGATE", "GRADING REQUIREMENTS FOR FINE AGGREGATE",
+              "FINENESS MODULUS", "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+              "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)", "MINIMUM ENTRAINED AIR"]
 
 # -----------------------------------------------------------------------------
 # MCE method settings
