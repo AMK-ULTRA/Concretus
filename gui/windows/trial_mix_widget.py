@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QMessageBox
 
 from Concretus.gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
@@ -32,6 +32,9 @@ class TrialMix(QWidget):
         self.aci = None
         self.doe = None
 
+        # Set up the main connections
+        self.table_connections()
+
         # Initialize the logger
         self.logger = Logger(__name__)
         self.logger.info('Trial mix widget initialized')
@@ -58,6 +61,14 @@ class TrialMix(QWidget):
         """Clean up widget when navigating away."""
 
         self.mce_data_model.reset()
+        self.aci_data_model.reset()
+        self.doe_data_model.reset()
+
+    def table_connections(self):
+        """Set up signal/slot connections for the tables."""
+
+        # Calculate the proportion for the trial mix
+        self.ui.pushButton_trial_mix.clicked.connect(self.sample_mixture)
 
     def create_table_columns(self, unit):
         """
@@ -73,16 +84,16 @@ class TrialMix(QWidget):
                 "Volumen absoluto (L)",
                 "Peso (kgf/m³)",
                 "Volumen (L/m³)",
-                "Peso para la prueba (kgf/m³)",
-                "Volumen para la prueba (L/m³)"
+                "Peso de prueba (kgf)",
+                "Volumen de prueba (L)"
             ]
         elif unit == "SI":
             column_headers = [
                 "Volumen absoluto (L)",
                 "Masa (kg/m³)",
                 "Volumen (L/m³)",
-                "Masa para la prueba (kg/m³)",
-                "Volumen para la prueba (L/m³)"
+                "Masa de prueba (kg)",
+                "Volumen de prueba (L)"
             ]
         else:
             column_headers = []
@@ -178,22 +189,64 @@ class TrialMix(QWidget):
         self.ui.tableWidget.setFixedHeight(total_height)
 
     def mce_calculation_engine(self):
-        """Run the MCE calculation engine."""
+        """
+        Initialize and run the MCE calculation engine.
+
+        This method instantiates the MCE calculation engine with the current data models,
+        executes the calculation process, and if any errors occur during the calculations,
+        retrieves and formats the errors from the MCE data model, and displays them in a critical message box.
+        """
 
         self.mce = MCE(self.data_model, self.mce_data_model)
-        self.mce.run()
+
+        # Execute the calculations; if any step fails, run() returns False
+        if not self.mce.run():
+            # Retrieve the errors from the MCE data model and format them as "key: value" per line
+            errors_dict = self.mce_data_model.calculation_errors
+            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
+            # Display the errors in a critical message box
+            QMessageBox.critical(self, "Error de Cálculo",
+                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
 
     def aci_calculation_engine(self):
-        """Run the ACI calculation engine."""
+        """
+        Initialize and run the ACI calculation engine.
+
+        This method instantiates the ACI calculation engine with the current data models,
+        executes the calculation process, and if any errors occur during the calculations,
+        retrieves and formats the errors from the ACI data model, and displays them in a critical message box.
+        """
 
         self.aci = ACI(self.data_model, self.aci_data_model)
-        self.aci.run()
+
+        # Execute the calculations; if any step fails, run() returns False
+        if not self.aci.run():
+            # Retrieve the errors from the ACI data model and format them as "key: value" per line
+            errors_dict = self.aci_data_model.calculation_errors
+            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
+            # Display the errors in a critical message box
+            QMessageBox.critical(self, "Error de Cálculo",
+                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
 
     def doe_calculation_engine(self):
-        """Run the DoE calculation engine."""
+        """
+        Initialize and run the DoE calculation engine.
+
+        This method instantiates the DoE calculation engine with the current data models,
+        executes the calculation process, and if any errors occur during the calculations,
+        retrieves and formats the errors from the DoE data model, and displays them in a critical message box.
+        """
 
         self.doe = DOE(self.data_model, self.doe_data_model)
-        self.doe.run()
+
+        # Execute the calculations; if any step fails, run() returns False
+        if not self.doe.run():
+            # Retrieve the errors from the DoE data model and format them as "key: value" per line
+            errors_dict = self.doe_data_model.calculation_errors
+            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
+            # Display the errors in a critical message box
+            QMessageBox.critical(self, "Error de Cálculo",
+                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
 
     def load_results(self, method):
         """
@@ -261,9 +314,9 @@ class TrialMix(QWidget):
             "-" # For total volume
         ]
 
-        # Filter out rows where any column value is None (or False, 0, ""; basically a falsy value)
-        # If ANY of the three columns at a given index is None, that row is not valid.
-        valid_indices = [i for i in range(len(col1)) if all([col1[i], col2[i], col3[i]])]
+        # Filter out rows where any column value is None
+        # If ANY of the three columns at a given index is None, that row is not valid
+        valid_indices = [i for i in range(len(col1)) if not any([col1[i] is None, col2[i] is None, col3[i] is None])]
 
         # Populate each cell by creating a QTableWidgetItem and marking it as non-editable
         for new_row, i in enumerate(valid_indices): # Fill the table using the valid indices
@@ -284,3 +337,106 @@ class TrialMix(QWidget):
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter) # Align text to center
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
                 self.ui.tableWidget.setItem(new_row, j, item)
+
+    def sample_mixture(self):
+        """
+        Provide the material content for the mix per cubic meter at a volume specified by the user.
+        Also consider a waste factor if required by the user.
+
+        Process all rows of the QTableWidget (except the last row) as follows:
+              - Extract values from the second (index 1) and third (index 2) columns.
+              - Attempt to convert these values to float. If successful, multiply the value by the first factor
+                (retrieved from doubleSpinBox_volume) and, if radioButton_waste is checked, by an additional factor
+                (retrieved from spinBox_waste). If conversion fails, the value is left as is.
+              - Update the fourth (index 3) and fifth (index 4) columns with the new values.
+              - Sum up all the (numeric) values written in the fourth column and, in the last row, set that cell to
+                the total sum; in the fifth column, place a dash ("-").
+        """
+
+        # Access the table widget
+        table = self.ui.tableWidget
+        row_count = table.rowCount()
+
+        # Get the primary factor from the volume specified by th user
+        factor = self.ui.doubleSpinBox_volume.value()
+
+        # Check if waste adjustment is active, and get the additional factor if so
+        if self.ui.radioButton_waste.isChecked():
+            waste = self.ui.spinBox_waste.value()
+            # Convert percentage to decimal form
+            waste = (waste / 100) + 1
+        else:
+            waste = 1  # No additional multiplication if the radio button is not checked
+
+        total_sum = 0  # This will accumulate the sum of numeric values (after multiplications) in column 4
+
+        # Process all rows except the last one
+        for row in range(row_count - 1):
+            # Get items from the second (index 1) and third (index 2) columns
+            item_col_2 = table.item(row, 1)
+            item_col_3 = table.item(row, 2)
+
+            text_2 = item_col_2.text() if item_col_2 is not None else ""
+            text_3 = item_col_3.text() if item_col_3 is not None else ""
+
+            # Try converting text to float; if it fails, retain the original text
+            try:
+                value_2 = float(text_2)
+                is_numeric_2 = True
+            except ValueError:
+                is_numeric_2 = False
+                value_2 = text_2
+
+            try:
+                value_3 = float(text_3)
+                is_numeric_3 = True
+            except ValueError:
+                is_numeric_3 = False
+                value_3 = text_3
+
+            # Multiply the value by the factor (and by the waste if applicable) if it is numeric; otherwise, leave it as is
+            if is_numeric_2:
+                new_value_2 = value_2 * factor * waste
+                new_value_2 = round(new_value_2, 1)
+                # Accumulate the numeric value for the total sum
+                total_sum += new_value_2
+            else:
+                new_value_2 = value_2
+
+            if is_numeric_3:
+                new_value_3 = value_3 * factor * waste
+                new_value_3 = round(new_value_3, 1)
+            else:
+                new_value_3 = value_3
+
+            # Update the fourth (index 3) and fifth (index 4) columns for this row
+            item_2 = QTableWidgetItem(str(new_value_2))
+            item_3 = QTableWidgetItem(str(new_value_3))
+
+            # Align text to center
+            item_2.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            item_3.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            # Make the cell non-editable
+            item_2.setFlags(item_2.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            item_3.setFlags(item_3.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+            table.setItem(row, 3, item_2)
+            table.setItem(row, 4, item_3)
+
+        # Now update the last row
+        last_row = row_count - 1
+        # In the fourth column, place the total sum of the numeric values
+        item_total_sum = QTableWidgetItem(str(round(total_sum, 1)))
+        table.setItem(last_row, 3, item_total_sum)
+        # In the fifth column, place a dash ("-")
+        item_last_row = QTableWidgetItem("-")
+        table.setItem(last_row, 4, item_last_row)
+
+        # Align text to center
+        item_total_sum.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        item_last_row.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Make the cell non-editable
+        item_total_sum.setFlags(item_total_sum.flags() & ~Qt.ItemFlag.ItemIsEditable)
+        item_last_row.setFlags(item_last_row.flags() & ~Qt.ItemFlag.ItemIsEditable)

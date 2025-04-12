@@ -1,13 +1,13 @@
 from functools import partial
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QMessageBox
 from PyQt6.QtCore import pyqtSignal
 
 from Concretus.gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
 from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
 from Concretus.core.regular_concrete.models.validation import Validation
 from Concretus.logger import Logger
-from Concretus.settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS
+from Concretus.settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS, NMS_VALID, ERROR_KEYS
 
 
 class CheckDesign(QWidget):
@@ -54,11 +54,14 @@ class CheckDesign(QWidget):
 
         # Update the progress bar
         self.update_progress_bar()
+        # Check the inputs
+        self.validate_inputs()
 
     def on_exit(self):
         """Clean up widget when navigating away."""
 
-        self.data_model.clear_validation_errors()
+        for section in ERROR_KEYS:
+            self.data_model.clear_validation_errors(section)
         self.clean_up_fields()
 
         # Disable these fields
@@ -88,6 +91,110 @@ class CheckDesign(QWidget):
 
         with open(style_file, 'r') as f:
             return f.read()
+
+    def validate_inputs(self):
+        """
+        Validate the input data from the data model. If any critical errors are detected,
+        a warning message box will be shown and the get_back_button_clicked() method will be triggered.
+        """
+
+        # Retrieve inputs from the data model
+        fine_relative_density = self.data_model.get_design_value('fine_aggregate.physical_prop.relative_density_SSD')
+        coarse_relative_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.relative_density_SSD')
+        cement_relative_density = self.data_model.get_design_value('cementitious_materials.relative_density')
+        scm_relative_density = self.data_model.get_design_value('cementitious_materials.SCM.SCM_relative_density')
+        scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
+        scm_checked = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
+        fine_loose_bulk_density = self.data_model.get_design_value('fine_aggregate.physical_prop.PUS')
+        coarse_loose_bulk_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.PUS')
+        coarse_compacted_bulk_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.PUC')
+        entrained_air = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
+        entrained_air_exposure_defined = self.data_model.get_design_value('field_requirements.entrained_air_content.exposure_defined')
+        exposure_class_aci = self.data_model.get_design_value('field_requirements.exposure_class.items_2')
+        exposure_class_doe = self.data_model.get_design_value('field_requirements.exposure_class.items_3')
+        nominal_max_size = self.data_model.get_design_value('coarse_aggregate.NMS')
+        passing_600 = self.data_model.get_design_value('fine_aggregate.gradation.passing')
+        coarse_absorption = self.data_model.get_design_value('coarse_aggregate.moisture.absorption_content')
+
+
+        # Get the design method
+        method = self.data_model.method
+
+        warnings = []
+
+        # Check zero density
+        if fine_relative_density == 0:
+            warnings.append("La densidad relativa del agregado fino no puede ser cero.")
+        if coarse_relative_density == 0:
+            warnings.append("La densidad relativa del agregado grueso no puede ser cero.")
+        if cement_relative_density == 0:
+            warnings.append("La densidad relativa del cemento no puede ser cero.")
+        if scm_relative_density == 0 and scm_checked:
+            warnings.append(f"La densidad relativa del SCM ({scm_type}) no puede ser cero.")
+
+        # Check bulk density with method-specific messages
+        if fine_loose_bulk_density == 0:
+            if method == "MCE":
+                warnings.append("El peso unitario suelto del agregado fino no puede ser cero.")
+            else:
+                warnings.append("La masa unitaria suelta del agregado fino no puede ser cero.")
+        if coarse_loose_bulk_density == 0:
+            if method == "MCE":
+                warnings.append("El peso unitario compactado del agregado fino no puede ser cero.")
+            else:
+                warnings.append("La masa unitaria compactada del agregado fino no puede ser cero.")
+        if coarse_compacted_bulk_density == 0 and method == "ACI":
+            warnings.append("La masa unitaria compactada del agregado grueso no puede ser cero.")
+
+        # Validate entrained air requirements
+        if entrained_air and entrained_air_exposure_defined:
+            if method == "ACI" and exposure_class_aci not in ["F1", "F2", "F3"]:
+                warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
+            if method == "DoE" and exposure_class_doe not in ["XF2", "XF3", "XF4"]:
+                warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
+
+        # Validate nominal maximum size
+        if nominal_max_size is None:
+            nominal_max_size = "Indeterminado"
+        if method == "MCE" and nominal_max_size not in NMS_VALID["MCE"]:
+            warnings.append(f"Los calculos no son aplicables con este tamaño máximo nominal: {nominal_max_size}")
+        if method == "ACI" and nominal_max_size not in NMS_VALID["ACI"]:
+            warnings.append(f"Los calculos no son aplicables con este tamaño máximo nominal: {nominal_max_size}")
+        if method == "DoE" and nominal_max_size not in NMS_VALID["DoE"]:
+            warnings.append(f"Los calculos no son aplicables con este tamaño máximo nominal: {nominal_max_size}")
+
+        # Validate grading limits
+        if method == "DoE" and passing_600.get("No. 30 (0,600 mm)", 1) is None:
+            warnings.append("El celda para el cedazo No. 30 (0,600 mm) no puede estar vacía.")
+
+        # Validate the absorption percentage of the coarse aggregate
+        if method == "ACI" and coarse_absorption == 0:
+            warnings.append("El porcentaje de absorción del agregado grueso no puede ser cero.")
+
+        # If there are warnings, display them in a QMessageBox and connect the signals
+        if warnings:
+            # Add a validation error to the data model
+            self.data_model.add_validation_error("Data entry", "Some inputs are not valid")
+
+            # Construct the message text
+            message = "Se encontraron los siguientes errores en el ingreso de los datos:\n\n" + "\n".join(warnings)
+
+            # Create the QMessageBox
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Warning)
+            msg_box.setWindowTitle("Errores en Datos de Entrada")
+            msg_box.setText(message)
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
+            msg_box.finished.connect(lambda result: self.get_back_button_clicked())
+
+            # Execute the message box (modal)
+            msg_box.exec()
+
+        else:
+            # Remove the validation error from the data model (if it fails the first time)
+            self.data_model.clear_validation_errors("DATA ENTRY")
 
     def apply_validation_style(self, line_edit, is_valid):
         """
@@ -138,16 +245,8 @@ class CheckDesign(QWidget):
         # Retrieve the dictionary with all errors
         validation_errors = self.data_model.validation_errors
 
-        # Define error keys and assign 1 if key exists in validation_errors, otherwise 0
-        error_keys = [
-            "GRADING REQUIREMENTS FOR COARSE AGGREGATE",
-            "GRADING REQUIREMENTS FOR FINE AGGREGATE",
-            "FINENESS MODULUS",
-            "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
-            "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
-            "MINIMUM ENTRAINED AIR",
-        ]
-        errors = {key: 1 if key in validation_errors else 0 for key in error_keys}
+        # Using the ERROR_KEYS dictionary, assign 1 if key exists in validation_errors, otherwise 0
+        errors = {key: 1 if key in validation_errors else 0 for key in ERROR_KEYS}
 
         # Retrieve the scores for coarse and fine gradings
         coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
@@ -268,7 +367,7 @@ class CheckDesign(QWidget):
 
         # Update the fields in the GUI
         if nms is None:
-            self.ui.lineEdit_NMS.setText('Granulometría incompleta')
+            self.ui.lineEdit_NMS.setText('Indeterminado')
         else:
             self.ui.lineEdit_NMS.setText(str(nms))
 
@@ -389,7 +488,7 @@ class CheckDesign(QWidget):
         # Update the UI fields
         self.ui.lineEdit_exposure_class_2.setText(exp_class_text)
         if nms is None:
-            self.ui.lineEdit_air_NMS.setText("Granulometría incompleta")
+            self.ui.lineEdit_air_NMS.setText("Indeterminado")
         else:
             self.ui.lineEdit_air_NMS.setText(nms)
 

@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
 
     def enable_actions(self, current_step):
         """
-        Enables the appropriate actions based on the current step.
+        Enables the appropriate actions based on the current step and that some validation error keys do not exist.
 
         :param int current_step: The current step in the workflow.
         """
@@ -152,8 +152,44 @@ class MainWindow(QMainWindow):
 
         if current_step in actions_to_enable:
             action = actions_to_enable[current_step]
-            if not action.isEnabled():
+
+            # If the action is Trial Mix, check that the error keys does not exist
+            if action == self.ui.action_trial_mix:
+                method = self.data_model.method
+                if method == "ACI":
+                    required_keys = [
+                        "FINENESS MODULUS",
+                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                        "MINIMUM ENTRAINED AIR",
+                        "DATA ENTRY"
+                    ]
+                elif method in ("MCE", "DoE"):
+                    required_keys = [
+                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                        "MINIMUM ENTRAINED AIR",
+                        "DATA ENTRY"
+                    ]
+                else:
+                    required_keys = []
+
+                # Check if any the error keys exist in the validation errors dictionary
+                missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
+                if not missing_keys:
+                    # If one or more error keys does not exist, enable the action
+                    action.setEnabled(True)
+                    return
+                else:
+                    # Keep the action disabled
+                    action.setEnabled(False)
+                    return
+
+            # If all validations pass or the action is not Trial Mix, enable the action
+            if action == self.ui.action_check_design:
                 action.setEnabled(True)
+                # Disable the Trial Mix widget
+                self.ui.action_trial_mix.setEnabled(False)
 
     def navigate_to(self, widget):
         """
@@ -235,7 +271,11 @@ class MainWindow(QMainWindow):
         self.logger.info('The Check Design has been selected')
 
         self.navigate_to(self.check_design)
-        self.data_model.current_step = 3
+        # If the input validation triggered the warning message, this means it will change the current step to 2
+        if self.data_model.validation_errors.get("DATA ENTRY", None):
+            self.data_model.current_step = 2
+        else:
+            self.data_model.current_step = 3
 
     def show_trial_mix(self):
         """Displays the Trial Mix widget and updates the workflow step value."""
