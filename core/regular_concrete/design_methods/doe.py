@@ -444,7 +444,7 @@ class FineAggregate(Aggregate):
         """
         Calculate the fine aggregate content in kilogram per cubic meter (kg/m³)
 
-        :param float | int passing_600: Fine percentage passing 600 µm sieve.
+        :param float | int passing_600: Fine percentage passing through 600 µm sieve.
         :param float w_cm: Water-to-cementitious materials ratio (w/cm).
         :param int slump_range: Slump range of the concrete in fresh state (in mm).
         :param str nms: Nominal maximum size designation (e.g., "N/A (10 mm)")
@@ -453,6 +453,12 @@ class FineAggregate(Aggregate):
         :return: The mass of saturated surface-dry (SSD) fine aggregate for a cubic meter of concrete in kg.
         :rtype: float
         """
+
+        # Check the percentage passing 600 µm sieve
+        if passing_600 is None:
+            error_msg = "The percentage passing through the 600 µm sieve must have a value"
+            self.doe_data_model.add_calculation_error('Fine Content', error_msg)
+            raise KeyError(error_msg)
 
         # Find the coefficients for the given percentage passing 600 µm sieve
         fine_proportion_coeff = FINE_PROPORTION.get(nms, {}).get(slump_range, {}).get(passing_600)
@@ -558,7 +564,7 @@ class StandardDeviation:
         f_cr = 0
 
         # Case 1: The margin is specified by the user (the standard deviation is unknown)
-        if user_defined_margin and std_dev_unknown:
+        if user_defined_margin >= 0 and std_dev_unknown:
             f_cr = design_strength + user_defined_margin
 
         # Case 2: The standard deviation is known
@@ -771,7 +777,7 @@ class DOE:
                 cement_class=self.data_model.get_design_value("cementitious_materials.cement_class")
             )
             self.scm = SCM(
-                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density'),
+                relative_density=self.data_model.get_design_value('cementitious_materials.SCM.SCM_relative_density'),
                 scm_checked=self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'),
                 scm_type=self.data_model.get_design_value('cementitious_materials.SCM.SCM_type'),
                 scm_percentage=self.data_model.get_design_value('cementitious_materials.SCM.SCM_content')
@@ -1006,8 +1012,8 @@ class DOE:
                 "cement_content": cement_content,
                 "cement_abs_volume": cement_abs_volume,
                 "cement_volume": "-",
-                "scm_content": scm_content,
-                "scm_abs_volume": scm_abs_volume,
+                "scm_content": scm_content if scm_checked else None,
+                "scm_abs_volume": scm_abs_volume if scm_checked else None,
                 "scm_volume": "-",
                 "fine_content_ssd": fine_content_ssd,
                 "fine_content_wet": fine_content_wet,
@@ -1078,5 +1084,7 @@ class DOE:
         if self.perform_calculations():
             self.update_data_model()
             self.logger.info("DoE calculation process completed successfully")
+            return True
         else:
             self.logger.error("DoE calculation process terminated due to an error")
+            return False

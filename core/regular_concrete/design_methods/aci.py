@@ -668,7 +668,7 @@ class ACI:
                 relative_density=self.data_model.get_design_value('cementitious_materials.relative_density')
             )
             self.scm = SCM(
-                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density'),
+                relative_density=self.data_model.get_design_value('cementitious_materials.SCM.SCM_relative_density'),
                 scm_checked=self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'),
                 scm_type=self.data_model.get_design_value('cementitious_materials.SCM.SCM_type'),
                 scm_percentage=self.data_model.get_design_value('cementitious_materials.SCM.SCM_content')
@@ -783,7 +783,7 @@ class ACI:
                                                                                           scm_percentage)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
             if scm_checked:
-                scm_abs_volume = self.cement.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
+                scm_abs_volume = self.scm.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
             else:
                 scm_abs_volume = 0
 
@@ -890,8 +890,8 @@ class ACI:
                 "cement_content": cement_content,
                 "cement_abs_volume": cement_abs_volume,
                 "cement_volume": "-",
-                "scm_content": scm_content,
-                "scm_abs_volume": scm_abs_volume,
+                "scm_content": scm_content if scm_checked else None,
+                "scm_abs_volume": scm_abs_volume if scm_checked else None,
                 "scm_volume": "-",
                 "fine_content_ssd": fine_content_ssd,
                 "fine_content_wet": fine_content_wet,
@@ -962,5 +962,7 @@ class ACI:
         if self.perform_calculations():
             self.update_data_model()
             self.logger.info("ACI calculation process completed successfully")
+            return True
         else:
             self.logger.error("ACI calculation process terminated due to an error")
+            return False

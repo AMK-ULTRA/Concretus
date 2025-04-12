@@ -597,9 +597,9 @@ class Beta:
         # Retrieve the recommended grading limits for the given nominal maximum size
         grading_limits = COMBINED_GRADING.get(nms)
         if grading_limits is None:
-            error_msg = (f"Grading limits not found for NMS: {nms}. "
-                         f"Available grading limits for the following NMS: {list(COMBINED_GRADING.keys())}")
-            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            error_msg = (f"No se encontraron límites granulométricos para el TMN: {nms}. "
+                         f"Límites granulométricos disponibles para los siguientes TMN: {list(COMBINED_GRADING.keys())}")
+            self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
             raise ValueError(error_msg)
 
         # Clean any unused sieves from the grading
@@ -626,8 +626,8 @@ class Beta:
                     continue
                 elif fine_value not in (percentage_max, percentage_min):
                     # If value does not match expected limits, raises a value error exception
-                    error_msg = "The given grading does not match the recommended limits"
-                    self.mce_data_model.add_calculation_error('Get beta', error_msg)
+                    error_msg = "La granulometría dada no coincide con ninguno de los límites recomendados."
+                    self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
                     raise ValueError(error_msg)
             else:
                 # Calculate the slope of a two-point linear equation
@@ -643,8 +643,8 @@ class Beta:
                 beta_maxs.append(beta_max)
 
         if not beta_mins or not beta_maxs:
-            error_msg = f"There is an empty set. beta_mins -> {beta_mins}; beta_maxs -> {beta_maxs}"
-            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            error_msg = f"Granulometría vacía o incompleta."
+            self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
             raise ValueError(error_msg)
 
         # Return the maximum of beta_mins and the minimum of beta_maxs if computed, else raises a value error exception
@@ -653,9 +653,9 @@ class Beta:
             self.mce_data_model.update_data('beta.beta_max', min(beta_maxs))
             return max(beta_mins), min(beta_maxs)
         else:
-            error_msg = (f"The calculated set is not possible. "
-                         f"The minimum beta ({max(beta_mins)}) is greater than the maximum ({min(beta_maxs)}).")
-            self.mce_data_model.add_calculation_error('Get beta', error_msg)
+            error_msg = (f"El conjunto calculado no es posible. "
+                         f"El beta mínimo ({max(beta_mins)}) es mayor que el beta máximo ({min(beta_maxs)}).")
+            self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
             raise ValueError(error_msg)
 
 @dataclass
@@ -1062,5 +1062,7 @@ class MCE:
         if self.perform_calculations():
             self.update_data_model()
             self.logger.info("MCE calculation process completed successfully")
+            return True
         else:
             self.logger.error("MCE calculation process terminated due to an error")
+            return False
