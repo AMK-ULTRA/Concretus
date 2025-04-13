@@ -115,7 +115,7 @@ class MainWindow(QMainWindow):
         """Initialize all widgets and add them to the QStackedWidget."""
 
         # Initialize all widgets
-        self.welcome = Welcome(self)
+        self.welcome = Welcome(self.data_model, self)
         self.regular_concrete = RegularConcrete(self.data_model, self)
         self.check_design = CheckDesign(self.data_model, self)
         self.trial_mix = TrialMix(self.data_model, self)
@@ -247,14 +247,13 @@ class MainWindow(QMainWindow):
         plot_dialog.exec()
 
     def show_welcome(self):
-        """Displays the Welcome widget and updates the workflow step value."""
+        """Displays the Welcome widget."""
 
         self.navigate_to(self.welcome)
-        self.data_model.current_step = 1
 
     def show_regular_concrete(self, method):
         """
-        Displays the Regular Concrete widget and updates the workflow step value.
+        Displays the Regular Concrete widget.
 
         :param str method: The method to update the fields in the widget.
         """
@@ -263,27 +262,20 @@ class MainWindow(QMainWindow):
         self.data_model.method = method
 
         self.navigate_to(self.regular_concrete)
-        self.data_model.current_step = 2
 
     def show_check_design(self):
-        """Displays the Checking Design widget and updates the workflow step value."""
+        """Displays the Checking Design widget."""
 
         self.logger.info('The Check Design has been selected')
 
         self.navigate_to(self.check_design)
-        # If the input validation triggered the warning message, this means it will change the current step to 2
-        if self.data_model.validation_errors.get("DATA ENTRY", None):
-            self.data_model.current_step = 2
-        else:
-            self.data_model.current_step = 3
 
     def show_trial_mix(self):
-        """Displays the Trial Mix widget and updates the workflow step value."""
+        """Displays the Trial Mix widget."""
 
         self.logger.info('The Check Design has been selected')
 
         self.navigate_to(self.trial_mix)
-        self.data_model.current_step = 4
 
     def reset_system(self):
         """Does nothing by now."""

@@ -55,7 +55,8 @@ class CheckDesign(QWidget):
         # Update the progress bar
         self.update_progress_bar()
         # Check the inputs
-        self.validate_inputs()
+        if self.validate_inputs():
+            self.data_model.current_step = 3 # Update de current step if the validation pass
 
     def on_exit(self):
         """Clean up widget when navigating away."""
@@ -96,6 +97,8 @@ class CheckDesign(QWidget):
         """
         Validate the input data from the data model. If any critical errors are detected,
         a warning message box will be shown and the get_back_button_clicked() method will be triggered.
+
+        :return bool: True if validation passes, False otherwise.
         """
 
         # Retrieve inputs from the data model
@@ -192,9 +195,13 @@ class CheckDesign(QWidget):
             # Execute the message box (modal)
             msg_box.exec()
 
+            return False  # Indicate that validation did not pass
+
         else:
             # Remove the validation error from the data model (if it fails the first time)
             self.data_model.clear_validation_errors("DATA ENTRY")
+
+            return True # Indicate that validation pass
 
     def apply_validation_style(self, line_edit, is_valid):
         """

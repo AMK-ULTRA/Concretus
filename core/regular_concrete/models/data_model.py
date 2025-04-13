@@ -27,7 +27,6 @@ class RegularConcreteDataModel(QObject):
         # Data structure
         self.design_data = self.create_empty_design_data() # data model
         self.validation_errors: dict[str, str] = {} # dictionary with all the errors
-        self.trial_mix_results: dict[str, float] = {}
 
         self.logger = Logger(__name__)
         self.logger.info("Data model initialized")
@@ -79,7 +78,7 @@ class RegularConcreteDataModel(QObject):
         if step != self._current_step:
             self._current_step = step # Modify the underlying variable
             self.step_changed.emit(step)
-            self.logger.info(f"The current step changed to: {step}")
+            self.logger.info(f"The current step is: {step}")
 
     # -------------------------------------------- Design data --------------------------------------------
     @staticmethod
@@ -285,6 +284,5 @@ class RegularConcreteDataModel(QObject):
 
         self.design_data = self.create_empty_design_data()
         self.validation_errors = {}
-        self.trial_mix_results = {}
         self.current_step = 0
         self.logger.info("All data has been restored")

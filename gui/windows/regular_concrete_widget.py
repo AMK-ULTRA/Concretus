@@ -77,7 +77,8 @@ class RegularConcrete(QWidget):
 
     def on_enter(self):
         """Prepare widget when it becomes visible."""
-        pass
+
+        self.data_model.current_step = 2
 
     def on_exit(self):
         """Clean up widget when navigating away."""

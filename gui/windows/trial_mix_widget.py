@@ -42,6 +42,8 @@ class TrialMix(QWidget):
     def on_enter(self):
         """Prepare widget when it becomes visible."""
 
+        self.data_model.current_step = 4
+
         method = self.data_model.method # Get the used method
         unit = self.data_model.units # and the current unit system
 
