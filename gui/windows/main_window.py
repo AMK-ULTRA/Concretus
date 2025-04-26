@@ -3,18 +3,18 @@ from functools import partial
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget, QLabel
 from PyQt6.QtGui import QActionGroup, QIcon
 
-from Concretus.gui.ui.ui_main_window import Ui_MainWindow
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.gui.windows.welcome_widget import Welcome
-from Concretus.gui.windows.regular_concrete_widget import RegularConcrete
-from Concretus.gui.windows.check_design_widget import CheckDesign
-from Concretus.gui.windows.trial_mix_widget import TrialMix
-from Concretus.gui.windows.about_dialog import AboutDialog
-from Concretus.gui.windows.config_dialog import ConfigDialog
-from Concretus.core.regular_concrete.plots.grading_curve import PlotDialog
-from Concretus.logger import Logger
-from Concretus.settings import ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, \
-    ICON_RESTART, ICON_HELP_MANUAL
+from gui.ui.ui_main_window import Ui_MainWindow
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from gui.windows.welcome_widget import Welcome
+from gui.windows.regular_concrete_widget import RegularConcrete
+from gui.windows.check_design_widget import CheckDesign
+from gui.windows.trial_mix_widget import TrialMix
+from gui.windows.about_dialog import AboutDialog
+from gui.windows.config_dialog import ConfigDialog
+from core.regular_concrete.plots.grading_curve import PlotDialog
+from logger import Logger
+from settings import (ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, ICON_RESTART,
+                      ICON_HELP_MANUAL)
 
 
 class MainWindow(QMainWindow):
@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
 
     def enable_actions(self, current_step):
         """
-        Enables the appropriate actions based on the current step and that some validation error keys do not exist.
+        Enable the appropriate actions based on the current step and if some validation error keys do not exist.
 
         :param int current_step: The current step in the workflow.
         """
@@ -158,6 +158,7 @@ class MainWindow(QMainWindow):
                 method = self.data_model.method
                 if method == "ACI":
                     required_keys = [
+                        "GRADING REQUIREMENTS FOR FINE AGGREGATE",
                         "FINENESS MODULUS",
                         "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
                         "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
@@ -176,8 +177,18 @@ class MainWindow(QMainWindow):
 
                 # Check if any the error keys exist in the validation errors dictionary
                 missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
+
+                if method == "ACI":
+                    has_fineness_modulus_error = "FINENESS MODULUS" in self.data_model.validation_errors
+                    has_grading_requirements_error = "GRADING REQUIREMENTS FOR FINE AGGREGATE" in self.data_model.validation_errors
+
+                    if has_fineness_modulus_error and not has_grading_requirements_error:
+                        missing_keys.remove("FINENESS MODULUS")
+                    elif has_grading_requirements_error and not has_fineness_modulus_error:
+                        missing_keys.remove("GRADING REQUIREMENTS FOR FINE AGGREGATE")
+
                 if not missing_keys:
-                    # If one or more error keys does not exist, enable the action
+                    # If no critical error keys exist, enable the action
                     action.setEnabled(True)
                     return
                 else:

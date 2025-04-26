@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from Concretus.settings import DEFAULT_UNITS_KEY, DEFAULT_LANGUAGE_KEY, INITIAL_STEP, LANGUAGES, UNIT_SYSTEM
-from Concretus.logger import Logger
+from settings import DEFAULT_UNITS_KEY, DEFAULT_LANGUAGE_KEY, INITIAL_STEP, LANGUAGES, UNIT_SYSTEM
+from logger import Logger
 
 class RegularConcreteDataModel(QObject):
     """

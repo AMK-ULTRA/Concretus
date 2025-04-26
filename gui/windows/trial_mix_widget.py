@@ -1,15 +1,15 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QMessageBox
 
-from Concretus.gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
-from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
-from Concretus.core.regular_concrete.models.doe_data_model import DOEDataModel
-from Concretus.core.regular_concrete.design_methods.mce import MCE
-from Concretus.core.regular_concrete.design_methods.aci import ACI
-from Concretus.core.regular_concrete.design_methods.doe import DOE
-from Concretus.logger import Logger
+from gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.mce_data_model import MCEDataModel
+from core.regular_concrete.models.aci_data_model import ACIDataModel
+from core.regular_concrete.models.doe_data_model import DOEDataModel
+from core.regular_concrete.design_methods.mce import MCE
+from core.regular_concrete.design_methods.aci import ACI
+from core.regular_concrete.design_methods.doe import DOE
+from logger import Logger
 
 
 class TrialMix(QWidget):

@@ -4,9 +4,9 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialog, QVBoxLayout
 import pyqtgraph as pg
 
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.logger import Logger
-from Concretus.settings import COARSE_RANGES, FINE_RANGES
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from logger import Logger
+from settings import COARSE_RANGES, FINE_RANGES
 
 class PlotDialog(QDialog):
     def __init__(self, data_model, aggregate_type, parent=None):

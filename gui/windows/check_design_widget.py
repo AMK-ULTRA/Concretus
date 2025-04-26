@@ -3,11 +3,11 @@ from functools import partial
 from PyQt6.QtWidgets import QWidget, QMessageBox
 from PyQt6.QtCore import pyqtSignal
 
-from Concretus.gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.core.regular_concrete.models.validation import Validation
-from Concretus.logger import Logger
-from Concretus.settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS, NMS_VALID, ERROR_KEYS
+from gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.validation import Validation
+from logger import Logger
+from settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS, NMS_VALID, ERROR_KEYS
 
 
 class CheckDesign(QWidget):

@@ -3,12 +3,12 @@ from dataclasses import dataclass, field
 import numpy as np
 from numpy.polynomial import Polynomial
 
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.core.regular_concrete.models.doe_data_model import DOEDataModel
-from Concretus.logger import Logger
-from Concretus.settings import QUARTILES, CONVERSION_FACTORS, W_CM_COEFFICIENTS, STARTING_STRENGTH, MAX_W_CM_DOE, \
-    WATER_CONTENT, WATER_CONTENT_REDUCTION, MIN_CEMENTITIOUS_CONTENT_DOE, ENTRAINED_AIR, DENSITY_COEFFICIENTS, \
-    FINE_PROPORTION
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.doe_data_model import DOEDataModel
+from logger import Logger
+from settings import (QUARTILES, CONVERSION_FACTORS, W_CM_COEFFICIENTS, STARTING_STRENGTH, MAX_W_CM_DOE, WATER_CONTENT,
+                      WATER_CONTENT_REDUCTION, MIN_CEMENTITIOUS_CONTENT_DOE, ENTRAINED_AIR, DENSITY_COEFFICIENTS,
+                      FINE_PROPORTION)
 
 
 # ------------------------------------------------ Class for materials ------------------------------------------------

@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import QDialog
 
-from Concretus.gui.ui.ui_config_dialog import Ui_ConfigDialog
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.logger import Logger
-from Concretus.settings import LANGUAGES, UNIT_SYSTEM
+from gui.ui.ui_config_dialog import Ui_ConfigDialog
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from logger import Logger
+from settings import LANGUAGES, UNIT_SYSTEM
 
 
 class ConfigDialog(QDialog):

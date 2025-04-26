@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from math import log, exp
 
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
-from Concretus.logger import Logger
-from Concretus.settings import K_FACTOR, QUARTILES, WATER_CONTENT_NAE, WATER_CONTENT_AE, MAX_W_CM_ACI, \
-    MIN_CEMENTITIOUS_CONTENT_ACI, ENTRAPPED_AIR, ENTRAINED_AIR, COEFFICIENTS, CONVERSION_FACTORS
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.aci_data_model import ACIDataModel
+from logger import Logger
+from settings import (K_FACTOR, QUARTILES, WATER_CONTENT_NAE, WATER_CONTENT_AE, MAX_W_CM_ACI,
+                      MIN_CEMENTITIOUS_CONTENT_ACI, ENTRAPPED_AIR, ENTRAINED_AIR, COEFFICIENTS, CONVERSION_FACTORS)
 
 
 # ------------------------------------------------ Class for materials ------------------------------------------------

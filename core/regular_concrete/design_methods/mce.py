@@ -2,11 +2,11 @@ import re
 from dataclasses import dataclass, field
 from math import log10
 
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
-from Concretus.logger import Logger
-from Concretus.settings import COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT_MCE, K_FACTOR, QUARTILES, \
-    CONSTANTS, ALFA_FACTOR_1, ALFA_FACTOR_2, MAX_W_C_MCE, CONVERSION_FACTORS
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.mce_data_model import MCEDataModel
+from logger import Logger
+from settings import (COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT_MCE, K_FACTOR, QUARTILES, CONSTANTS,
+                      ALFA_FACTOR_1, ALFA_FACTOR_2, MAX_W_C_MCE, CONVERSION_FACTORS)
 
 
 # ------------------------------------------------ Class for materials ------------------------------------------------

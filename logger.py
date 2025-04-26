@@ -2,7 +2,7 @@ import logging
 import sys
 from pathlib import Path
 
-from Concretus.settings import LOG_FILE, LOG_FORMAT, LOG_LEVEL
+from settings import LOG_FILE, LOG_FORMAT, LOG_LEVEL
 
 class Logger:
     _initialized = False  # Class variable to control initialization

@@ -1,9 +1,9 @@
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QDialog
 
-from Concretus.gui.ui.ui_about_dialog import Ui_AboutDialog
-from Concretus.logger import Logger
-from Concretus.settings import IMAGE_ABOUT
+from gui.ui.ui_about_dialog import Ui_AboutDialog
+from logger import Logger
+from settings import IMAGE_ABOUT
 
 
 class AboutDialog(QDialog):

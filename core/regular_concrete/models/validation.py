@@ -1,7 +1,7 @@
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.logger import Logger
-from Concretus.settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES,
-                                MAXIMUM_SCM, NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from logger import Logger
+from settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES, MAXIMUM_SCM,
+                      NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
 
 
 class Validation:

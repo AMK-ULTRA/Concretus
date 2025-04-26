@@ -1,4 +1,4 @@
-from Concretus.logger import Logger
+from logger import Logger
 
 
 class ACIDataModel:

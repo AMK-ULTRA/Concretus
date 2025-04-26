@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication
-from Concretus.gui.windows.main_window import MainWindow
-from Concretus.logger import Logger
+from gui.windows.main_window import MainWindow
+from logger import Logger
 
 # Initialize the logger
 logger = Logger(__name__)

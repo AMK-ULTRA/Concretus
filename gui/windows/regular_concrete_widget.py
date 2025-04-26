@@ -2,10 +2,10 @@ from PyQt6.QtCore import QObject, QEvent, Qt, QRegularExpression
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit
 
-from Concretus.gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.logger import Logger
-from Concretus.settings import MIN_SPEC_STRENGTH, MAX_SPEC_STRENGTH, SIEVES, FINE_RETAINED_STATE, COARSE_RETAINED_STATE
+from gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from logger import Logger
+from settings import MIN_SPEC_STRENGTH, MAX_SPEC_STRENGTH, SIEVES, FINE_RETAINED_STATE, COARSE_RETAINED_STATE
 
 
 class NumericDelegate(QItemDelegate):

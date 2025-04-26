@@ -1,10 +1,10 @@
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPixmap
 
-from Concretus.core.regular_concrete.models.data_model import RegularConcreteDataModel
-from Concretus.gui.ui.ui_welcome_widget import Ui_WelcomeWidget
-from Concretus.logger import Logger
-from Concretus.settings import IMAGE_PYQT_LOGO, IMAGE_ABOUT
+from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from gui.ui.ui_welcome_widget import Ui_WelcomeWidget
+from logger import Logger
+from settings import IMAGE_PYQT_LOGO, IMAGE_ABOUT
 
 
 class Welcome(QWidget):
