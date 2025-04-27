@@ -1,9 +1,9 @@
 import unittest
 from math import exp
 
-from Concretus.core.regular_concrete.design_methods.aci import (CementitiousMaterial, Water, Air, FineAggregate,
+from core.regular_concrete.design_methods.aci import (CementitiousMaterial, Water, Air, FineAggregate,
                                                                 CoarseAggregate, StandardDeviation, AbramsLaw)
-from Concretus.core.regular_concrete.models.aci_data_model import ACIDataModel
+from core.regular_concrete.models.aci_data_model import ACIDataModel
 
 
 class TestCementitiousMaterial(unittest.TestCase):

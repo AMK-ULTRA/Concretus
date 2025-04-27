@@ -1,8 +1,8 @@
 import unittest
 
-from Concretus.core.regular_concrete.design_methods.doe import (CementitiousMaterial, Water, Air, FineAggregate,
+from core.regular_concrete.design_methods.doe import (CementitiousMaterial, Water, Air, FineAggregate,
                                                                 CoarseAggregate, StandardDeviation, AbramsLaw, Aggregate)
-from Concretus.core.regular_concrete.models.doe_data_model import DOEDataModel
+from core.regular_concrete.models.doe_data_model import DOEDataModel
 
 
 class TestCementitiousMaterial(unittest.TestCase):

@@ -1,8 +1,8 @@
 import unittest
 
-from Concretus.core.regular_concrete.design_methods.mce import (Cement, Air, FineAggregate, CoarseAggregate,
+from core.regular_concrete.design_methods.mce import (Cement, Air, FineAggregate, CoarseAggregate,
                                                                 StandardDeviation, AbramsLaw, Beta)
-from Concretus.core.regular_concrete.models.mce_data_model import MCEDataModel
+from core.regular_concrete.models.mce_data_model import MCEDataModel
 
 
 class TestCement(unittest.TestCase):
@@ -235,12 +235,12 @@ class TestBeta(unittest.TestCase):
             '2-1/2" (63 mm)': 100,
             '2" (50 mm)': 100,
             '1-1/2" (37,5 mm)': 100,
-            '1" (25 mm)': 97,
-            '3/4" (19 mm)': 52,
-            '1/2" (12,5 mm)': 25,
-            '3/8" (9,5 mm)': 6,
-            '1/4" (6,3 mm)': 1,
-            'No. 4 (4,75 mm)': 0,
+            '1" (25 mm)': 99,
+            '3/4" (19 mm)': 83,
+            '1/2" (12,5 mm)': 30,
+            '3/8" (9,5 mm)': 12,
+            '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 3,
             'No. 8 (2,36 mm)': 0,
             'No. 16 (1,18 mm)': 0,
             'No. 30 (0,600 mm)': 0,
@@ -256,19 +256,19 @@ class TestBeta(unittest.TestCase):
             '1" (25 mm)': 100,
             '3/4" (19 mm)': 100,
             '1/2" (12,5 mm)': 100,
-            '3/8" (9,5 mm)': 100,
-            '1/4" (6,3 mm)': 96,
-            'No. 4 (4,75 mm)': 86,
-            'No. 8 (2,36 mm)': 68,
-            'No. 16 (1,18 mm)': 40,
-            'No. 30 (0,600 mm)': 32,
-            'No. 50 (0,300 mm)': 12,
-            'No. 100 (0,150 mm)': 4,
+            '3/8" (9,5 mm)': 99,
+            '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 83,
+            'No. 8 (2,36 mm)': 66,
+            'No. 16 (1,18 mm)': 47,
+            'No. 30 (0,600 mm)': 34,
+            'No. 50 (0,300 mm)': 20,
+            'No. 100 (0,150 mm)': 9,
         }
 
         beta_min, beta_max = self.beta.get_beta(nms, coarse_data, fine_data)
-        beta_min_expected = 41.5
-        beta_max_expected = 62.5
+        beta_min_expected = 37.9
+        beta_max_expected = 41.2
         self.assertAlmostEqual(beta_min, beta_min_expected, delta=0.5)
         self.assertAlmostEqual(beta_max, beta_max_expected, delta=0.5)
 
