@@ -1,4 +1,4 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QMessageBox
 
 from gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
@@ -13,6 +13,9 @@ from logger import Logger
 
 
 class TrialMix(QWidget):
+    # Define a custom signal
+    regular_concrete_requested = pyqtSignal()
+
     def __init__(self, data_model, parent=None):
         super().__init__(parent)
         # Create an instance of the GUI
@@ -197,6 +200,7 @@ class TrialMix(QWidget):
         This method instantiates the MCE calculation engine with the current data models,
         executes the calculation process, and if any errors occur during the calculations,
         retrieves and formats the errors from the MCE data model, and displays them in a critical message box.
+        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
         """
 
         self.mce = MCE(self.data_model, self.mce_data_model)
@@ -206,9 +210,18 @@ class TrialMix(QWidget):
             # Retrieve the errors from the MCE data model and format them as "key: value" per line
             errors_dict = self.mce_data_model.calculation_errors
             errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
-            # Display the errors in a critical message box
-            QMessageBox.critical(self, "Error de Cálculo",
-                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
+
+            # Create a QMessageBox instance
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Critical)
+            msg_box.setWindowTitle("Error de Cálculo")
+            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
+            msg_box.finished.connect(self.get_back_regular_concrete_widget)
+            # Execute the message box (modal)
+            msg_box.exec()
 
     def aci_calculation_engine(self):
         """
@@ -217,6 +230,7 @@ class TrialMix(QWidget):
         This method instantiates the ACI calculation engine with the current data models,
         executes the calculation process, and if any errors occur during the calculations,
         retrieves and formats the errors from the ACI data model, and displays them in a critical message box.
+        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
         """
 
         self.aci = ACI(self.data_model, self.aci_data_model)
@@ -226,9 +240,18 @@ class TrialMix(QWidget):
             # Retrieve the errors from the ACI data model and format them as "key: value" per line
             errors_dict = self.aci_data_model.calculation_errors
             errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
-            # Display the errors in a critical message box
-            QMessageBox.critical(self, "Error de Cálculo",
-                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
+
+            # Create a QMessageBox instance
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Critical)
+            msg_box.setWindowTitle("Error de Cálculo")
+            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
+            msg_box.finished.connect(self.get_back_regular_concrete_widget)
+            # Execute the message box (modal)
+            msg_box.exec()
 
     def doe_calculation_engine(self):
         """
@@ -237,6 +260,7 @@ class TrialMix(QWidget):
         This method instantiates the DoE calculation engine with the current data models,
         executes the calculation process, and if any errors occur during the calculations,
         retrieves and formats the errors from the DoE data model, and displays them in a critical message box.
+        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
         """
 
         self.doe = DOE(self.data_model, self.doe_data_model)
@@ -246,9 +270,23 @@ class TrialMix(QWidget):
             # Retrieve the errors from the DoE data model and format them as "key: value" per line
             errors_dict = self.doe_data_model.calculation_errors
             errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
-            # Display the errors in a critical message box
-            QMessageBox.critical(self, "Error de Cálculo",
-                                 f"Se produjeron errores durante los cálculos:\n{errors_message}")
+
+            # Create a QMessageBox instance
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Critical)
+            msg_box.setWindowTitle("Error de Cálculo")
+            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
+            msg_box.finished.connect(self.get_back_regular_concrete_widget)
+            # Execute the message box (modal)
+            msg_box.exec()
+
+    def get_back_regular_concrete_widget(self):
+        """Emit a signal to go to the RegularConcrete widget."""
+
+        self.regular_concrete_requested.emit()
 
     def load_results(self, method):
         """
