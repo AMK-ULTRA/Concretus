@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConversionDialog</class>
+ <widget class="QDialog" name="ConversionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Conversión</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox_dosage_type">
+     <property name="locale">
+      <locale language="Spanish" country="Venezuela"/>
+     </property>
+     <property name="title">
+      <string>Dosificación del aditivo</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButton_1">
+        <property name="locale">
+         <locale language="Spanish" country="Venezuela"/>
+        </property>
+        <property name="text">
+         <string>ml (o cm³) / saco de cemento (o material cementante)</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radioButton_2">
+        <property name="locale">
+         <locale language="Spanish" country="Venezuela"/>
+        </property>
+        <property name="text">
+         <string>ml (o cm³) / kg de cemento (o material cementante)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout_dosage_data">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_dosage">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+       <property name="text">
+        <string>Dosis (ml o cm³)</string>
+       </property>
+       <property name="buddy">
+        <cstring>doubleSpinBox_dosage</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_dosage">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_dosage_relative_density">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+       <property name="text">
+        <string>Densidad relativa</string>
+       </property>
+       <property name="buddy">
+        <cstring>doubleSpinBox_dosage_relative_density</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_dosage_relative_density">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_bag_weight">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+       <property name="text">
+        <string>Peso del saco (kg)</string>
+       </property>
+       <property name="buddy">
+        <cstring>doubleSpinBox_bag_weight</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_bag_weight">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton_convert">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+       <property name="text">
+        <string>Convetir</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_cancel">
+       <property name="locale">
+        <locale language="Spanish" country="Venezuela"/>
+       </property>
+       <property name="text">
+        <string>Cancelar</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>radioButton_1</tabstop>
+  <tabstop>radioButton_2</tabstop>
+  <tabstop>doubleSpinBox_dosage</tabstop>
+  <tabstop>doubleSpinBox_dosage_relative_density</tabstop>
+  <tabstop>doubleSpinBox_bag_weight</tabstop>
+  <tabstop>pushButton_convert</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>radioButton_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>doubleSpinBox_bag_weight</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>138</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>138</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_bag_weight</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>84</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_convert</sender>
+   <signal>clicked()</signal>
+   <receiver>ConversionDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>37</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>-10</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_cancel</sender>
+   <signal>clicked()</signal>
+   <receiver>ConversionDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>210</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>219</x>
+     <y>-27</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
