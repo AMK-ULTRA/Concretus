@@ -45,7 +45,7 @@
    <item>
     <widget class="QLabel" name="label_units">
      <property name="text">
-      <string>Unidades:</string>
+      <string>Sistema de unidades:</string>
      </property>
      <property name="buddy">
       <cstring>comboBox_units</cstring>
