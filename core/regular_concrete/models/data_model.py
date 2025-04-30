@@ -194,11 +194,20 @@ class RegularConcreteDataModel(QObject):
                 'water_density': None
             },
             'chemical_admixtures': {
-                'admixture_type': None,
-                'admixture_name': None,
-                'admixture_relative_density': None,
-                'admixture_dosage': None,
-                'effectiveness': None
+                'WRA': {
+                'WRA_checked': None,
+                'WRA_type': None,
+                'WRA_name': None,
+                'WRA_relative_density': None,
+                'WRA_dosage': None,
+                'WRA_effectiveness': None
+            },
+                'AEA': {
+                'AEA_checked': None,
+                'AEA_name': None,
+                'AEA_relative_density': None,
+                'AEA_dosage': None
+            }
             },
             'validation': {
                 'coarse_category': None,

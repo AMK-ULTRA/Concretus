@@ -1,9 +1,12 @@
+from functools import partial
+
 from PyQt6.QtCore import QObject, QEvent, Qt, QRegularExpression
 from PyQt6.QtGui import QRegularExpressionValidator
-from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit, QDialog
 
 from gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
 from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from gui.windows.conversion_dialog import ConversionDialog
 from logger import Logger
 from settings import MIN_SPEC_STRENGTH, MAX_SPEC_STRENGTH, SIEVES, FINE_RETAINED_STATE, COARSE_RETAINED_STATE
 
@@ -63,7 +66,9 @@ class RegularConcrete(QWidget):
         self.ui.tableWidget_coarse.installEventFilter(self.delete_key_filter)
 
         # Set up the main connections
+        self.setup_connections()
         self.table_connections()
+
         # Default "% Retained" state for each table
         self.fine_retained_state = FINE_RETAINED_STATE
         self.coarse_retained_state = COARSE_RETAINED_STATE
@@ -100,8 +105,37 @@ class RegularConcrete(QWidget):
         self.data_model.units_changed.connect(lambda units: self.update_units(units))
         self.data_model.method_changed.connect(lambda method: self.update_method(method))
 
+    def setup_connections(self):
+        """Set up main connections."""
+
+        # Initialize the convert dialog when requested by the user
+        self.ui.pushButton_WRA_converter.clicked.connect(partial(self.show_conversion_dialog, "WRA"))
+        self.ui.pushButton_AEA_converter.clicked.connect(partial(self.show_conversion_dialog, "AEA"))
+
+    def show_conversion_dialog(self, admixture_type):
+        """
+        Launch the conversion dialog and update the dosage value in the corresponding QDoubleSpinBox in the UI.
+
+        :param str admixture_type: The admixture type for which the conversion dialog will open.
+                                   This can be "AEA" or "WRA."
+        """
+
+        self.logger.info(f'The conversion dialog has been selected for {admixture_type}')
+
+        conversion_dialog = ConversionDialog(self.data_model, admixture_type, self)
+        if conversion_dialog.exec() == QDialog.DialogCode.Accepted:
+            conversion_dialog.conversion_tool()
+
+            # Write the new calculated value
+            if admixture_type == "WRA":
+                dosage = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage')
+                self.ui.doubleSpinBox_WRA_dosage.setValue(dosage) if dosage is not None else None
+            elif admixture_type == "AEA":
+                dosage = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
+                self.ui.doubleSpinBox_AEA_dosage.setValue(dosage) if dosage is not None else None
+
     def save_data(self):
-        """Stores all form data in the data model."""
+        """Store all form data in the data model."""
 
         # Map all widgets, key paths and methods to get the current value
         # Format: (self.ui.[objectName], 'key path in the design data', 'method (without parenthesis)')
@@ -176,12 +210,17 @@ class RegularConcrete(QWidget):
             (self.ui.doubleSpinBox_water_density, 'water.water_density', 'value'),
 
             # Chemical Admixtures
-            (self.ui.comboBox_admixture_type, 'chemical_admixtures.admixture_type', 'currentText'),
-            (self.ui.lineEdit_admixture_name, 'chemical_admixtures.admixture_name', 'text'),
-            (self.ui.doubleSpinBox_admixture_relative_density, 'chemical_admixtures.admixture_relative_density',
-             'value'),
-            (self.ui.doubleSpinBox_admixture_dosage, 'chemical_admixtures.admixture_dosage', 'value'),
-            (self.ui.spinBox_admixture_effectiveness, 'chemical_admixtures.effectiveness', 'value')
+            (self.ui.groupBox_WRA, 'chemical_admixtures.WRA.WRA_checked', 'isChecked'),
+            (self.ui.comboBox_WRA_type, 'chemical_admixtures.WRA.WRA_type', 'currentText'),
+            (self.ui.lineEdit_WRA_name, 'chemical_admixtures.WRA.WRA_name', 'text'),
+            (self.ui.doubleSpinBox_WRA_relative_density, 'chemical_admixtures.WRA.WRA_relative_density', 'value'),
+            (self.ui.doubleSpinBox_WRA_dosage, 'chemical_admixtures.WRA.WRA_dosage', 'value'),
+            (self.ui.doubleSpinBox_WRA_effectiveness, 'chemical_admixtures.WRA.WRA_effectiveness', 'value'),
+
+            (self.ui.groupBox_AEA, 'chemical_admixtures.AEA.AEA_checked', 'isChecked'),
+            (self.ui.lineEdit_AEA_name, 'chemical_admixtures.AEA.AEA_name', 'text'),
+            (self.ui.doubleSpinBox_AEA_relative_density, 'chemical_admixtures.AEA.AEA_relative_density', 'value'),
+            (self.ui.doubleSpinBox_AEA_dosage, 'chemical_admixtures.AEA.AEA_dosage', 'value'),
         ]
 
         # Iterates through a list of tuples, where each tuple represents a mapping between
@@ -205,7 +244,7 @@ class RegularConcrete(QWidget):
                 continue
 
     def save_table_data(self):
-        """Stores all table data in the data model."""
+        """Store all table data in the data model."""
 
         # Dictionaries for fine aggregate
         passing_fine = {}
@@ -220,7 +259,7 @@ class RegularConcrete(QWidget):
         flag_coarse_retained = self.ui.radioButton_coarse_retained.isChecked()
 
         # List with tuples (table, passing dictionary, retained dictionary)
-        # The first tuple corresponds to fine aggregate, the second to coarse aggregate.
+        # The first tuple corresponds to fine aggregate, the second to coarse aggregate
         tables_info = [
             (self.ui.tableWidget_fine, passing_fine, retained_fine),
             (self.ui.tableWidget_coarse, passing_coarse, retained_coarse)
@@ -228,7 +267,7 @@ class RegularConcrete(QWidget):
 
         # Loop over each table (fine and coarse)
         for index, (table, dict_passing, dict_retained) in enumerate(tables_info):
-            # Determine the flag for the current table.
+            # Determine the flag for the current table
             # For fine aggregate (index 0)
             if index == 0:
                 flag_retained = flag_fine_retained
@@ -286,7 +325,7 @@ class RegularConcrete(QWidget):
 
     def save_retained_states(self, aggregate_type, retained_checked):
         """
-        Saves the checked state of the fine and coarse aggregate retained radio buttons by updating
+        Save the checked state of the fine and coarse aggregate retained radio buttons by updating
         the 'retained_checked' and 'passing_checked' flags in the data model.
 
         :param str aggregate_type: The type of aggregate ('fine_aggregate' or 'coarse_aggregate').
@@ -325,7 +364,7 @@ class RegularConcrete(QWidget):
 
     def toggle_passing_retained(self, table, retained_enabled):
         """
-        Enables "% Passing" and disables "% Retained", or vice versa.
+        Enable "% Passing" and disable "% Retained", or vice versa.
 
         :param table: The table to modify.
         :param bool retained_enabled: True to enable "% Retained", False to enable "% Passing".
@@ -360,7 +399,7 @@ class RegularConcrete(QWidget):
 
     def populate_tables(self, method):
         """
-        Deletes all rows and generates a new set of rows according to the selected method.
+        Delete all rows and generate a new set of rows according to the selected method.
 
         :param str method: The method for selecting the set of corresponding rows.
         """
@@ -509,7 +548,7 @@ class RegularConcrete(QWidget):
                 "coarse_types": ("Triturado", "Semitriturado", "Grava natural"),
                 "coarse_pus": "Peso unitario suelto (kgf/m³)",
                 "coarse_puc": "Peso unitario compactado (kgf/m³)",
-                "chemical_admixtures_enabled": False
+                "AEA_enabled": False
             },
             "ACI": {
                 "slump_ranges": ("25 mm - 50 mm", "75 mm - 100 mm", "125 mm - 150 mm", "150 mm - 175 mm"),
@@ -544,7 +583,7 @@ class RegularConcrete(QWidget):
                 "coarse_types": ("Redondeada", "Angular"),
                 "coarse_pus": "Masa unitaria suelta (kg/m³)",
                 "coarse_puc": "Masa unitaria compactada (kg/m³)",
-                "chemical_admixtures_enabled": True
+                "AEA_enabled": True
             },
             "DoE": {
                 "slump_ranges": ("0 mm - 10 mm", "10 mm - 30 mm", "30 mm - 60 mm", "60 mm - 180 mm"),
@@ -578,7 +617,7 @@ class RegularConcrete(QWidget):
                 "coarse_types": ("Triturada", "No triturada"),
                 "coarse_pus": "Masa unitaria suelta (kg/m³)",
                 "coarse_puc": "Masa unitaria compactada (kg/m³)",
-                "chemical_admixtures_enabled": True
+                "AEA_enabled": True
             }
         }
 
@@ -629,7 +668,7 @@ class RegularConcrete(QWidget):
             self.ui.label_coarse_puc.setText(config["coarse_puc"])
             self.ui.comboBox_coarse_type.clear()
             self.ui.comboBox_coarse_type.addItems(config["coarse_types"])
-            self.ui.chemical_admixtures.setEnabled(config["chemical_admixtures_enabled"])
+            self.ui.groupBox_AEA.setEnabled(config["AEA_enabled"])
 
             self.logger.info(f'A complete update of the current method "{method}" has been made')
         else:
