@@ -22,9 +22,12 @@
   <property name="locale">
    <locale language="Spanish" country="Venezuela"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="QGroupBox" name="groupBox_grading">
        <property name="title">
@@ -112,7 +115,7 @@
            <bool>true</bool>
           </property>
           <property name="buddy">
-           <cstring>lineEdit_air_NMS</cstring>
+           <cstring>lineEdit_NMS</cstring>
           </property>
          </widget>
         </item>
@@ -216,7 +219,7 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
+     <item row="1" column="0">
       <widget class="QGroupBox" name="groupBox_spec_strength">
        <property name="title">
         <string>Resistencia de cálculo especificada</string>
@@ -286,6 +289,78 @@
           <property name="text">
            <string/>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="groupBox_cement_type">
+       <property name="title">
+        <string>Tipo de cemento</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_exposure_class_3">
+          <property name="text">
+           <string>Exposición a sulfatos</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_exposure_class_3</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineEdit_exposure_class_3">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_cement_used">
+          <property name="text">
+           <string>Cemento en uso</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_cement_used</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_cement_used">
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_cement_required">
+          <property name="text">
+           <string>Cemento requerido</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_cement_required</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_cement_required">
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
@@ -396,7 +471,7 @@
            <string>Clase de exposición</string>
           </property>
           <property name="buddy">
-           <cstring>lineEdit_exposure_class</cstring>
+           <cstring>lineEdit_exposure_class_2</cstring>
           </property>
          </widget>
         </item>

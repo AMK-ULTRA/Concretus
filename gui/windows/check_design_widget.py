@@ -1,7 +1,7 @@
 from functools import partial
 
-from PyQt6.QtWidgets import QWidget, QMessageBox
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QWidget, QMessageBox
 
 from gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
 from core.regular_concrete.models.data_model import RegularConcreteDataModel
@@ -41,6 +41,7 @@ class CheckDesign(QWidget):
         self.show_nms()
         self.allowed_fineness_modulus()
         self.minimum_spec_strength()
+        self.cement_type_required()
 
         # Check if necessary calculations should be performed
         if self.data_model.method != 'MCE':
@@ -83,7 +84,7 @@ class CheckDesign(QWidget):
     @staticmethod
     def load_style(style_file):
         """
-        Loads the contents of a CSS file.
+        Load the contents of a CSS file.
 
         :param str style_file: The path to the CSS file.
         :returns: The sheet style.
@@ -190,8 +191,7 @@ class CheckDesign(QWidget):
             msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
 
             # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
-            msg_box.finished.connect(lambda result: self.get_back_button_clicked())
-
+            msg_box.finished.connect(self.get_back_button_clicked)
             # Execute the message box (modal)
             msg_box.exec()
 
@@ -225,7 +225,7 @@ class CheckDesign(QWidget):
             line_edit.setStyleSheet(clear_sheet_style)
 
     def clean_up_fields(self):
-        """Clears the text content of specified line edits and resets their styles."""
+        """Clear the text content of specified line edits and reset their styles."""
 
         # Fields to clean
         clear_fields = [
@@ -236,7 +236,8 @@ class CheckDesign(QWidget):
             self.ui.lineEdit_air_NMS,
             self.ui.lineEdit_NMS,
             self.ui.lineEdit_air_actual,
-            self.ui.lineEdit_air_min
+            self.ui.lineEdit_air_min,
+            self.ui.lineEdit_cement_used
         ]
 
         for field in clear_fields:
@@ -245,56 +246,36 @@ class CheckDesign(QWidget):
 
     def update_progress_bar(self):
         """
-        Updates the progress bar based on the number of validation errors.
-        0 errors correspond to 100% progress and 6 errors to 0% progress.
+        Update the progress bar based on the number of validation errors.
+        0 errors correspond to 100% progress and 7 errors to 0% progress.
         """
 
         # Retrieve the dictionary with all errors
         validation_errors = self.data_model.validation_errors
 
-        # Using the ERROR_KEYS dictionary, assign 1 if key exists in validation_errors, otherwise 0
-        errors = {key: 1 if key in validation_errors else 0 for key in ERROR_KEYS}
+        # Using the ERROR_KEYS dictionary, assign 0 if key exists in validation_errors, otherwise 1
+        errors = {key: 0 if key in validation_errors else 1 for key in ERROR_KEYS}
 
         # Retrieve the scores for coarse and fine gradings
         coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
         fine_scores = self.data_model.get_design_value('validation.fine_scores')
 
         # Determine the maximum score for coarse and fine; use 1 if empty
-        k_1 = max(coarse_scores.values(), default=1)
-        k_2 = max(fine_scores.values(), default=1)
+        weighted_error_1 = max(coarse_scores.values(), default=1)
+        weighted_error_2 = max(fine_scores.values(), default=1)
 
-        # Handle the case where the maximum score is zero
-        if k_1 == 0:
-            k_1 = 1
-        if k_2 == 0:
-            k_2 = 1
+        # Update the errors dictionary with the weighted values for coarse and fine grading requirements
+        errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] = weighted_error_1
+        errors["GRADING REQUIREMENTS FOR FINE AGGREGATE"] = weighted_error_2
 
-        # Multiply the first two error values by their respective maximum scores
-        weighted_error_1 = errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] * k_1
-        weighted_error_2 = errors["GRADING REQUIREMENTS FOR FINE AGGREGATE"] * k_2
+        # Determine the validations that were passed
+        validation_passed = sum(errors.values())
 
-        # Create a list of all errors, using the weighted values for the first two
-        error_list = [
-            weighted_error_1,
-            weighted_error_2,
-            errors["FINENESS MODULUS"],
-            errors["MINIMUM SPECIFIED COMPRESSIVE STRENGTH"],
-            errors["MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)"],
-            errors["MINIMUM ENTRAINED AIR"],
-        ]
-        error_count = sum(error_list)
-
-        # Calculate the total number of error categories
-        max_errors = 4  # Number of permanent error categories
-
-        # Check for additional error categories
-        if self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked'):
-            max_errors += 1
-        if self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked'):
-            max_errors += 1
+        # Total number of validation categories
+        max_validation = 7
 
         # Calculate the progress percentage
-        progress_value = 100 - (error_count * 100 / max_errors)
+        progress_value = (validation_passed / max_validation) * 100
 
         # Update the progress bar with the computed value
         self.ui.progressBar.setValue(int(round(progress_value)))
@@ -312,7 +293,7 @@ class CheckDesign(QWidget):
         :param str aggregate_type: The aggregate to be plotted.
         """
 
-        # When the button is pressed, the signal is emitted along with the type of aggregate to be plotted.
+        # When the button is pressed, the signal is emitted along with the type of aggregate to be plotted
         self.plot_requested.emit(aggregate_type)
 
     def update_units(self, units):
@@ -340,9 +321,8 @@ class CheckDesign(QWidget):
         Then updates the corresponding GUI fields.
         """
 
-        # Retrieve the current method
+        # Retrieve design parameters from the data model
         method = self.data_model.method
-        # and passing percentage dictionaries for fine and coarse aggregate from the data model
         measured_coarse = self.data_model.get_design_value('coarse_aggregate.gradation.passing')
         measured_fine = self.data_model.get_design_value('fine_aggregate.gradation.passing')
 
@@ -364,7 +344,7 @@ class CheckDesign(QWidget):
     def show_nms(self):
         """Display the nominal maximum size of the coarse aggregate."""
 
-        # Retrieve values from the data model
+        # Retrieve design parameters from the data model
         method = self.data_model.method
         coarse_category = self.data_model.get_design_value('validation.coarse_category')
         grading_list = self.data_model.get_design_value('coarse_aggregate.gradation.passing')
@@ -380,11 +360,10 @@ class CheckDesign(QWidget):
 
     def allowed_fineness_modulus(self):
         """
-        Check whether the fineness modulus meets regulatory requirements.
-        Then updates the corresponding GUI fields.
+        Check whether the fineness modulus meets regulatory requirements. Then updates the corresponding GUI fields.
         """
 
-        # Retrieve the current method and retained percentage dictionary for fine aggregate from the data model
+        # Retrieve design parameters from the data model
         method = self.data_model.method
         cumulative_retained = self.data_model.get_design_value('fine_aggregate.gradation.cumulative_retained')
 
@@ -413,7 +392,7 @@ class CheckDesign(QWidget):
         Then updates the corresponding GUI fields.
         """
 
-        # Retrieve the method and current specified compressive strength from the data model
+        # Retrieve design parameters from the data model
         method = self.data_model.method
         current_spec_strength = self.data_model.get_design_value('field_requirements.strength.spec_strength')
 
@@ -441,13 +420,39 @@ class CheckDesign(QWidget):
         self.ui.lineEdit_spec_strength_min.setText(str(minimum_value))
         self.apply_validation_style(self.ui.lineEdit_spec_strength_actual, valid)
 
-    def maximum_scm_content(self):
+    def cement_type_required(self):
         """
-        Check whether the given SCM content is lower than the maximum SCM content  permitted according
-        to the exposure class. Then updates the corresponding GUI fields.
+        Validate the selected cement type against sulfate exposure requirements and update the GUI.
         """
 
-        # Retrieve the method, exposure classes, scm type and its content from the data model
+        # Retrieve design parameters from the data model
+        method = self.data_model.method
+        exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
+        cement_type = self.data_model.get_design_value('cementitious_materials.cement_type')
+
+        # Validate if the selected cement type meets sulfate exposure requirements
+        sulfate_exposure, required_cement_types, valid = self.validation.required_cement_type(method, list(
+            exposure_classes.values()), cement_type)
+
+        # Update the GUI field for the cement type used
+        self.ui.lineEdit_cement_used.setText(cement_type)
+
+        # Update exposure class and required cement types in the GUI
+        if sulfate_exposure is None and required_cement_types is None:
+            self.ui.lineEdit_exposure_class_3.setText("N/A")
+            self.ui.lineEdit_cement_required.setText("N/A")
+        else:
+            self.ui.lineEdit_exposure_class_3.setText(sulfate_exposure)
+            self.ui.lineEdit_cement_required.setText(", ".join(required_cement_types))
+            self.apply_validation_style(self.ui.lineEdit_cement_used, valid)
+
+    def maximum_scm_content(self):
+        """
+        Check whether the given SCM content is lower than the maximum SCM content permitted according to
+        the exposure class. Then updates the corresponding GUI fields.
+        """
+
+        # Retrieve design parameters from the data model
         method = self.data_model.method
         exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
         scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
@@ -472,7 +477,7 @@ class CheckDesign(QWidget):
         nominal maximum size (NMS) and coarse aggregate category. Then updates the corresponding GUI fields.
         """
 
-        # Retrieve values from the data model
+        # Retrieve design parameters from the data model
         method = self.data_model.method
         exposure_classes = self.data_model.get_design_value('validation.exposure_classes')
         nms = self.data_model.get_design_value('coarse_aggregate.NMS')

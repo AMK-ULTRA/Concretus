@@ -1,7 +1,7 @@
 from core.regular_concrete.models.data_model import RegularConcreteDataModel
 from logger import Logger
 from settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES, MAXIMUM_SCM,
-                      NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS)
+                      NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS, CEMENT_TYPE)
 
 
 class Validation:
@@ -371,6 +371,68 @@ class Validation:
         else:
             self.logger.debug('The specified compressive strength is greater than the minimum required by regulations')
             return True, required_strength, exposure_class
+
+    @staticmethod
+    def get_required_cement(method, exposure_classes):
+        """
+        Determine the cement type(s) required for a given design method and a set of exposure classes.
+
+        :param str method: Design method ("MCE", "ACI", "DoE")
+        :param list exposure_classes: List of exposure classes (e.g. ["S0", "F1", ...])
+        :return: The first matching sulfate exposure class if found, else None and
+                 a list of the required cement types for that exposure class if found, else None.
+        :rtype: tuple[str | None, list[str] | None]
+        """
+
+        # Retrieve the cement requirements for a given design method; if method not found, return None
+        cement_requirements = CEMENT_TYPE.get(method)
+        if not cement_requirements:
+            return None, None
+
+        # Look for a matching exposure class and return immediately upon finding one
+        for exposure in exposure_classes:
+            if exposure in cement_requirements:
+                return exposure, cement_requirements[exposure]
+
+        return None, None
+
+    def required_cement_type(self, method, exposure_classes, cement_type):
+        """
+        Validate whether the selected cement type is suitable for the sulfate exposure conditions
+        defined by the given design method and exposure classes.
+
+        :param str method: Design method ("MCE", "ACI", "DoE")
+        :param list exposure_classes: List of exposure classes (e.g. ["S0", "F1", ...])
+        :param str cement_type: The cement type currently selected in the design.
+        :return: A tuple (sulfate_exposure, required_cement_types, valid) where:
+                 - sulfate_exposure is the identified sulfate exposure class if any, else None.
+                 - required_cement_types is a list of cement types required for that exposure class, else None.
+                 - valid is a boolean value indicating if the selected cement type meets the requirements
+                 (None if no specific sulfate exposure requirement is found).
+        :rtype: tuple[str | None, list[str] | None, bool | None]
+        """
+
+        sulfate_exposure, required_cement_types = self.get_required_cement(method, exposure_classes)
+
+        if sulfate_exposure is None:
+            self.logger.debug('No specific sulfate exposure requirements detected; any cement type may be used')
+            return None, None, None
+
+        if cement_type in required_cement_types:
+            self.logger.debug(
+                f'The selected cement type "{cement_type}" meets the requirements for sulfate exposure "{sulfate_exposure}"')
+            return sulfate_exposure, required_cement_types, True
+        else:
+            # Log a validation error indicating that the selected cement type is not acceptable
+            error_message = (
+                f'Exposure to sulfates ("{sulfate_exposure}") requires one of the following cement types: '
+                f'{required_cement_types}. The selected cement type ("{cement_type}") is not acceptable.'
+            )
+            self.data_model.add_validation_error(
+                'Cementitious material required due to sulfate exposure', error_message
+            )
+            self.logger.debug(error_message)
+            return sulfate_exposure, required_cement_types, False
 
     @staticmethod
     def get_max_scm_content(method, exposure_classes, scm_type):
