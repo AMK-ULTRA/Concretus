@@ -281,6 +281,24 @@ MINIMUM_SPEC_STRENGTH = {
     }
 }
 
+# Type of cement required according to sulfate exposure
+CEMENT_TYPE = {
+    "MCE": {
+        "Moderada": ["Tipo II", "Tipo V"],
+        "Severa": ["Tipo V"],
+        "Muy severa": ["Tipo V"]
+    },
+    "ACI": {
+        "S1": ["Tipo II", "Tipo IIA", "Tipo V"],
+        "S2": ["Tipo V"],
+        "S3": ["Tipo V"]
+    },
+    "DoE": {
+        "XA2": ["CEM I (SR)", "CEM III (SR)", "CEM IV (SR)"],
+        "XA3": ["CEM I (SR)", "CEM III (SR)", "CEM IV (SR)"]
+    },
+}
+
 # Allowed ranges for the passing percentage (grading limits) according to COVENIN 0277-2021 (MCE),
 # ASTM C33-C33M (23) (ACI) and PD 6682-1-2009 (DoE)
 # KEEP THE FOLLOWING FORMAT -> (upper limit, lower limit) | When both limits are equal, simply write the number
@@ -1059,6 +1077,7 @@ K_FACTOR = {
 # List of error keys for progress bar update
 ERROR_KEYS = ["GRADING REQUIREMENTS FOR COARSE AGGREGATE", "GRADING REQUIREMENTS FOR FINE AGGREGATE",
               "FINENESS MODULUS", "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+              "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
               "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)", "MINIMUM ENTRAINED AIR"]
 
 # -----------------------------------------------------------------------------
