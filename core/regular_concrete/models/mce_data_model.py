@@ -40,8 +40,7 @@ class MCEDataModel:
             },
             'air': {
                 'entrapped_air_content': None,
-                'entrained_air_content': None,
-                'air_entraining_admixture_content': None
+                'entrained_air_content': None
             },
             'fine_aggregate': {
                 'fine_content_ssd': None,
@@ -83,6 +82,12 @@ class MCEDataModel:
                 'reduced_alpha': None,
                 'm': None,
                 'n': None
+            },
+            'chemical_admixtures': {
+                'WRA': {
+                    'WRA_content': None,
+                    'WRA_volume': None
+                },
             },
             'summation': {
                 'total_abs_volume': None,

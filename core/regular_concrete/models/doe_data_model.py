@@ -45,8 +45,7 @@ class DOEDataModel:
             },
             'air': {
                 'entrapped_air_content': None,
-                'entrained_air_content': None,
-                'air_entraining_admixture_content': None
+                'entrained_air_content': None
             },
             'fine_aggregate': {
                 'fine_content_ssd': None,
@@ -74,6 +73,16 @@ class DOEDataModel:
                 'w_cm_curve': None,
                 'w_cm_by_strength': None,
                 'w_cm_by_durability': None
+            },
+            'chemical_admixtures': {
+                'WRA': {
+                    'WRA_content': None,
+                    'WRA_volume': None
+                },
+                'AEA': {
+                    'AEA_content': None,
+                    'AEA_volume': None
+                },
             },
             'summation': {
                 'total_abs_volume': None,

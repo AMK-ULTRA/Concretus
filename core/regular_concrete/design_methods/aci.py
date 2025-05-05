@@ -16,7 +16,7 @@ class CementitiousMaterial:
 
     def absolute_volume(self, content, water_density, relative_density, cementitious_type=None):
         """
-        Calculates the absolute volume of a cementitious material in cubic meters (m³).
+        Calculate the absolute volume of a cementitious material in cubic meters (m³).
 
         The cementitious material content and water density must use consistent units:
         - If the cementitious material content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
@@ -98,7 +98,7 @@ class Water:
 
     def water_volume(self, water_content, density):
         """
-        Calculates the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
+        Calculate the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
 
         The water content and density must use consistent units:
         - If water content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
@@ -120,7 +120,7 @@ class Water:
     def water_content(self, slump_range, nms, entrained_air, agg_types, scm_checked=False, scm_type=None,
                       scm_percentage=None, wra_checked=False, effectiveness=None):
         """
-        Calculates the required water content for concrete, adjusting based on slump, nominal maximum
+        Calculate the required water content for concrete, adjusting based on slump, nominal maximum
         size of aggregate (NMS), air entrained and aggregate types. If SCM or WRA is used, it is also
         taken into account for water calculation.
 
@@ -607,12 +607,52 @@ class AbramsLaw:
 class Admixture:
     aci_data_model: ACIDataModel = field(init=False, repr=False)
 
+    def admixture_content(self, cement_content, dosage):
+        """
+        Calculate the admixture content in kilograms (kg) based on the total cementitious material and dosage.
+
+        :param cement_content: The total cementitious material in kilograms (kg).
+        :param dosage: The admixture dosage as a percentage (%).
+        :return: The admixture content in kilograms (kg).
+        :rtype: float
+        """
+
+        if dosage == 0:
+            error_msg = "The admixture dosage cannot be zero"
+            self.aci_data_model.add_calculation_error('Admixture content', error_msg)
+            raise ZeroDivisionError(error_msg)
+        return cement_content * (dosage / 100)
+
+    def admixture_volume(self, content, water_density, relative_density):
+        """
+        Calculate the (absolute) volume of an admixture in cubic meters (m³).
+
+        :param float content: The admixture content in kilograms (kg).
+        :param float water_density: The density of water in kg/m³.
+        :param float relative_density: The relative density of the admixture.
+        :return: The (absolute) volume of the admixture in cubic meters (m³).
+        :rtype: float
+        """
+
+        if water_density == 0 or relative_density == 0:
+            error_msg = (f"The admixture relative density is {relative_density}. "
+                         f"The water density is {water_density}. None can be zero")
+            self.aci_data_model.add_calculation_error('Admixture volume', error_msg)
+            raise ZeroDivisionError(error_msg)
+        return content / (relative_density * water_density)
+
 @dataclass
 class WRA(Admixture):
     wra_checked: bool
     relative_density: float
     dosage: float
     effectiveness: float
+
+@dataclass
+class AEA(Admixture):
+    aea_checked: bool
+    relative_density: float
+    dosage: float
 
 
 # ------------------------------------------------ Main class ------------------------------------------------
@@ -640,6 +680,7 @@ class ACI:
         self.std_deviation = None
         self.abrams_law = None
         self.wra = None
+        self.aea = None
 
         # Dictionary to store the calculated results for later use in the report
         self.calculation_results = {}
@@ -675,7 +716,7 @@ class ACI:
 
     def load_inputs(self):
         """
-        Loads data from the data model, performs unit conversion for selected parameters,
+        Load data from the data model and perform unit conversion for selected parameters,
         and instantiates the necessary objects.
         """
 
@@ -746,6 +787,11 @@ class ACI:
                 dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
                 effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
             )
+            self.aea = AEA(
+                aea_checked=self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked'),
+                relative_density=self.data_model.get_design_value('chemical_admixtures.AEA.AEA_relative_density'),
+                dosage=self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
+            )
 
             # Connect to the ACI data model
             self.cement.aci_data_model = self.aci_data_model
@@ -757,6 +803,7 @@ class ACI:
             self.std_deviation.aci_data_model = self.aci_data_model
             self.abrams_law.aci_data_model = self.aci_data_model
             self.wra.aci_data_model = self.aci_data_model
+            self.aea.aci_data_model = self.aci_data_model
 
             self.logger.debug("Input data loaded and converted successfully")
         except Exception as e:
@@ -887,6 +934,30 @@ class ACI:
             fine_volume = self.fine_agg.apparent_volume(fine_content_wet, fine_loose_bulk_density, "fine")
             coarse_volume = self.coarse_agg.apparent_volume(coarse_content_wet, coarse_loose_bulk_density, "coarse")
 
+            # Admixture dosage
+            wra_relative_density = self.wra.relative_density
+            wra_dosage = self.wra.dosage
+            aea_checked = self.aea.aea_checked
+            aea_relative_density = self.aea.relative_density
+            aea_dosage = self.aea.dosage
+            total_cementitious_content = cement_content + scm_content
+
+            # Water-Reducing Admixture
+            if wra_checked:
+                wra_content = self.wra.admixture_content(total_cementitious_content, wra_dosage)
+                wra_volume = self.wra.admixture_volume(wra_content, water_density, wra_relative_density)
+            else:
+                wra_content = None
+                wra_volume = None
+
+            # Air-Entraining Admixture
+            if aea_checked:
+                aea_content = self.wra.admixture_content(total_cementitious_content, aea_dosage)
+                aea_volume = self.wra.admixture_volume(aea_content, water_density, aea_relative_density)
+            else:
+                aea_content = None
+                aea_volume = None
+
             # Convert absolute from m3 to L
             water_abs_volume = 1000 * water_abs_volume
             water_volume = 1000 * water_volume
@@ -898,6 +969,10 @@ class ACI:
                 entrained_air_content = 1000 * entrained_air_content
             else:
                 entrapped_air_content = 1000 * entrapped_air_content
+            if wra_checked:
+                wra_volume = 1000 * wra_volume
+            if aea_checked:
+                aea_volume = 1000 * aea_volume
 
             # Add up all absolute volumes and contents
             if entrained_air:
@@ -933,6 +1008,10 @@ class ACI:
                 "coarse_content_wet": coarse_content_wet,
                 "coarse_abs_volume": coarse_abs_volume,
                 "coarse_volume": coarse_volume,
+                "WRA_content": wra_content,
+                "WRA_volume": wra_volume,
+                "AEA_content": aea_content,
+                "AEA_volume": aea_volume,
                 "total_abs_volume": total_abs_volume,
                 "total_content": total_sum
             }
@@ -973,6 +1052,10 @@ class ACI:
                 data_key = f"fine_aggregate.{key}"
             elif key in ("coarse_content_ssd", "coarse_content_wet", "coarse_abs_volume", "coarse_volume"):
                 data_key = f"coarse_aggregate.{key}"
+            elif key in ("WRA_content", "WRA_volume"):
+                data_key = f"chemical_admixtures.WRA.{key}"
+            elif key in ("AEA_content", "AEA_volume"):
+                data_key = f"chemical_admixtures.AEA.{key}"
             elif key in ("total_abs_volume", "total_content"):
                 data_key = f"summation.{key}"
             else:

@@ -17,7 +17,7 @@ class CementitiousMaterial:
 
     def absolute_volume(self, content, water_density, relative_density, cementitious_type=None):
         """
-        Calculates the absolute volume of a cementitious material in cubic meters (m³).
+        Calculate the absolute volume of a cementitious material in cubic meters (m³).
 
         The cementitious material content and water density must use consistent units:
         - If the cementitious material content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
@@ -136,7 +136,7 @@ class Water:
 
     def water_volume(self, water_content, density):
         """
-        Calculates the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
+        Calculate the volume of water in cubic meter (m³). For water, the absolute volume and total volume are the same.
 
         The water content and density must use consistent units:
         - If water content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
@@ -665,7 +665,7 @@ class AbramsLaw:
     def water_cement_ratio(self, target_strength, target_strength_time, nms, agg_types, exposure_classes,
                            wra_checked=False, effectiveness=None, m=None, n=None):
         """
-        Calculated the water-cement ratio. The parameters m and n are constants that depend on the age of test,
+        Calculate the water-cement ratio. The parameters m and n are constants that depend on the age of test,
         the characteristics of the component materials of the mixture and the way the mixture is made.
 
         If a WRA is used, there will be a reduction in the w/c ratio according to the effectiveness of the admixture.
@@ -753,6 +753,40 @@ class AbramsLaw:
 class Admixture:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
+    def admixture_content(self, cement_content, dosage):
+        """
+        Calculate the admixture content in kilograms (kg) based on the total cementitious material and dosage.
+
+        :param cement_content: The total cementitious material in kilograms (kg).
+        :param dosage: The admixture dosage as a percentage (%).
+        :return: The admixture content in kilograms (kg).
+        :rtype: float
+        """
+
+        if dosage == 0:
+            error_msg = "The admixture dosage cannot be zero"
+            self.mce_data_model.add_calculation_error('Admixture content', error_msg)
+            raise ZeroDivisionError(error_msg)
+        return cement_content * (dosage / 100)
+
+    def admixture_volume(self, content, water_density, relative_density):
+        """
+        Calculate the (absolute) volume of an admixture in cubic meters (m³).
+
+        :param float content: The admixture content in kilograms (kg).
+        :param float water_density: The density of water in kg/m³.
+        :param float relative_density: The relative density of the admixture.
+        :return: The (absolute) volume of the admixture in cubic meters (m³).
+        :rtype: float
+        """
+
+        if water_density == 0 or relative_density == 0:
+            error_msg = (f"The admixture relative density is {relative_density}. "
+                         f"The water density is {water_density}. None can be zero")
+            self.mce_data_model.add_calculation_error('Admixture volume', error_msg)
+            raise ZeroDivisionError(error_msg)
+        return content / (relative_density * water_density)
+
 @dataclass
 class WRA(Admixture):
     wra_checked: bool
@@ -821,7 +855,7 @@ class MCE:
 
     def load_inputs(self):
         """
-        Loads data from the data model, performs unit conversion for selected parameters,
+        Load data from the data model and perform unit conversion for selected parameters,
         and instantiates the necessary objects.
         """
 
@@ -999,6 +1033,18 @@ class MCE:
             fine_volume = self.fine_agg.apparent_volume(fine_content_wet, fine_loose_bulk_density, "fine")
             coarse_volume = self.coarse_agg.apparent_volume(coarse_content_wet, coarse_loose_bulk_density, "coarse")
 
+            # Admixture dosage
+            wra_relative_density = self.wra.relative_density
+            wra_dosage = self.wra.dosage
+
+            # Water-Reducing Admixture
+            if wra_checked:
+                wra_content = self.wra.admixture_content(cement_content, wra_dosage)
+                wra_volume = self.wra.admixture_volume(wra_content, water_density, wra_relative_density)
+            else:
+                wra_content = None
+                wra_volume = None
+
             # Convert absolute from m3 to L
             water_abs_volume = 1000 * water_abs_volume
             water_volume = 1000 * water_volume
@@ -1006,6 +1052,8 @@ class MCE:
             fine_abs_volume = 1000 * fine_abs_volume
             coarse_abs_volume = 1000 * coarse_abs_volume
             entrapped_air_content = 1000 * entrapped_air_content
+            if wra_checked:
+                wra_volume = 1000 * wra_volume
 
             # Add up all absolute volumes and contents
             total_abs_volume = sum(
@@ -1036,6 +1084,8 @@ class MCE:
                 "coarse_content_wet": coarse_content_wet,
                 "coarse_abs_volume": coarse_abs_volume,
                 "coarse_volume": coarse_volume,
+                "WRA_content": wra_content,
+                "WRA_volume": wra_volume,
                 "total_abs_volume": total_abs_volume,
                 "total_content": total_sum
             }
@@ -1074,6 +1124,8 @@ class MCE:
                 data_key = f"fine_aggregate.{key}"
             elif key in ("coarse_content_ssd", "coarse_content_wet", "coarse_abs_volume", "coarse_volume"):
                 data_key = f"coarse_aggregate.{key}"
+            elif key in ("WRA_content", "WRA_volume"):
+                data_key = f"chemical_admixtures.WRA.{key}"
             elif key in ("total_abs_volume", "total_content"):
                 data_key = f"summation.{key}"
             else:
