@@ -34,7 +34,7 @@ class CementitiousMaterial:
         """
 
         if water_density == 0 or relative_density == 0:
-            error_msg = (f"The relative density of {cementitious_type} is {relative_density}. "
+            error_msg = (f"The relative density of the {cementitious_type} is {relative_density}. "
                          f"The water density is {water_density}. None can be zero")
             self.doe_data_model.add_calculation_error('Cementitious volume', error_msg)
             raise ZeroDivisionError(error_msg)
@@ -138,10 +138,11 @@ class Water:
 
         return water_content / density
 
-    def water_content(self, slump_range, nms, agg_types, entrained_air, scm_checked, scm_percentage=None):
+    def water_content(self, slump_range, nms, agg_types, entrained_air, scm_checked=False, scm_percentage=None,
+                      wra_checked=False, effectiveness=None):
         """
         Calculates the required water content for concrete, adjusting based on slump, nominal maximum
-        size of aggregate (NMS) and aggregate types. If SCM is used, it is also taken into account for
+        size of aggregate (NMS) and aggregate types. If SCM or WRA is used, it is also taken into account for
         water calculation.
 
         :param str slump_range: Slump range of the concrete in fresh state (in mm).
@@ -151,6 +152,8 @@ class Water:
         :param bool entrained_air: True if the mixture is air-entrained, otherwise False.
         :param bool scm_checked: True if an SCM is used, otherwise False.
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
+        :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param float effectiveness: WRA effectiveness percentage.
         :return: The water content (in kg/m³).
         :rtype: float
         """
@@ -184,9 +187,10 @@ class Water:
 
         # Initialize water corrections
         water_correction_scm = 0
+        water_correction_wra = 0
 
         # Apply SCM corrections if applicable
-        if scm_checked and scm_percentage != 0:
+        if scm_checked:
             # Determine the SCM percentage range
             if 10 <= scm_percentage < 20:
                 scm_percentage_range = '10-20'
@@ -205,14 +209,19 @@ class Water:
 
             # Get water correction value if a valid percentage range is determined
             if scm_percentage_range:
-                water_correction_scm = WATER_CONTENT_REDUCTION.get(scm_percentage_range, {}).get(slump_range, 0)
+                water_correction_scm = - WATER_CONTENT_REDUCTION.get(scm_percentage_range, {}).get(slump_range, 0)
+
+        # Apply WRA corrections if applicable
+        if wra_checked:
+            water_correction_wra = -(effectiveness / 100) * water_content
 
         # Store intermediate values in data model
         self.doe_data_model.update_data('water.water_content.base', water_content)
         self.doe_data_model.update_data('water.water_content.scm_correction', water_correction_scm)
+        self.doe_data_model.update_data('water.water_content.wra_correction', water_correction_wra)
 
         # Apply corrections to base water content
-        final_water_content = water_content - water_correction_scm
+        final_water_content = water_content + water_correction_scm + water_correction_wra
 
         return final_water_content
 
@@ -699,6 +708,17 @@ class AbramsLaw:
         # Return the more restrictive (lower) w/cm ratio to satisfy both strength and durability
         return min(w_cm_by_strength, w_cm_by_durability)
 
+@dataclass
+class Admixture:
+    doe_data_model: DOEDataModel = field(init=False, repr=False)
+
+@dataclass
+class WRA(Admixture):
+    wra_checked: bool
+    relative_density: float
+    dosage: float
+    effectiveness: float
+
 
 # ------------------------------------------------ Main class ------------------------------------------------
 class DOE:
@@ -724,6 +744,7 @@ class DOE:
         self.hardened_concrete = None
         self.std_deviation = None
         self.abrams_law = None
+        self.wra = None
 
         # Dictionary to store the calculated results for later use in the report
         self.calculation_results = {}
@@ -827,6 +848,12 @@ class DOE:
                     "field_requirements.strength.std_dev_unknown.margin")
             )
             self.abrams_law = AbramsLaw()
+            self.wra = WRA(
+                wra_checked=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked'),
+                relative_density=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density'),
+                dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
+                effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
+            )
 
             # Connect to the DoE data model
             self.cement.doe_data_model = self.doe_data_model
@@ -837,6 +864,7 @@ class DOE:
             self.coarse_agg.doe_data_model = self.doe_data_model
             self.std_deviation.doe_data_model = self.doe_data_model
             self.abrams_law.doe_data_model = self.doe_data_model
+            self.wra.doe_data_model = self.doe_data_model
 
             self.logger.debug("Input data loaded and converted successfully")
         except Exception as e:
@@ -896,10 +924,12 @@ class DOE:
             slump_range = self.fresh_concrete.slump_range
             nominal_max_size = self.coarse_agg.nominal_max_size
             scm_percentage = self.scm.scm_percentage
+            wra_checked = self.wra.wra_checked
+            wra_effectiveness = self.wra.effectiveness
             water_density = self.water.density
 
             water_content = self.water.water_content(slump_range, nominal_max_size, agg_types, entrained_air, scm_checked,
-                                                     scm_percentage)
+                                                     scm_percentage, wra_checked, wra_effectiveness)
             water_abs_volume = self.water.water_volume(water_content, water_density)
 
             # E. Cementitious Materials Content and Absolute Volume
@@ -909,7 +939,8 @@ class DOE:
 
             cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm, exposure_classes,
                                                                            scm_checked, scm_percentage)
-            cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
+            cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density,
+                                                            "Cemento")
 
             if scm_checked:
                 scm_abs_volume = self.cement.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)

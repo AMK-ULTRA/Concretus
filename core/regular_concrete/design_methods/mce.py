@@ -41,7 +41,7 @@ class CementitiousMaterial:
 @dataclass
 class Cement(CementitiousMaterial):
 
-    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, theta=None, k=117.2, n=0.16, m=1.3):
+    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, k=117.2, n=0.16, m=1.3, theta=None):
         """
         Calculate the cement content in kilogram-force per cubic meter of mixture (kgf/m³) using the triangular_relationship.
         The parameters k, n, m are constants that depend on the characteristics of the component materials of
@@ -66,7 +66,7 @@ class Cement(CementitiousMaterial):
         # Convert slump to centimeters
         slump = 0.1 * slump
 
-        if theta is None or theta < 0:
+        if theta is None or theta <= 0:
             # Calculate the design cement content
             design_cement_content = k * slump ** n * alpha ** (-m)
 
@@ -662,11 +662,13 @@ class Beta:
 class AbramsLaw:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
-    def water_cement_ratio(self, target_strength, target_strength_time, nms, agg_types, exposure_classes, m=None,
-                           n=None):
+    def water_cement_ratio(self, target_strength, target_strength_time, nms, agg_types, exposure_classes,
+                           wra_checked=False, effectiveness=None, m=None, n=None):
         """
         Calculated the water-cement ratio. The parameters m and n are constants that depend on the age of test,
         the characteristics of the component materials of the mixture and the way the mixture is made.
+
+        If a WRA is used, there will be a reduction in the w/c ratio according to the effectiveness of the admixture.
 
         :param float target_strength: The target strength of the mixture design.
         :param str target_strength_time: The expected time to reach the target strength,
@@ -676,6 +678,8 @@ class AbramsLaw:
                                      (e.g., ("Triturado", "Natural")).
         :param list[str] exposure_classes: A list containing all possible exposure classes, in no particular order,
                                            (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
+        :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param float effectiveness: WRA effectiveness percentage.
         :param float m: A constant.
         :param float n: A constant.
         :return: The water-cement ratio (also known as alpha).
@@ -728,14 +732,33 @@ class AbramsLaw:
         # The final alpha is the minimum between the corrected alpha and the minimum allowed alpha
         alpha = min(corrected_alpha, min_alpha)
 
+        # Apply a reduction to the final alpha if a WRA is used
+        if wra_checked:
+            reduced_alpha = (1 - effectiveness / 100) * alpha
+        else:
+            reduced_alpha = None
+
         # Store intermediate calculation results in the MCE data model for reference
         self.mce_data_model.update_data('water_cement_ratio.design_alpha', design_alpha)
         self.mce_data_model.update_data('water_cement_ratio.corrected_alpha', corrected_alpha)
         self.mce_data_model.update_data('water_cement_ratio.min_alpha', min_alpha)
+        self.mce_data_model.update_data('water_cement_ratio.fina_alpha', alpha)
+        self.mce_data_model.update_data('water_cement_ratio.reduced_alpha', reduced_alpha)
         self.mce_data_model.update_data('water_cement_ratio.m', m)
         self.mce_data_model.update_data('water_cement_ratio.n', n)
 
-        return alpha
+        return reduced_alpha if wra_checked else alpha
+
+@dataclass
+class Admixture:
+    mce_data_model: MCEDataModel = field(init=False, repr=False)
+
+@dataclass
+class WRA(Admixture):
+    wra_checked: bool
+    relative_density: float
+    dosage: float
+    effectiveness: float
 
 
 # ------------------------------------------------ Main class ------------------------------------------------
@@ -762,6 +785,7 @@ class MCE:
         self.std_deviation = None
         self.beta = None
         self.abrams_law = None
+        self.wra = None
 
         # Dictionary to store the calculated results for later use in the report.
         self.calculation_results = {}
@@ -855,6 +879,12 @@ class MCE:
             )
             self.beta = Beta()
             self.abrams_law = AbramsLaw()
+            self.wra = WRA(
+                wra_checked=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked'),
+                relative_density=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density'),
+                dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
+                effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
+            )
 
             # Connect to the MCE data model
             self.cement.mce_data_model = self.mce_data_model
@@ -864,6 +894,7 @@ class MCE:
             self.std_deviation.mce_data_model = self.mce_data_model
             self.beta.mce_data_model = self.mce_data_model
             self.abrams_law.mce_data_model = self.mce_data_model
+            self.wra.mce_data_model = self.mce_data_model
 
             self.logger.debug("Input data loaded and converted successfully")
         except Exception as e:
@@ -911,9 +942,11 @@ class MCE:
             target_strength_time = self.hardened_concrete.spec_strength_time
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
             exposure_classes = list(self.hardened_concrete.exposure_classes.values())
+            wra_checked = self.wra.wra_checked
+            wra_effectiveness = self.wra.effectiveness
 
             alpha = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nominal_max_size,
-                                                       agg_types, exposure_classes)
+                                                       agg_types, exposure_classes, wra_checked, wra_effectiveness)
 
             # D. Cement Content and Absolute Volume
             slump = self.fresh_concrete.slump
@@ -983,7 +1016,7 @@ class MCE:
             # Store all the results in a dictionary
             self.calculation_results = {
                 "target_strength": target_strength,
-                "alpha": alpha,
+                "used_alpha": alpha,
                 "beta_mean": beta_mean,
                 "beta_economic": beta_economic,
                 "beta": beta_value,
@@ -1027,8 +1060,8 @@ class MCE:
             # The key paths according to MCE data model schema
             if key == "target_strength":
                 data_key = "spec_strength.target_strength.target_strength_value"
-            elif key == "alpha":
-                data_key = "water_cement_ratio.alpha"
+            elif key == "used_alpha":
+                data_key = "water_cement_ratio.used_alpha"
             elif key in ("beta_mean", "beta_economic", "beta"):
                 data_key = f"beta.{key}"
             elif key == "entrapped_air_content":

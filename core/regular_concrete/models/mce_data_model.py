@@ -73,12 +73,14 @@ class MCEDataModel:
                 },
             },
             'water_cement_ratio': {
-                'alpha': None,
+                'used_alpha': None,
                 'design_alpha': None,
                 'correction_factor_1': None,
                 'correction_factor_2': None,
                 'corrected_alpha': None,
                 'min_alpha': None,
+                'fina_alpha': None,
+                'reduced_alpha': None,
                 'm': None,
                 'n': None
             },

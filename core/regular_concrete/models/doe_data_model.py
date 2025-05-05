@@ -36,6 +36,7 @@ class DOEDataModel:
                 'water_content': {
                     'base': None,
                     'scm_correction': None,
+                    'wra_correction': None,
                     'final_content': None
                 },
                 'water_content_correction': None,

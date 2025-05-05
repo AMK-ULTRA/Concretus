@@ -117,19 +117,23 @@ class Water:
 
         return water_content / density
 
-    def water_content(self, slump_range, nms, entrained_air, agg_types, scm=None, scm_percentage=None):
+    def water_content(self, slump_range, nms, entrained_air, agg_types, scm_checked=False, scm_type=None,
+                      scm_percentage=None, wra_checked=False, effectiveness=None):
         """
         Calculates the required water content for concrete, adjusting based on slump, nominal maximum
-        size of aggregate (NMS), air entrained and aggregate types. If SCM is used, it is also taken into account for
-        water calculation.
+        size of aggregate (NMS), air entrained and aggregate types. If SCM or WRA is used, it is also
+        taken into account for water calculation.
 
         :param str slump_range: Slump range of the concrete in fresh state (in mm).
         :param str nms: Nominal maximum size of the coarse aggregate.
         :param bool entrained_air: True if the concrete is entrained air, otherwise False.
         :param tuple[str, str] agg_types: A tuple containing the type of coarse and fine aggregate, respectively
                                (e.g., ("Angular", "Natural")).
-        :param str scm: Type of SCM (e.g., "Cenizas volantes", "Cemento de escoria", "Humo de sílice").
+        :param bool scm_checked: True if a supplementary cementitious material is used, otherwise False.
+        :param str scm_type: Type of SCM (e.g., "Cenizas volantes", "Cemento de escoria", "Humo de sílice").
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
+        :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param float effectiveness: WRA effectiveness percentage.
         :return: The water content (in kg/m³).
         :rtype: float
         """
@@ -150,6 +154,7 @@ class Water:
         water_correction_coarse = 0
         water_correction_fine = 0
         water_correction_scm = 0
+        water_correction_wra = 0
 
         # Adjust according to the type of aggregate
         if "Redondeada" in agg_types:
@@ -158,24 +163,31 @@ class Water:
             water_correction_fine = 0.05 * water_content
 
         # Adjust according to the type of SCM (if used)
-        if scm and scm_percentage:
-            if scm == "Cenizas volantes":
+        if scm_checked:
+            if scm_type == "Cenizas volantes":
                 multiplier = scm_percentage // 10
                 reduction = (multiplier * 3) * 0.01
                 water_correction_scm = -reduction * water_content
-            elif scm == "Cemento de escoria":
+            elif scm_type == "Cemento de escoria":
                 multiplier = scm_percentage // 10
                 reduction = (multiplier * 5) * 0.01
                 water_correction_scm = -reduction * water_content
+
+        # Adjust according to the WRA (if used)
+        if wra_checked:
+            reduction = effectiveness / 100
+            water_correction_wra = -reduction * water_content
 
         # Store intermediate values in data model
         self.aci_data_model.update_data('water.water_content.base', water_content)
         self.aci_data_model.update_data('water.water_content.coarse_aggregate_correction', water_correction_coarse)
         self.aci_data_model.update_data('water.water_content.fine_aggregate_correction', water_correction_fine)
         self.aci_data_model.update_data('water.water_content.scm_correction', water_correction_scm)
+        self.aci_data_model.update_data('water.water_content.wra_correction', water_correction_wra)
 
         # Apply corrections to base water content
-        final_water_content = water_content + water_correction_coarse + water_correction_fine + water_correction_scm
+        final_water_content = (water_content + water_correction_coarse + water_correction_fine + water_correction_scm +
+                               water_correction_wra)
 
         return final_water_content
 
@@ -591,6 +603,17 @@ class AbramsLaw:
         # Return the more restrictive (lower) w/cm ratio to satisfy both strength and durability
         return min(w_cm_by_strength, w_cm_by_durability)
 
+@dataclass
+class Admixture:
+    aci_data_model: ACIDataModel = field(init=False, repr=False)
+
+@dataclass
+class WRA(Admixture):
+    wra_checked: bool
+    relative_density: float
+    dosage: float
+    effectiveness: float
+
 
 # ------------------------------------------------ Main class ------------------------------------------------
 class ACI:
@@ -616,8 +639,9 @@ class ACI:
         self.hardened_concrete = None
         self.std_deviation = None
         self.abrams_law = None
+        self.wra = None
 
-        # Dictionary to store the calculated results for later use in the report.
+        # Dictionary to store the calculated results for later use in the report
         self.calculation_results = {}
 
     def convert_value(self, value, unit):
@@ -716,6 +740,12 @@ class ACI:
                     "field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled")
             )
             self.abrams_law = AbramsLaw()
+            self.wra = WRA(
+                wra_checked=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked'),
+                relative_density=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density'),
+                dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
+                effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
+            )
 
             # Connect to the ACI data model
             self.cement.aci_data_model = self.aci_data_model
@@ -726,6 +756,7 @@ class ACI:
             self.coarse_agg.aci_data_model = self.aci_data_model
             self.std_deviation.aci_data_model = self.aci_data_model
             self.abrams_law.aci_data_model = self.aci_data_model
+            self.wra.aci_data_model = self.aci_data_model
 
             self.logger.debug("Input data loaded and converted successfully")
         except Exception as e:
@@ -760,11 +791,16 @@ class ACI:
             nominal_max_size = self.coarse_agg.nominal_max_size
             entrained_air = self.air.entrained_air
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
-            scm = self.scm.scm_type
+            scm_checked = self.scm.scm_checked
+            scm_type = self.scm.scm_type
             scm_percentage = self.scm.scm_percentage
+            wra_checked = self.wra.wra_checked
+            wra_effectiveness = self.wra.effectiveness
             water_density = self.water.density
 
-            water_content = self.water.water_content(slump_range, nominal_max_size, entrained_air, agg_types, scm, scm_percentage)
+            water_content = self.water.water_content(slump_range, nominal_max_size, entrained_air, agg_types,
+                                                     scm_checked, scm_type, scm_percentage, wra_checked,
+                                                     wra_effectiveness)
             water_abs_volume = self.water.water_volume(water_content, water_density)
 
             # C. Water-Cementitious Materials ratio, aka alpha or a/cm
@@ -775,12 +811,9 @@ class ACI:
             # D. Cementitious Materials Content and Absolute Volume
             cement_relative_density = self.cement.relative_density
             scm_relative_density = self.scm.relative_density
-            scm_type = self.scm.scm_type
-            scm_checked = self.scm.scm_checked
 
-            cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm,
-                                                                                          nominal_max_size, scm_checked,
-                                                                                          scm_percentage)
+            cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm, nominal_max_size,
+                                                                           scm_checked, scm_percentage)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
             if scm_checked:
                 scm_abs_volume = self.scm.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
@@ -790,9 +823,8 @@ class ACI:
             # D.1. Review the Water-Cementitious Materials ratio
             w_cm_recalculated = water_content / (cement_content + scm_content)
 
-            # If the minimum cementitious material has been selected, adjust the w/cm ratio
-            if w_cm_recalculated != w_cm:
-                w_cm = w_cm_recalculated
+            if w_cm_recalculated != w_cm: # If the minimum cementitious material has been selected,
+                w_cm = w_cm_recalculated  # adjust the w/cm ratio.
 
             # E. Air Content
             entrained_air_content = 0

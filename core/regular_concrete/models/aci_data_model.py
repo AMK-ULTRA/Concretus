@@ -35,6 +35,7 @@ class ACIDataModel:
                     'coarse_aggregate_correction': None,
                     'fine_aggregate_correction': None,
                     'scm_correction': None,
+                    'wra_correction': None,
                     'final_content': None
                 },
                 'water_content_correction': None,
