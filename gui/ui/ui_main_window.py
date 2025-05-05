@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(790, 573)
+        MainWindow.resize(840, 573)
         MainWindow.setMinimumSize(QtCore.QSize(790, 573))
         MainWindow.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)

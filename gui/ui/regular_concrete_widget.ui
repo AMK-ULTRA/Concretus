@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>790</width>
+    <width>840</width>
     <height>530</height>
    </rect>
   </property>
@@ -919,6 +919,9 @@
             </item>
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_pus">
+              <property name="decimals">
+               <number>0</number>
+              </property>
               <property name="maximum">
                <double>10000.000000000000000</double>
               </property>
@@ -939,6 +942,9 @@
             </item>
             <item row="2" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_puc">
+              <property name="decimals">
+               <number>0</number>
+              </property>
               <property name="maximum">
                <double>10000.000000000000000</double>
               </property>
@@ -971,6 +977,9 @@
               <property name="wrapping">
                <bool>false</bool>
               </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -991,6 +1000,9 @@
             </item>
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_abs">
+              <property name="decimals">
+               <number>1</number>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1182,6 +1194,9 @@
             </item>
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_pus">
+              <property name="decimals">
+               <number>0</number>
+              </property>
               <property name="maximum">
                <double>10000.000000000000000</double>
               </property>
@@ -1205,6 +1220,9 @@
             </item>
             <item row="2" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_puc">
+              <property name="decimals">
+               <number>0</number>
+              </property>
               <property name="maximum">
                <double>10000.000000000000000</double>
               </property>
@@ -1240,6 +1258,9 @@
               <property name="wrapping">
                <bool>false</bool>
               </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1260,6 +1281,9 @@
             </item>
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_abs">
+              <property name="decimals">
+               <number>1</number>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1448,7 +1472,33 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_WRA_type"/>
+           <widget class="QComboBox" name="comboBox_WRA_type">
+            <item>
+             <property name="text">
+              <string>Tipo A</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tipo D</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tipo E</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tipo F</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tipo G</string>
+             </property>
+            </item>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_WRA_name">
@@ -1474,10 +1524,17 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_WRA_relative_density"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_WRA_relative_density">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+           </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_WRA_effectiveness">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reducción estimada del agua de mezclado (en % del agua total).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Efectividad (%)</string>
             </property>
@@ -1501,6 +1558,9 @@
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_WRA_dosage">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porcentaje de aditivo en relación al peso del cemento o material cementante.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Dosis (%)</string>
             </property>
@@ -1585,6 +1645,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_AEA_dosage">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porcentaje de aditivo en relación al peso del cemento o material cementante.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Dosis (%)</string>
             </property>

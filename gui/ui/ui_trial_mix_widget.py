@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_TrialMixWidget(object):
     def setupUi(self, TrialMixWidget):
         TrialMixWidget.setObjectName("TrialMixWidget")
-        TrialMixWidget.resize(790, 530)
+        TrialMixWidget.resize(840, 530)
         TrialMixWidget.setMinimumSize(QtCore.QSize(790, 530))
         TrialMixWidget.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(TrialMixWidget)

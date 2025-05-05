@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_WelcomeWidget(object):
     def setupUi(self, WelcomeWidget):
         WelcomeWidget.setObjectName("WelcomeWidget")
-        WelcomeWidget.resize(790, 530)
+        WelcomeWidget.resize(840, 530)
         WelcomeWidget.setMinimumSize(QtCore.QSize(790, 530))
         WelcomeWidget.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         self.verticalLayout = QtWidgets.QVBoxLayout(WelcomeWidget)
