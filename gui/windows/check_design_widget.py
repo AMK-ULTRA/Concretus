@@ -114,19 +114,25 @@ class CheckDesign(QWidget):
         coarse_compacted_bulk_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.PUC')
         entrained_air = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
         entrained_air_exposure_defined = self.data_model.get_design_value('field_requirements.entrained_air_content.exposure_defined')
+        aea_checked = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
+        aea_relative_density = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_relative_density')
+        aea_dosage = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
         exposure_class_aci = self.data_model.get_design_value('field_requirements.exposure_class.items_2')
         exposure_class_doe = self.data_model.get_design_value('field_requirements.exposure_class.items_3')
         nominal_max_size = self.data_model.get_design_value('coarse_aggregate.NMS')
         passing_600 = self.data_model.get_design_value('fine_aggregate.gradation.passing')
         coarse_absorption = self.data_model.get_design_value('coarse_aggregate.moisture.absorption_content')
-
+        wra_checked = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
+        wra_relative_density = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density')
+        wra_dosage = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage')
+        wra_effectiveness = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
 
         # Get the design method
         method = self.data_model.method
 
         warnings = []
 
-        # Check zero density
+        # Check zero relative density
         if fine_relative_density == 0:
             warnings.append("La densidad relativa del agregado fino no puede ser cero.")
         if coarse_relative_density == 0:
@@ -135,6 +141,10 @@ class CheckDesign(QWidget):
             warnings.append("La densidad relativa del cemento no puede ser cero.")
         if scm_relative_density == 0 and scm_checked:
             warnings.append(f"La densidad relativa del SCM ({scm_type}) no puede ser cero.")
+        if wra_relative_density == 0 and wra_checked:
+            warnings.append("La densidad relativa del aditivo reductor de agua no puede ser cero.")
+        if aea_relative_density == 0 and aea_checked:
+            warnings.append("La densidad relativa del aditivo incorporador de aire no puede ser cero.")
 
         # Check bulk density with method-specific messages
         if fine_loose_bulk_density == 0:
@@ -156,6 +166,18 @@ class CheckDesign(QWidget):
                 warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
             if method == "DoE" and exposure_class_doe not in ["XF2", "XF3", "XF4"]:
                 warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
+
+        # Validate AEA requirements
+        if entrained_air and not aea_checked:
+            warnings.append("Aditivo incorporador de aire requerido (diseño con aire incorporado).")
+        if aea_dosage == 0 and aea_checked:
+            warnings.append("La dosis del aditivo incorporador de aire no puede ser cero.")
+
+        # Validate WRA requirements
+        if wra_checked and not wra_effectiveness:
+            warnings.append("Ingrese la efectividad del reductor de agua.")
+        if wra_dosage == 0 and wra_checked:
+            warnings.append("La dosis del aditivo reductor de agua no puede ser cero.")
 
         # Validate nominal maximum size
         if nominal_max_size is None:
