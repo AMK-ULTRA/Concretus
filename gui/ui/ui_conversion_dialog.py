@@ -13,6 +13,7 @@ class Ui_ConversionDialog(object):
     def setupUi(self, ConversionDialog):
         ConversionDialog.setObjectName("ConversionDialog")
         ConversionDialog.resize(360, 240)
+        ConversionDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         ConversionDialog.setSizeGripEnabled(False)
         self.verticalLayout = QtWidgets.QVBoxLayout(ConversionDialog)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -47,6 +48,7 @@ class Ui_ConversionDialog(object):
         self.formLayout_dosage_data.setWidget(1, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_dosage_relative_density)
         self.doubleSpinBox_dosage_relative_density = QtWidgets.QDoubleSpinBox(parent=ConversionDialog)
         self.doubleSpinBox_dosage_relative_density.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
+        self.doubleSpinBox_dosage_relative_density.setDecimals(3)
         self.doubleSpinBox_dosage_relative_density.setObjectName("doubleSpinBox_dosage_relative_density")
         self.formLayout_dosage_data.setWidget(1, QtWidgets.QFormLayout.ItemRole.FieldRole, self.doubleSpinBox_dosage_relative_density)
         self.label_bag_weight = QtWidgets.QLabel(parent=ConversionDialog)
