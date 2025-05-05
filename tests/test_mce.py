@@ -30,7 +30,7 @@ class TestCement(unittest.TestCase):
                 cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes)
                 self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.000001)
 
-    def test_cement_content_with_correction(self):
+    def test_cement_content_with_correction_for_aggregates(self):
         slump = 100
         alpha = 0.5
         exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
@@ -55,8 +55,68 @@ class TestCement(unittest.TestCase):
 
         for nms, agg_types, cement_content_expected in test_cases:
             with self.subTest(nms=nms, agg_types=agg_types):
-                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, k=500, n=0, m=0)
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, k=500, n=0,
+                                                            m=0)
                 self.assertEqual(cement_content, cement_content_expected)
+
+    def test_cement_content_with_correction_for_exposure_classes(self):
+        slump = 50
+        alpha = 0.65
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        test_cases = [
+            (['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común'], 270),
+            (['Agua dulce', 'Despreciable', 'Despreciable', 'Atmósfera común'], 270),
+            (['Agua salobre o de mar', 'Despreciable', 'Despreciable', 'Atmósfera común'], 350),
+
+            (['Despreciable', 'Moderada', 'Despreciable', 'Atmósfera común'], 270),
+            (['Despreciable', 'Severa', 'Despreciable', 'Atmósfera común'], 270),
+            (['Despreciable', 'Muy severa', 'Despreciable', 'Atmósfera común'], 350),
+
+            (['Despreciable', 'Despreciable', 'Alta', 'Atmósfera común'], 270),
+            (['Despreciable', 'Despreciable', 'Despreciable', 'Litoral'], 350),
+        ]
+
+        for exposure_classes, cement_content_expected in test_cases:
+            with self.subTest(exposure_classes=exposure_classes):
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes)
+                self.assertEqual(cement_content, cement_content_expected)
+
+    def test_cement_content_with_multiple_corrections(self):
+        slump = 50
+        alpha = 0.50
+        test_cases = [
+            ('2-1/2" (63 mm)', ("Triturado", "Triturada"), ['Agua salobre o de mar', 'Despreciable', 'Despreciable', 'Atmósfera común'], 406.1914),
+            ('1-1/2" (37,5 mm)', ("Semitriturado", "Natural"), ['Despreciable', 'Severa', 'Despreciable', 'Atmósfera común'], 322.8997),
+            ('1/2" (12,5 mm)', ("Semitriturado", "Triturada"), ['Despreciable', 'Muy severa', 'Despreciable', 'Atmósfera común'], 523.4941),
+            ('3/4" (19 mm)', ("Grava natural", "Triturada"), ['Despreciable', 'Despreciable', 'Alta', 'Atmósfera común'], 376.3244),
+            ('1/4" (6,3 mm)', ("Triturado", "Natural"), ['Despreciable', 'Despreciable', 'Despreciable', 'Litoral'], 496.5391),
+        ]
+
+        for nms, agg_types, exposure_classes, cement_content_expected in test_cases:
+            with self.subTest(nms=nms):
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes)
+                self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.0001)
+
+    def test_cement_content_with_different_constant(self):
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
+        slump = 100
+        alpha = 0.50
+        test_cases = [
+            (1, 0, 0, 270),
+            (15, 1, 2, 600),
+            (150, 1, 0, 1500),
+            (0, 100, 100, 270),
+            (136, 0.16, 1.3, 484.0362668),
+        ]
+
+        for k, n, m, cement_content_expected in test_cases:
+            with self.subTest(k=k, n=n, m=m):
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, k=k, n=n,
+                                                            m=m)
+                self.assertAlmostEqual(cement_content, cement_content_expected)
 
     def test_cement_content_with_theta(self):
         nms = '1" (25 mm)'
@@ -68,13 +128,13 @@ class TestCement(unittest.TestCase):
             (136.8, 0.55, 297.5874),
             (141.8, 0.35, 555.1211),
             (222, 0.60, 431.2771),
-            (0, 0.35, 270),
+            (0, 0.35, 572.7548),
             (-10, 0.50, 360.2435),
         ]
 
         for theta, alpha, cement_content_expected in test_cases:
             with self.subTest(theta=theta, alpha=alpha):
-                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, theta)
+                cement_content = self.cement.cement_content(slump, alpha, nms, agg_types, exposure_classes, theta=theta)
                 self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.0001)
 
 class TestAir(unittest.TestCase):
@@ -172,25 +232,31 @@ class TestStandardDeviation(unittest.TestCase):
     def test_target_strength_with_std_dev_known(self):
         std_dev_known = True
         std_dev_unknown = False
-        defective_level = '9'
         quality_control = "Excelente"
         test_cases = [
-            (210, 35, 15, 270.0446),
-            (250, 70, 20, 391.9796),
-            (300, 50, 25, 385.5615),
-            (350, 15, 30, 370.115),
-            (365, 20, 35, 391.82),
-            (410, 50, 15, 504.778),
+            ('9', 210, 35, 15, 270.0446),
+            ('9', 250, 70, 20, 391.9796),
+            ('9', 300, 50, 25, 385.5615),
+            ('9', 350, 15, 30, 370.115),
+            ('9', 365, 20, 35, 391.82),
+            ('9', 410, 50, 15, 504.778),
+
+            ('2', 200, 100, 15, 519.264),
+            ('4', 300, 45, 20, 398.6986),
+            ('6', 350, 10, 25, 366.0165),
+            ('7', 400, 35, 30, 451.6600),
+            ('10', 450, 5, 35, 456.4100),
+
         ]
 
-        for design_strength, std_dev_value, sample_size, target_strength_expected in test_cases:
-            with self.subTest(design_strength=design_strength):
+        for defective_level, design_strength, std_dev_value, sample_size, target_strength_expected in test_cases:
+            with self.subTest(defective_level=defective_level, design_strength=design_strength):
                 target_strength = self.std_dev.target_strength(design_strength, std_dev_known, std_dev_value,
                                                                sample_size, defective_level, std_dev_unknown,
                                                                quality_control)
                 self.assertAlmostEqual(target_strength, target_strength_expected)
 
-    def test_target_strength_without_std_dev_known(self):
+    def test_target_strength_with_std_dev_unknown(self):
         std_dev_known = False
         std_dev_unknown = True
         defective_level = '9'
@@ -229,48 +295,53 @@ class TestBeta(unittest.TestCase):
 
     def test_get_beta(self):
         nms = '1" (25 mm)'
-        coarse_data = {
-            '3-1/2" (90 mm)': 100,
-            '3" (75 mm)': 100,
-            '2-1/2" (63 mm)': 100,
-            '2" (50 mm)': 100,
-            '1-1/2" (37,5 mm)': 100,
-            '1" (25 mm)': 99,
-            '3/4" (19 mm)': 83,
-            '1/2" (12,5 mm)': 30,
-            '3/8" (9,5 mm)': 12,
-            '1/4" (6,3 mm)': None,
-            'No. 4 (4,75 mm)': 3,
-            'No. 8 (2,36 mm)': 0,
-            'No. 16 (1,18 mm)': 0,
-            'No. 30 (0,600 mm)': 0,
-            'No. 50 (0,300 mm)': 0,
-            'No. 100 (0,150 mm)': 0,
-        }
-        fine_data = {
-            '3-1/2" (90 mm)': 100,
-            '3" (75 mm)': 100,
-            '2-1/2" (63 mm)': 100,
-            '2" (50 mm)': 100,
-            '1-1/2" (37,5 mm)': 100,
-            '1" (25 mm)': 100,
-            '3/4" (19 mm)': 100,
-            '1/2" (12,5 mm)': 100,
-            '3/8" (9,5 mm)': 99,
-            '1/4" (6,3 mm)': None,
-            'No. 4 (4,75 mm)': 83,
-            'No. 8 (2,36 mm)': 66,
-            'No. 16 (1,18 mm)': 47,
-            'No. 30 (0,600 mm)': 34,
-            'No. 50 (0,300 mm)': 20,
-            'No. 100 (0,150 mm)': 9,
-        }
+        test_cases = [
+            ({
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 97, '3/4" (19 mm)': 52, '1/2" (12,5 mm)': 25, '3/8" (9,5 mm)': 6, '1/4" (6,3 mm)': 1,
+            'No. 4 (4,75 mm)': 0, 'No. 8 (2,36 mm)': 0, 'No. 16 (1,18 mm)': 0, 'No. 30 (0,600 mm)': 0,
+            'No. 50 (0,300 mm)': 0, 'No. 100 (0,150 mm)': 0
+             },
+             {
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 100, '3/4" (19 mm)': 100, '1/2" (12,5 mm)': 100, '3/8" (9,5 mm)': 100, '1/4" (6,3 mm)': 96,
+            'No. 4 (4,75 mm)': 86, 'No. 8 (2,36 mm)': 68, 'No. 16 (1,18 mm)': 40, 'No. 30 (0,600 mm)': 32,
+            'No. 50 (0,300 mm)': 12, 'No. 100 (0,150 mm)': 4,
+             },
+             41.5, 62.5),
+            ({
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 98, '3/4" (19 mm)': 83, '1/2" (12,5 mm)': 31, '3/8" (9,5 mm)': 12, '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 4, 'No. 8 (2,36 mm)': 0, 'No. 16 (1,18 mm)': 0, 'No. 30 (0,600 mm)': 0,
+            'No. 50 (0,300 mm)': 0, 'No. 100 (0,150 mm)': 0
+             },
+             {
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 100, '3/4" (19 mm)': 100, '1/2" (12,5 mm)': 100, '3/8" (9,5 mm)': 100, '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 95, 'No. 8 (2,36 mm)': 84, 'No. 16 (1,18 mm)': 66, 'No. 30 (0,600 mm)': 47,
+            'No. 50 (0,300 mm)': 24, 'No. 100 (0,150 mm)': 11,
+             },
+             37.0, 41.0),
+            ({
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 99, '3/4" (19 mm)': 83, '1/2" (12,5 mm)': 30, '3/8" (9,5 mm)': 12, '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 3, 'No. 8 (2,36 mm)': 0, 'No. 16 (1,18 mm)': 0, 'No. 30 (0,600 mm)': 0,
+            'No. 50 (0,300 mm)': 0, 'No. 100 (0,150 mm)': 0
+             },
+             {
+            '3-1/2" (90 mm)': 100, '3" (75 mm)': 100, '2-1/2" (63 mm)': 100, '2" (50 mm)': 100, '1-1/2" (37,5 mm)': 100,
+            '1" (25 mm)': 100, '3/4" (19 mm)': 100, '1/2" (12,5 mm)': 100, '3/8" (9,5 mm)': 99, '1/4" (6,3 mm)': None,
+            'No. 4 (4,75 mm)': 83, 'No. 8 (2,36 mm)': 66, 'No. 16 (1,18 mm)': 47, 'No. 30 (0,600 mm)': 34,
+            'No. 50 (0,300 mm)': 20, 'No. 100 (0,150 mm)': 9,
+             },
+             37.9, 41.2),
+        ]
 
-        beta_min, beta_max = self.beta.get_beta(nms, coarse_data, fine_data)
-        beta_min_expected = 37.9
-        beta_max_expected = 41.2
-        self.assertAlmostEqual(beta_min, beta_min_expected, delta=0.5)
-        self.assertAlmostEqual(beta_max, beta_max_expected, delta=0.5)
+        for coarse_data, fine_data, beta_min_expected, beta_max_expected in test_cases:
+            with self.subTest(beta_min_expected=beta_min_expected, beta_max_expected=beta_max_expected):
+                beta_min, beta_max = self.beta.get_beta(nms, coarse_data, fine_data)
+                self.assertAlmostEqual(beta_min, beta_min_expected, delta=0.5)
+                self.assertAlmostEqual(beta_max, beta_max_expected, delta=0.5)
 
 class TestAbramsLaw(unittest.TestCase):
     def setUp(self):
@@ -293,9 +364,9 @@ class TestAbramsLaw(unittest.TestCase):
             with self.subTest(target_strength_time=target_strength_time):
                 water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
                                                                         agg_types, exposure_classes)
-                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.001)
+                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.0005)
 
-    def test_water_cement_ratio_with_corrections(self):
+    def test_water_cement_ratio_with_corrections_for_aggregates(self):
         target_strength = 500
         target_strength_time = "28 días"
         exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
@@ -324,6 +395,72 @@ class TestAbramsLaw(unittest.TestCase):
                                                                         agg_types, exposure_classes)
                 self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected)
 
+    def test_water_cement_ratio_with_corrections_for_exposure_classes(self):
+        target_strength = 160
+        target_strength_time = "28 días"
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        test_cases = [
+            (['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común'], 0.75),
+            (['Agua dulce', 'Despreciable', 'Despreciable', 'Atmósfera común'], 0.50),
+            (['Agua salobre o de mar', 'Despreciable', 'Despreciable', 'Atmósfera común'], 0.40),
+
+            (['Despreciable', 'Moderada', 'Despreciable', 'Atmósfera común'], 0.50),
+            (['Despreciable', 'Severa', 'Despreciable', 'Atmósfera común'], 0.45),
+            (['Despreciable', 'Muy severa', 'Despreciable', 'Atmósfera común'], 0.45),
+
+            (['Despreciable', 'Despreciable', 'Alta', 'Atmósfera común'], 0.55),
+            (['Despreciable', 'Despreciable', 'Despreciable', 'Litoral'], 0.60),
+        ]
+
+        for exposure_classes, water_cement_ratio_expected in test_cases:
+            with self.subTest(exposure_classes=exposure_classes):
+                water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
+                                                                        agg_types, exposure_classes)
+                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected)
+
+    def test_water_cement_ratio_with_corrections_for_WRA(self):
+        target_strength = 450
+        target_strength_time = "28 días"
+        nms = '1" (25 mm)'
+        agg_types = ("Triturado", "Natural")
+        exposure_classes = ['Despreciable', 'Despreciable', 'Despreciable', 'Atmósfera común']
+        wra_checked = True
+        test_cases = [
+            (0, 0.3219),
+            (10, 0.2897),
+            (20, 0.2575),
+            (35, 0.2092),
+            (50, 0.1609),
+            (100, 0),
+        ]
+
+        for effectiveness, water_cement_ratio_expected in test_cases:
+            with self.subTest(effectiveness=effectiveness):
+                water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
+                                                                        agg_types, exposure_classes, wra_checked,
+                                                                        effectiveness)
+                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.0001)
+
+    def test_water_cement_ratio_with_multiple_corrections(self):
+        target_strength = 400
+        target_strength_time = "28 días"
+        wra_checked = True
+        test_cases = [
+            ('3" (75 mm)', ("Semitriturado", "Natural"), ['Despreciable', 'Severa', 'Despreciable', 'Atmósfera común'], 10, 0.2431),
+            ('2" (50 mm)', ("Triturado", "Triturada"), ['Agua salobre o de mar', 'Despreciable', 'Despreciable', 'Atmósfera común'], 15, 0.2990),
+            ('1/2" (12,5 mm)', ("Semitriturado", "Triturada"), ['Despreciable', 'Muy severa', 'Despreciable', 'Atmósfera común'], 50, 0.2250),
+            ('3/8" (9,5 mm)', ("Grava natural", "Triturada"), ['Despreciable', 'Despreciable', 'Alta', 'Atmósfera común'], 30, 0.3185),
+            ('1/4" (6,3 mm)', ("Triturado", "Natural"), ['Despreciable', 'Despreciable', 'Despreciable', 'Litoral'], 3, 0.5820),
+        ]
+
+        for nms, agg_types, exposure_classes, effectiveness, water_cement_ratio_expected in test_cases:
+            with self.subTest(effectiveness=effectiveness):
+                water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
+                                                                        agg_types, exposure_classes, wra_checked,
+                                                                        effectiveness)
+                self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.0001)
+
     def test_water_cement_ratio_with_different_constant(self):
         target_strength = 300
         nms = '1" (25 mm)'
@@ -338,7 +475,7 @@ class TestAbramsLaw(unittest.TestCase):
         for target_strength_time, m, n, water_cement_ratio_expected in test_cases:
             with self.subTest(target_strength_time=target_strength_time):
                 water_cement_ratio = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nms,
-                                                                        agg_types, exposure_classes, m, n)
+                                                                        agg_types, exposure_classes, m=m, n=n)
                 self.assertAlmostEqual(water_cement_ratio, water_cement_ratio_expected, delta=0.0001)
 
 ##############################################

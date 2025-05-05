@@ -1,7 +1,7 @@
 import unittest
 
-from core.regular_concrete.design_methods.doe import (CementitiousMaterial, Water, Air, FineAggregate,
-                                                                CoarseAggregate, StandardDeviation, AbramsLaw, Aggregate)
+from core.regular_concrete.design_methods.doe import (CementitiousMaterial, Water, Air, FineAggregate, CoarseAggregate,
+                                                      StandardDeviation, AbramsLaw, Aggregate)
 from core.regular_concrete.models.doe_data_model import DOEDataModel
 
 
@@ -51,29 +51,58 @@ class TestWater(unittest.TestCase):
         self.water = Water(density=1000)
         self.water.doe_data_model = self.doe_data_model
 
-    def test_water_content_without_SCM(self):
+    def test_water_content_without_corrections(self):
         air_entrained = False
         scm_checked = False
         scm_percentage = 0
+        wra_checked = False
+        effectiveness = 0
         test_cases = [
+            ("0 mm - 10 mm", "N/A (10 mm)", ("No triturada", "No triturada"), 150),
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 135),
-            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 590 / 3),
+            ("0 mm - 10 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 170),
+            ("0 mm - 10 mm", "N/A (40 mm)", ("No triturada", "No triturada"), 115),
+            ("0 mm - 10 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 155),
+
+            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "No triturada"), 180),
+            ("10 mm - 30 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 205),
+            ("10 mm - 30 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 160),
+            ("10 mm - 30 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 190),
+            ("10 mm - 30 mm", "N/A (40 mm)", ("No triturada", "No triturada"), 140),
             ("10 mm - 30 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 175),
-            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 180),
+
+            ("30 mm - 60 mm", "N/A (10 mm)", ("No triturada", "No triturada"), 205),
+            ("30 mm - 60 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 230),
             ("30 mm - 60 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 180),
+            ("30 mm - 60 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 210),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "No triturada"), 160),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 190),
+
+            ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "No triturada"), 225),
+            ("60 mm - 180 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 250),
+            ("60 mm - 180 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 195),
             ("60 mm - 180 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 225),
+            ("60 mm - 180 mm", "N/A (40 mm)", ("No triturada", "No triturada"), 175),
+            ("60 mm - 180 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 205),
+
+            ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "No triturada"), 160),
+            ("10 mm - 30 mm", "N/A (20 mm)", ("Triturada", "No triturada"), 170),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 180),
             ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 725 / 3),
         ]
 
         for slump_range, nms, agg_types, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked, scm_percentage)
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
+                                                         scm_percentage, wra_checked, effectiveness)
                 self.assertEqual(water_content, water_content_expected)
 
-    def test_water_content_with_SCM(self):
+    def test_water_content_with_corrections_for_SCM(self):
         air_entrained = False
         scm_checked = True
+        wra_checked = False
+        effectiveness = 0
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 5, 180),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 10, 130),
@@ -87,13 +116,38 @@ class TestWater(unittest.TestCase):
 
         for slump_range, nms, agg_types, scm_percentage, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked, scm_percentage)
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
+                                                         scm_percentage, wra_checked, effectiveness)
                 self.assertEqual(water_content, water_content_expected)
 
-    def test_water_content_with_air_entrained(self):
+    def test_water_content_with_corrections_for_WRA(self):
+        air_entrained = False
+        scm_checked = False
+        scm_percentage = 0
+        wra_checked = True
+        test_cases = [
+            ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 5, 171),
+            ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 10, 121.5),
+            ("10 mm - 30 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 15, 1003 / 6),
+            ("10 mm - 30 mm", "N/A (40 mm)", ("Triturada", "Triturada"), 20, 140),
+            ("30 mm - 60 mm", "N/A (40 mm)", ("No triturada", "Triturada"), 30, 126),
+            ("30 mm - 60 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 39, 109.8),
+            ("60 mm - 180 mm", "N/A (20 mm)", ("Triturada", "Triturada"), 40, 135),
+            ("60 mm - 180 mm", "N/A (10 mm)", ("No triturada", "Triturada"), 50, 725 / 6),
+        ]
+
+        for slump_range, nms, agg_types, effectiveness, water_content_expected in test_cases:
+            with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
+                                                         scm_percentage, wra_checked, effectiveness)
+                self.assertEqual(water_content, water_content_expected)
+
+    def test_water_content_with_corrections_for_air_entrained(self):
         air_entrained = True
         scm_checked = False
         scm_percentage = 0
+        wra_checked = False
+        effectiveness = 0
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 135),
@@ -108,7 +162,28 @@ class TestWater(unittest.TestCase):
         for slump_range, nms, agg_types, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
                 water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage)
+                                                         scm_percentage, wra_checked, effectiveness)
+                self.assertAlmostEqual(water_content, water_content_expected)
+
+    def test_water_content_with_multiple_corrections(self):
+        slump_range = "0 mm - 10 mm"
+        nms = "N/A (20 mm)"
+        agg_types = ("No triturada", "No triturada")
+        air_entrained = True
+        scm_checked = True
+        wra_checked = True
+        test_cases = [
+            (5, 10, 121.5),
+            (10, 5, 123.25),
+            (25, 18, 100.7),
+            (30, 50, 52.5),
+            (50, 0, 110),
+        ]
+
+        for scm_percentage, effectiveness, water_content_expected in test_cases:
+            with self.subTest(scm_percentage=scm_percentage, effectiveness=effectiveness):
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
+                                                         scm_percentage, wra_checked, effectiveness)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
 class TestAir(unittest.TestCase):
@@ -242,8 +317,6 @@ class TestFineAggregate(unittest.TestCase):
             ("60 mm - 180 mm", "N/A (10 mm)", 85, 34.3),
             ("60 mm - 180 mm", "N/A (10 mm)", 35, 55.5),
 
-            ##############################
-
             ("0 mm - 10 mm", "N/A (20 mm)", 100, 18.5),
             ("0 mm - 10 mm", "N/A (20 mm)", 80, 21.8),
             ("0 mm - 10 mm", "N/A (20 mm)", 60, 26.2),
@@ -275,8 +348,6 @@ class TestFineAggregate(unittest.TestCase):
             ("60 mm - 180 mm", "N/A (20 mm)", 15, 53.1),
             ("60 mm - 180 mm", "N/A (20 mm)", 85, 27.7),
             ("60 mm - 180 mm", "N/A (20 mm)", 35, 44.6),
-
-            ##############################
 
             ("0 mm - 10 mm", "N/A (40 mm)", 100, 15.0),
             ("0 mm - 10 mm", "N/A (40 mm)", 80, 18.0),
@@ -336,6 +407,8 @@ class TestCoarseAggregate(unittest.TestCase):
             (1970, 335, 1635),
             (1845, 405, 1440),
             (1900, 515, 1385),
+            (1985, 0, 1985),
+            (1450, 1450, 0),
         ]
 
         for total_agg_content,  fine_content_ssd, coarse_content_expected in test_cases:
@@ -359,27 +432,32 @@ class TestStandardDeviation(unittest.TestCase):
     def test_target_strength_with_std_dev_known(self):
         std_dev_known = True
         std_dev_unknown = False
-        defective_level = '5'
         entrained_air_content = 0
         user_defined_margin = 0
         test_cases = [
-            (10, 21, 4, 16.58),
-            (15, 25, 3, 19.935),
-            (5, 30, 0.5, 6.645),
-            (40, 40, 2, 46.58),
-            (10, 10, 5, 18.225),
-            (15, 5, 3, 24.87),
-            (30, 15, 5, 43.16),
+            ('5', 10, 4, 21, 16.58),
+            ('5', 15, 3, 25, 19.935),
+            ('5', 5, 0.5, 30, 6.645),
+            ('5', 40, 2, 40, 46.58),
+            ('5', 10, 5, 10, 18.225),
+            ('5', 15, 3, 5, 24.87),
+            ('5', 30, 5, 15, 43.16),
+
+            ('1', 30, 3.5, 10, 48.608),
+            ('3', 20, 7, 15, 35.048),
+            ('8', 55, 5, 20, 62.025),
+            ('20', 35, 1.5, 25, 38.368),
+            ('25', 40, 2, 30, 42.696),
         ]
 
-        for design_strength, sample_size, std_dev_value, target_strength_expected in test_cases:
-            with self.subTest(design_strength=design_strength, sample_size=sample_size):
+        for defective_level, design_strength, std_dev_value, sample_size, target_strength_expected in test_cases:
+            with self.subTest(defective_level=defective_level, design_strength=design_strength, sample_size=sample_size):
                 target_strength = self.std_dev.target_strength(design_strength, std_dev_known, std_dev_value,
                                                                sample_size, defective_level, std_dev_unknown,
                                                                user_defined_margin, entrained_air_content)
                 self.assertAlmostEqual(target_strength, target_strength_expected)
 
-    def test_target_strength_without_std_dev_known(self):
+    def test_target_strength_with_std_dev_unknown(self):
         std_dev_known = False
         std_dev_unknown = True
         defective_level = '5'
@@ -466,9 +544,28 @@ class TestAbramsLaw(unittest.TestCase):
         test_cases = [
             (['XC1', 'N/A', 'N/A', 'N/A'], 0.65),
             (['XC2', 'N/A', 'N/A', 'N/A'], 0.60),
-            (['XC2', 'XD1', 'XF1', 'N/A'], 0.55),
-            (['XC2', 'XD1', 'XF3', 'N/A'], 0.50),
-            (['XC2', 'XD1', 'XF3', 'XA3'], 0.45),
+            (['XC3', 'N/A', 'N/A', 'N/A'], 0.55),
+            (['XC4', 'N/A', 'N/A', 'N/A'], 0.50),
+
+            (['N/A', 'XS1', 'N/A', 'N/A'], 0.50),
+            (['N/A', 'XS2', 'N/A', 'N/A'], 0.45),
+            (['N/A', 'XS3', 'N/A', 'N/A'], 0.45),
+            (['N/A', 'XD1', 'N/A', 'N/A'], 0.55),
+            (['N/A', 'XD2', 'N/A', 'N/A'], 0.55),
+            (['N/A', 'XD3', 'N/A', 'N/A'], 0.45),
+
+            (['N/A', 'N/A', 'XF1', 'N/A'], 0.55),
+            (['N/A', 'N/A', 'XF2', 'N/A'], 0.55),
+            (['N/A', 'N/A', 'XF3', 'N/A'], 0.50),
+            (['N/A', 'N/A', 'XF4', 'N/A'], 0.45),
+
+            (['N/A', 'N/A', 'N/A', 'XA1'], 0.55),
+            (['N/A', 'N/A', 'N/A', 'XA2'], 0.50),
+            (['N/A', 'N/A', 'N/A', 'XA3'], 0.45),
+
+            (['XC4', 'XD1', 'XF3', 'XA3'], 0.45),
+            (['XC1', 'XS2', 'XF2', 'XA2'], 0.45),
+            (['XC4', 'XD3', 'XF4', 'XA3'], 0.45),
         ]
 
         for exposure_classes, w_cm_expected in test_cases:

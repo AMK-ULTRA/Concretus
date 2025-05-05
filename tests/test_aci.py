@@ -1,8 +1,7 @@
 import unittest
-from math import exp
 
-from core.regular_concrete.design_methods.aci import (CementitiousMaterial, Water, Air, FineAggregate,
-                                                                CoarseAggregate, StandardDeviation, AbramsLaw)
+from core.regular_concrete.design_methods.aci import (CementitiousMaterial, Water, Air, FineAggregate, CoarseAggregate,
+                                                      StandardDeviation, AbramsLaw)
 from core.regular_concrete.models.aci_data_model import ACIDataModel
 
 
@@ -133,20 +132,80 @@ class TestWater(unittest.TestCase):
                     water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types)
                     self.assertEqual(water_content, water_content_expected)
 
-    def test_water_content_with_corrections(self):
+    def test_water_content_with_corrections_for_aggregates(self):
         slump_range = "125 mm - 150 mm"
         nms = '2" (50 mm)'
-        entrained_air = True
+        entrained_air = False
         test_cases = [
-            (("Redondeada", "Natural"), "Cenizas volantes", 55, 123.20),
-            (("Angular", "Manufacturada"), "Cemento de escoria", 25, 152),
-            (("Redondeada", "Manufacturada"), "Cemento de escoria", 35, 131.2),
+            (("Redondeada", "Natural"), 158.24),
+            (("Angular", "Manufacturada"), 180.6),
+            (("Redondeada", "Manufacturada"), 166.84),
         ]
 
-        for agg_types, scm, scm_percentage, water_content_expected in test_cases:
-            with self.subTest(agg_types=agg_types, scm=scm, scm_percentage=scm_percentage):
-                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm, scm_percentage)
-                self.assertAlmostEqual(water_content, water_content_expected, delta=0.001)
+        for agg_types, water_content_expected in test_cases:
+            with self.subTest(agg_types=agg_types):
+                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types)
+                self.assertAlmostEqual(water_content, water_content_expected)
+
+    def test_water_content_with_corrections_for_SCM(self):
+        slump_range = "25 mm - 50 mm"
+        nms = '1" (25 mm)'
+        entrained_air = True
+        agg_types = ("Angular", "Natural")
+        scm_checked = True
+        test_cases = [
+            ("Cenizas volantes", 5, 160),
+            ("Cenizas volantes", 55, 136),
+            ("Cemento de escoria", 25, 144),
+            ("Cemento de escoria", 35, 136),
+        ]
+
+        for scm_type, scm_percentage, water_content_expected in test_cases:
+            with self.subTest(scm_type=scm_type, scm_percentage=scm_percentage):
+                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm_checked,
+                                                         scm_type, scm_percentage)
+                self.assertEqual(water_content, water_content_expected)
+
+    def test_water_content_with_corrections_for_WRA(self):
+        slump_range = "75 mm - 100 mm"
+        nms = '3" (75 mm)'
+        entrained_air = False
+        agg_types = ("Angular", "Natural")
+        scm_checked = False
+        scm_type = "Cenizas volantes"
+        scm_percentage = 0
+        wra_checked = True
+        test_cases = [
+            (0, 145),
+            (25, 108.75),
+            (50, 72.5),
+            (75, 36.25),
+            (100, 0),
+        ]
+
+        for effectiveness, water_content_expected in test_cases:
+            with self.subTest(effectiveness=effectiveness):
+                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm_checked,
+                                                         scm_type, scm_percentage, wra_checked, effectiveness)
+                self.assertAlmostEqual(water_content, water_content_expected)
+
+    def test_water_content_with_multiple_corrections(self):
+        slump_range = "150 mm - 175 mm"
+        nms = '3/8" (9,5 mm)'
+        entrained_air = False
+        scm_checked = True
+        wra_checked = True
+        test_cases = [
+            (("Redondeada", "Natural"), "Cenizas volantes", 25, 10, 184.68),
+            (("Angular", "Manufacturada"), "Cemento de escoria", 35, 50, 97.2),
+            (("Redondeada", "Manufacturada"), "Humo de sílice", 15, 45, 126.36),
+        ]
+
+        for agg_types, scm_type, scm_percentage, effectiveness, water_content_expected in test_cases:
+            with self.subTest(agg_types=agg_types, scm_type=scm_type):
+                water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm_checked,
+                                                         scm_type, scm_percentage, wra_checked, effectiveness)
+                self.assertAlmostEqual(water_content, water_content_expected)
 
 class TestAir(unittest.TestCase):
     def setUp(self):
@@ -311,17 +370,22 @@ class TestStandardDeviation(unittest.TestCase):
     def test_target_strength_with_std_dev_known(self):
         std_dev_known = True
         std_dev_unknown = False
-        defective_level = '9'
         test_cases = [
-            (31, 3.5, 15, 36.9598),
-            (21, 7, 20, 35.1148),
-            (55, 5, 25, 61.901),
-            (35, 1.5, 30, 37.01),
-            (36, 2, 30, 38.68),
+            ('9', 31, 3.5, 15, 36.9598),
+            ('9', 21, 7, 20, 35.1148),
+            ('9', 55, 5, 25, 61.901),
+            ('9', 35, 1.5, 30, 37.01),
+            ('9', 36, 2, 30, 38.68),
+
+            ('0,5', 55, 5, 25, 68.2664),
+            ('2,5', 21, 7, 20, 39.8776),
+            ('5', 31, 3.5, 15, 38.2387),
+            ('10', 35, 1.5, 30, 36.9230),
+            ('15', 40, 2, 30, 42.072),
         ]
 
-        for design_strength, std_dev_value, sample_size, target_strength_expected in test_cases:
-            with self.subTest(design_strength=design_strength):
+        for defective_level, design_strength, std_dev_value, sample_size, target_strength_expected in test_cases:
+            with self.subTest(defective_level=defective_level, design_strength=design_strength):
                 target_strength = self.std_dev.target_strength(design_strength, std_dev_known, std_dev_value,
                                                                sample_size, defective_level, std_dev_unknown)
                 self.assertAlmostEqual(target_strength, target_strength_expected, delta=0.1)
@@ -381,26 +445,26 @@ class TestAbramsLaw(unittest.TestCase):
                 self.assertAlmostEqual(water_cementitious_materials_ratio, water_cementitious_materials_ratio_expected,
                                        delta=0.015)
 
-    def test_water_cementitious_materials_ratio_with_exposure_classes(self):
+    def test_water_cementitious_materials_ratio_with_exposure_classes_and_entrained_air(self):
         target_strength = 15
-        entrained_air = False
+        entrained_air = True
         test_cases = [
-            (['F0', 'W0', 'S0', 'C0'], 1.1318 * exp(-0.025 * target_strength)),
-            (['F0', 'W0', 'S1', 'C0'], 0.50),
-            (['F0', 'W0', 'S2', 'C0'], 0.45),
-            (['F0', 'W0', 'S3', 'C0'], 0.40),
-
-            (['F0', 'W0', 'S0', 'C0'], 1.1318 * exp(-0.025 * target_strength)),
+            (['F0', 'W0', 'S0', 'C0'], 0.70),
             (['F1', 'W0', 'S0', 'C0'], 0.55),
             (['F2', 'W0', 'S0', 'C0'], 0.45),
             (['F3', 'W0', 'S0', 'C0'], 0.40),
 
-            (['F0', 'W0', 'S0', 'C0'], 1.1318 * exp(-0.025 * target_strength)),
-            (['F0', 'W1', 'S0', 'C0'], 1.1318 * exp(-0.025 * target_strength)),
+            (['F0', 'W0', 'S0', 'C0'], 0.70),
+            (['F0', 'W1', 'S0', 'C0'], 0.70),
             (['F0', 'W2', 'S0', 'C0'], 0.50),
 
-            (['F0', 'W0', 'S0', 'C0'], 1.1318 * exp(-0.025 * target_strength)),
-            (['F0', 'W0', 'S0', 'C1'], 1.1318 * exp(-0.025 * target_strength)),
+            (['F0', 'W0', 'S0', 'C0'], 0.70),
+            (['F0', 'W0', 'S1', 'C0'], 0.50),
+            (['F0', 'W0', 'S2', 'C0'], 0.45),
+            (['F0', 'W0', 'S3', 'C0'], 0.40),
+
+            (['F0', 'W0', 'S0', 'C0'], 0.70),
+            (['F0', 'W0', 'S0', 'C1'], 0.70),
             (['F0', 'W0', 'S0', 'C2'], 0.40),
         ]
 
@@ -409,7 +473,39 @@ class TestAbramsLaw(unittest.TestCase):
                 water_cementitious_materials_ratio = self.abrams_law.water_cementitious_materials_ratio(target_strength,
                                                                                                         entrained_air,
                                                                                                         exposure_classes)
-                self.assertEqual(water_cementitious_materials_ratio, water_cementitious_materials_ratio_expected)
+                self.assertAlmostEqual(water_cementitious_materials_ratio, water_cementitious_materials_ratio_expected,
+                                       delta=0.01)
+
+    def test_water_cementitious_materials_ratio_with_exposure_classes_and_without_entrained_air(self):
+        target_strength = 20
+        entrained_air = False
+        test_cases = [
+            (['F0', 'W0', 'S0', 'C0'], 0.69),
+            (['F1', 'W0', 'S0', 'C0'], 0.55),
+            (['F2', 'W0', 'S0', 'C0'], 0.45),
+            (['F3', 'W0', 'S0', 'C0'], 0.40),
+
+            (['F0', 'W0', 'S0', 'C0'], 0.69),
+            (['F0', 'W1', 'S0', 'C0'], 0.69),
+            (['F0', 'W2', 'S0', 'C0'], 0.50),
+
+            (['F0', 'W0', 'S0', 'C0'], 0.69),
+            (['F0', 'W0', 'S1', 'C0'], 0.50),
+            (['F0', 'W0', 'S2', 'C0'], 0.45),
+            (['F0', 'W0', 'S3', 'C0'], 0.40),
+
+            (['F0', 'W0', 'S0', 'C0'], 0.69),
+            (['F0', 'W0', 'S0', 'C1'], 0.69),
+            (['F0', 'W0', 'S0', 'C2'], 0.40),
+        ]
+
+        for exposure_classes, water_cementitious_materials_ratio_expected in test_cases:
+            with self.subTest(exposure_classes=exposure_classes):
+                water_cementitious_materials_ratio = self.abrams_law.water_cementitious_materials_ratio(target_strength,
+                                                                                                        entrained_air,
+                                                                                                        exposure_classes)
+                self.assertAlmostEqual(water_cementitious_materials_ratio, water_cementitious_materials_ratio_expected,
+                                       delta=0.015)
 
 ##############################################
 # Run all the tests
