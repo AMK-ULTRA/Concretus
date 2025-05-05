@@ -479,6 +479,10 @@ class RegularConcrete(QWidget):
         elif self.data_model.method == "DoE":
             self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if units == 'SI' else 100)
 
+        # Update default value for the margin (unknown standard deviation)
+        if self.data_model.method == "DoE":
+            self.ui.spinBox_margin.setMaximum(10 if units == 'SI' else 100)
+
         # Update the labels
         self.ui.label_spec_strength.setText(f"Resistencia de cálculo especificada ({unit_suffix})")
         self.ui.label_std_dev_value.setText(f"Valor ({unit_suffix})")
