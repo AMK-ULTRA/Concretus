@@ -88,6 +88,10 @@ class MCEDataModel:
                     'WRA_content': None,
                     'WRA_volume': None
                 },
+                'AEA': {
+                    'AEA_content': None,
+                    'AEA_volume': None
+                },
             },
             'summation': {
                 'total_abs_volume': None,

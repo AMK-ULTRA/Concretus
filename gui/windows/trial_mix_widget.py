@@ -77,15 +77,17 @@ class TrialMix(QWidget):
 
     def create_table_columns(self, unit):
         """
-        Create table columns based on selected unit system.
-        Dynamically configures vertical headers according to the current unit system (MKS/SI).
+        Configure the table's column headers for two QTableWidgets based on the selected unit system
+        and any admixtures used.
 
         :param str unit: The current unit system (e.g., "MKS", "SI")
         """
 
-        # Define column headers based on the current unit system.
+        # ------------------------------------------------------
+        # Process Materials Table (self.ui.tableWidget)
+        # ------------------------------------------------------
         if unit == "MKS":
-            column_headers = [
+            column_headers_1 = [
                 "Volumen absoluto (L)",
                 "Peso (kgf/m³)",
                 "Volumen (L/m³)",
@@ -93,7 +95,7 @@ class TrialMix(QWidget):
                 "Volumen de prueba (L)"
             ]
         elif unit == "SI":
-            column_headers = [
+            column_headers_1 = [
                 "Volumen absoluto (L)",
                 "Masa (kg/m³)",
                 "Volumen (L/m³)",
@@ -101,22 +103,50 @@ class TrialMix(QWidget):
                 "Volumen de prueba (L)"
             ]
         else:
-            column_headers = []
+            column_headers_1 = []
 
-        # Set the number of columns and assign horizontal headers
-        self.ui.tableWidget.setColumnCount((len(column_headers)))
-        self.ui.tableWidget.setHorizontalHeaderLabels(column_headers)
+        # ----------------------------
+        # Process Admixture Table (self.ui.tableWidget_2)
+        # ----------------------------
+        wra_is_enabled = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
+        aea_is_enabled = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
 
-        # Center align and stretch horizontal headers
-        self.ui.tableWidget.horizontalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        if wra_is_enabled or aea_is_enabled:
+            column_headers_2 = [
+                # "Volumen absoluto (L)",
+                "Cantidad (kg/m³)",
+                "Volumen (L/m³)",
+                "Cantidad de prueba (g)",
+                "Volumen de prueba (mL)"
+            ]
+        else:
+            column_headers_2 = []
+
+        tables = (self.ui.tableWidget, self.ui.tableWidget_2)
+        column_headers = (column_headers_1, column_headers_2)
+
+        for table, column_header in zip(tables, column_headers):
+            # Set the number of columns and assign horizontal headers
+            table.setColumnCount((len(column_header)))
+            table.setHorizontalHeaderLabels(column_header)
+
+            # Center align and stretch horizontal headers
+            table.horizontalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+            table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
     def create_table_rows(self, method):
         """
-        Create table rows based on selected calculation method and material options.
+        Configure the row headers for two QTableWidgets based on the selected design method,
+        material options, and chemical admixture flags.
 
-        Dynamically configures vertical headers according to the active calculation method (MCE/ACI/DoE)
-        and material selections (SCM, air entrained).
+        For self.ui.tableWidget:
+        - The vertical headers are set based on the active calculation method (e.g., "MCE", "ACI", "DoE")
+          and additional material options such as SCM and entrained air content.
+
+        For self.ui.tableWidget_2:
+        - The vertical headers are set based on chemical admixture selections:
+            * If WRA is enabled (water-reducing admixture), a row labeled "Reductor de agua" is added.
+            * If AEA is enabled (air-entraining admixture), a row labeled "Incorporador de aire" is added.
 
         :param str method: The active method (e.g., "MCE", "ACI", "DoE")
         """
@@ -125,6 +155,12 @@ class TrialMix(QWidget):
         scm_is_enabled = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
         scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
         entrained_air_is_enabled = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
+        wra_is_enabled = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
+        aea_is_enabled = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
+
+        # ------------------------
+        # Process Materials Table (self.ui.tableWidget)
+        # ------------------------
 
         # Define row headers based on the method and enabled flags
         if method == "MCE":
@@ -147,16 +183,16 @@ class TrialMix(QWidget):
                 "Aire incorporado",
                 "Total"
             ]
-            # If scm_is_enabled is False, delete the row corresponding to SCM
+            # If SCM is not enabled, remove the SCM type row
             if not scm_is_enabled:
                 if scm_type in row_headers:
                     row_headers.remove(scm_type)
-            # if entrained_air_is_enabled is False or its entrained air content is zero, delete "Aire incorporado"
+            # If entrained air is not enabled (or its content is zero), remove "Aire incorporado";
             if not entrained_air_is_enabled:
                 for label in ["Aire incorporado"]:
                     if label in row_headers:
                         row_headers.remove(label)
-            # Otherwise, delete "Aire atrapado"
+            # otherwise, remove "Aire atrapado".
             else:
                 for label in ["Aire atrapado"]:
                     if label in row_headers:
@@ -164,34 +200,58 @@ class TrialMix(QWidget):
 
         else:
             row_headers = []
-
-        # Clean table
+        # Clear and update tableWidget for design method rows
         self.ui.tableWidget.setRowCount(0)
-
-        # Set the number of rows and assign vertical headers
         self.ui.tableWidget.setRowCount(len(row_headers))
         self.ui.tableWidget.setVerticalHeaderLabels(row_headers)
 
+        # ------------------------
+        # Process Materials Table (self.ui.tableWidget)
+        # ------------------------
+
+        # Create row headers based on the admixture flags
+        admixture_rows = []
+        if wra_is_enabled:
+            admixture_rows.append("Reductor de agua")
+        if aea_is_enabled:
+            admixture_rows.append("Incorporador de aire")
+
+        # Clear and update tableWidget_2 for admixture rows.
+        self.ui.tableWidget_2.setRowCount(0)
+        self.ui.tableWidget_2.setRowCount(len(admixture_rows))
+        self.ui.tableWidget_2.setVerticalHeaderLabels(admixture_rows)
+
     def adjust_table_height(self):
         """
-        Adjust the vertical size of the table so that it fits exactly the number of rows,
-        keeping each row at its predetermined height.
+        Adjust the vertical size of two tables (the materials table and the admixture table) so that
+        each table exactly fits its number of rows with each row retaining its predetermined height.
         """
 
-        # Get the default height of each row
-        row_height = self.ui.tableWidget.verticalHeader().defaultSectionSize()
-        # Get the height of the horizontal header
-        header_height = self.ui.tableWidget.horizontalHeader().height()
-        # Calculate the total number of rows
-        num_rows = self.ui.tableWidget.rowCount()
+        # Adjust both tables using the helper method
+        self.adjust_single_table_height(self.ui.tableWidget)
+        self.adjust_single_table_height(self.ui.tableWidget_2)
 
-        # Calculate total height:
-        # total height = header height + (number of rows * height of each row) + margin
-        extra_margin = 2  # 2px margin to prevent scrollbar appearance
-        total_height = header_height + num_rows * row_height + extra_margin
+    @staticmethod
+    def adjust_single_table_height(table_widget):
+        """
+        Adjusts the vertical size of a single QTableWidget to fit its content exactly.
 
-        # Adjust the height of the table
-        self.ui.tableWidget.setFixedHeight(total_height)
+        :param table_widget: A QTableWidget instance to adjust.
+        """
+        # Get the default height of each row.
+        row_height = table_widget.verticalHeader().defaultSectionSize()
+        # Get the height of the horizontal header.
+        header_height = table_widget.horizontalHeader().height()
+        # Obtain the total number of rows in the table.
+        num_rows = table_widget.rowCount()
+
+        # Calculate the total table height:
+        #   total height = header height + (number of rows * row height) + extra margin.
+        extra_margin = 2  # A small margin (in pixels) to prevent the appearance of a scrollbar.
+        total_height = header_height + (num_rows * row_height) + extra_margin
+
+        # Set the fixed height of the table.
+        table_widget.setFixedHeight(total_height)
 
     def mce_calculation_engine(self):
         """
@@ -290,19 +350,22 @@ class TrialMix(QWidget):
 
     def load_results(self, method):
         """
-        Load trial mix results into the QTableWidget based on the specified design method.
+        Load trial mix results into two QTableWidgets based on the specified design method.
 
-        This method selects the appropriate data model (MCE, ACI, or DoE) based on the provided method
-        and retrieves three sets of data:
+        For the materials table (self.ui.tableWidget):
+        - Retrieves three data sets:
+            * Column 1: Absolute volumes (e.g., water_abs_volume, cement_abs_volume, etc.).
+            * Column 2: Contents (e.g., water_content, cement_content, etc.).
+            * Column 3: Volumes (e.g., water_volume, cement_volume, etc.).
+        - Filters out any row where any of the three values is None.
+        - Populates the table with the valid rows.
 
-        1. Absolute volumes (e.g., water_abs_volume, cement_abs_volume, etc.).
-        2. Contents (e.g., water_content, cement_content, etc.).
-        3. Volumes (e.g., water_volume, cement_volume, etc.).
-
-        These values are stored in three separate lists (col1, col2, and col3) corresponding to the three
-        columns of the table. Since the maximum number of rows is fixed (8), but not all rows are valid for
-        every method (i.e., some values may be None), the method filters out any row where at least one value
-        (from any column) is None.
+        For the admixture table (self.ui.tableWidget_2):
+        - Retrieves two data sets:
+            * Column 1: Chemical admixture contents (WRA_content and AEA_content).
+            * Column 2: Chemical admixture volumes (WRA_volume and AEA_volume).
+        - Filters out any row where any value is None.
+        - Populates the table with the valid rows.
 
         :param str method: The design method for which to load results ("MCE", "ACI", or "DoE").
         """
@@ -318,6 +381,9 @@ class TrialMix(QWidget):
             self.logger.error(f"Unknown method: {method}")
             return
 
+        # ------------------------
+        # Process Materials Table (self.ui.tableWidget)
+        # ------------------------
         # Column 1 values: Absolute volumes
         col1 = [
             current_method_data_model.get_data('water.water_abs_volume'),
@@ -356,42 +422,88 @@ class TrialMix(QWidget):
 
         # Filter out rows where any column value is None
         # If ANY of the three columns at a given index is None, that row is not valid
-        valid_indices = [i for i in range(len(col1)) if not any([col1[i] is None, col2[i] is None, col3[i] is None])]
+        valid_indices = [
+            i for i in range(len(col1))
+            if not any(value is None for value in (col1[i], col2[i], col3[i]))
+        ]
 
-        # Populate each cell by creating a QTableWidgetItem and marking it as non-editable
-        for new_row, i in enumerate(valid_indices): # Fill the table using the valid indices
+        # Populate each cell in the materials table
+        for new_row, i in enumerate(valid_indices):
             for j, col in enumerate([col1, col2, col3]):
                 value = col[i]
-                # Since we already filtered, value should not be None
-                if value is None:
-                    text = ""
-                else:
-                    if isinstance(value, (float, int)):
-                        if j == 0:
-                            text = f"{value:.2f}"
-                        else:
-                            text = f"{value:.0f}"
+                # Value should not be None after filtering
+                if isinstance(value, (float, int)):
+                    if j == 0:
+                        text = f"{value:.2f}"
                     else:
-                        text = str(value)
-                item = QTableWidgetItem(text)
+                        text = f"{value:.1f}"
+                else:
+                    text = str(value)
+                item = QTableWidgetItem(text) # Create a QTableWidgetItem
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter) # Align text to center
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
                 self.ui.tableWidget.setItem(new_row, j, item)
 
+        # ------------------------------------------------------
+        # Process Admixture Table (self.ui.tableWidget_2)
+        # ------------------------------------------------------
+        # Column 1: Chemical admixture contents
+        admixture_col1 = [
+            current_method_data_model.get_data('chemical_admixtures.WRA.WRA_content'),
+            current_method_data_model.get_data('chemical_admixtures.AEA.AEA_content')
+        ]
+
+        # Column 2: Chemical admixture volumes
+        admixture_col2 = [
+            current_method_data_model.get_data('chemical_admixtures.WRA.WRA_volume'),
+            current_method_data_model.get_data('chemical_admixtures.AEA.AEA_volume')
+        ]
+
+        # Filter out rows where any column value is None
+        valid_indices_adm = [
+            i for i in range(len(admixture_col1))
+            if not any(value is None for value in (admixture_col1[i], admixture_col2[i]))
+        ]
+
+        # Populate each cell in the admixture table
+        for new_row, i in enumerate(valid_indices_adm):
+            for j, col in enumerate([admixture_col1, admixture_col2]):
+                value = col[i]
+                if isinstance(value, (float, int)):
+                    text = f"{value:.3f}"
+                else:
+                    text = str(value)
+                item = QTableWidgetItem(text) # Create a QTableWidgetItem
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter) # Align text to center
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
+                self.ui.tableWidget_2.setItem(new_row, j, item)
+
     def sample_mixture(self):
         """
         Provide the material content for the mix per cubic meter at a volume specified by the user.
-        Also consider a waste factor if required by the user.
+        Also consider a waste factor if required by the user. This method processes two tables with different logic:
 
-        Process all rows of the QTableWidget (except the last row) as follows:
-              - Extract values from the second (index 1) and third (index 2) columns.
-              - Attempt to convert these values to float. If successful, multiply the value by the first factor
-                (retrieved from doubleSpinBox_volume) and, if radioButton_waste is checked, by an additional factor
-                (retrieved from spinBox_waste). If conversion fails, the value is left as is.
-              - Update the fourth (index 3) and fifth (index 4) columns with the new values.
-              - Sum up all the (numeric) values written in the fourth column and, in the last row, set that cell to
-                the total sum; in the fifth column, place a dash ("-").
+        For self.ui.tableWidget:
+        - Process all rows except the last row.
+        - Extract values from the second (index 1) and third (index 2) columns.
+        - Attempt to convert these values to float. If successful, multiply the numeric value by:
+                * A primary factor (from doubleSpinBox_volume).
+                * An additional waste factor (if radioButton_waste is checked, using spinBox_waste; otherwise, 1).
+        - Update the fourth (index 3) and fifth (index 4) columns with the new values.
+        - Accumulate the numeric values from the fourth column and, in the last row, set that cell to the total sum;
+            in the fifth column, place a dash ("-").
+
+        For self.ui.tableWidget_2:
+        - Process all rows (without a dedicated total row).
+        - Extract values from the first (index 0) and second (index 1) columns.
+        - Convert the value from the first column (assumed to be in kg) to grams by multiplying by 1000.
+        - Convert the value from the second column (assumed to be in Liters) to milliliters by multiplying by 1000.
+        - Update the third (index 2) and fourth (index 3) columns with these converted values.
         """
+
+        # ------------------------
+        # Process Materials Table (self.ui.tableWidget)
+        # ------------------------
 
         # Access the table widget
         table = self.ui.tableWidget
@@ -403,8 +515,7 @@ class TrialMix(QWidget):
         # Check if waste adjustment is active, and get the additional factor if so
         if self.ui.radioButton_waste.isChecked():
             waste = self.ui.spinBox_waste.value()
-            # Convert percentage to decimal form
-            waste = (waste / 100) + 1
+            waste = (waste / 100) + 1 # Convert percentage to decimal form
         else:
             waste = 1  # No additional multiplication if the radio button is not checked
 
@@ -434,37 +545,34 @@ class TrialMix(QWidget):
                 is_numeric_3 = False
                 value_3 = text_3
 
-            # Multiply the value by the factor (and by the waste if applicable) if it is numeric; otherwise, leave it as is
+            # Multiply the value by the factor (and by the waste) if is numeric; otherwise, leave it as is
             if is_numeric_2:
-                new_value_2 = value_2 * factor * waste
-                new_value_2 = round(new_value_2, 1)
+                new_value_2 = round(value_2 * factor * waste, 1)
                 # Accumulate the numeric value for the total sum
                 total_sum += new_value_2
             else:
                 new_value_2 = value_2
 
             if is_numeric_3:
-                new_value_3 = value_3 * factor * waste
-                new_value_3 = round(new_value_3, 1)
+                new_value_3 = round(value_3 * factor * waste, 1)
             else:
                 new_value_3 = value_3
 
-            # Update the fourth (index 3) and fifth (index 4) columns for this row
+            # Create QTableWidgetItems for the updated values
             item_2 = QTableWidgetItem(str(new_value_2))
             item_3 = QTableWidgetItem(str(new_value_3))
 
-            # Align text to center
+            # Align text to center and make the cell non-editable
             item_2.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             item_3.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-            # Make the cell non-editable
             item_2.setFlags(item_2.flags() & ~Qt.ItemFlag.ItemIsEditable)
             item_3.setFlags(item_3.flags() & ~Qt.ItemFlag.ItemIsEditable)
 
+            # Update columns: 4th (index 3) and 5th (index 4)
             table.setItem(row, 3, item_2)
             table.setItem(row, 4, item_3)
 
-        # Now update the last row
+        # Process the last row for the materials table
         last_row = row_count - 1
         # In the fourth column, place the total sum of the numeric values
         item_total_sum = QTableWidgetItem(str(round(total_sum, 1)))
@@ -473,10 +581,63 @@ class TrialMix(QWidget):
         item_last_row = QTableWidgetItem("-")
         table.setItem(last_row, 4, item_last_row)
 
-        # Align text to center
+        # Align text to center and make the cell non-editable
         item_total_sum.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         item_last_row.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Make the cell non-editable
         item_total_sum.setFlags(item_total_sum.flags() & ~Qt.ItemFlag.ItemIsEditable)
         item_last_row.setFlags(item_last_row.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+        # ----------------------------
+        # Process Admixture Table (self.ui.tableWidget_2)
+        # ----------------------------
+        table2 = self.ui.tableWidget_2
+        row_count2 = table2.rowCount()
+
+        # For the admixture table, process all rows (no summing of a total row)
+        for row in range(row_count2):
+            # Extract items from the first (index 0) and second (index 1) columns
+            item_col_1 = table2.item(row, 0)
+            item_col_2 = table2.item(row, 1)
+
+            text_1 = item_col_1.text() if item_col_1 is not None else ""
+            text_2 = item_col_2.text() if item_col_2 is not None else ""
+
+            # Attempt to convert the extracted texts to float
+            try:
+                value_1 = float(text_1)
+                is_numeric_1 = True
+            except ValueError:
+                is_numeric_1 = False
+                value_1 = text_1
+
+            try:
+                value_2 = float(text_2)
+                is_numeric_2 = True
+            except ValueError:
+                is_numeric_2 = False
+                value_2 = text_2
+
+            # Multiply the value by the factor if is numeric; otherwise, leave it as is
+            if is_numeric_1: # For the first value (assumed kg), convert to grams (multiply by 1000) if numeric
+                new_value_1 = round(value_1 * factor * 1000, 1)
+            else:
+                new_value_1 = value_1
+
+            if is_numeric_2: # For the second value (assumed Liters), convert to milliliters (multiply by 1000) if numeric
+                new_value_2 = round(value_2 * factor * 1000, 1)
+            else:
+                new_value_2 = value_2
+
+            # Create QTableWidgetItems for the updated values
+            item_new_1 = QTableWidgetItem(str(new_value_1))
+            item_new_2 = QTableWidgetItem(str(new_value_2))
+
+            # Align text to center and make the cell non-editable
+            item_new_1.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            item_new_2.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            item_new_1.setFlags(item_new_1.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            item_new_2.setFlags(item_new_2.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+            # Update columns for table2: third (index 2) and fourth (index 3)
+            table2.setItem(row, 2, item_new_1)
+            table2.setItem(row, 3, item_new_2)
