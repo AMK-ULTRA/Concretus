@@ -166,6 +166,11 @@ class CheckDesign(QWidget):
                 warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
             if method == "DoE" and exposure_class_doe not in ["XF2", "XF3", "XF4"]:
                 warnings.append("La clase de exposición indicada no requiere de aire incorporado.")
+        if not entrained_air:
+            if method == "ACI" and exposure_class_aci in ["F1", "F2", "F3"]:
+                warnings.append("La clase de exposición indicada requiere de aire incorporado.")
+            if method == "DoE" and exposure_class_doe in ["XF2", "XF3", "XF4"]:
+                warnings.append("La clase de exposición indicada requiere de aire incorporado.")
 
         # Validate AEA requirements
         if entrained_air and not aea_checked:
