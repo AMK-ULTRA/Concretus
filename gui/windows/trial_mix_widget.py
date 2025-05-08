@@ -2,7 +2,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QMessageBox
 
 from gui.ui.ui_trial_mix_widget import Ui_TrialMixWidget
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from core.regular_concrete.models.mce_data_model import MCEDataModel
 from core.regular_concrete.models.aci_data_model import ACIDataModel
 from core.regular_concrete.models.doe_data_model import DOEDataModel
@@ -14,32 +14,34 @@ from logger import Logger
 
 class TrialMix(QWidget):
     # Define a custom signal
-    regular_concrete_requested = pyqtSignal()
+    request_regular_concrete_from_trial = pyqtSignal()
 
-    def __init__(self, data_model, parent=None):
+    def __init__(self, data_model, mce_data_model, aci_data_model, doe_data_model, parent=None):
         super().__init__(parent)
         # Create an instance of the GUI
         self.ui = Ui_TrialMixWidget()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
 
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
         # Connect to the data model
         self.data_model: RegularConcreteDataModel = data_model
         # Connect to the data model of each method
-        self.mce_data_model = MCEDataModel()
-        self.aci_data_model = ACIDataModel()
-        self.doe_data_model = DOEDataModel()
+        self.mce_data_model: MCEDataModel = mce_data_model
+        self.aci_data_model: ACIDataModel = aci_data_model
+        self.doe_data_model: DOEDataModel = doe_data_model
 
         # Create an empty reference to the calculation engines
         self.mce = None
         self.aci = None
         self.doe = None
 
-        # Set up the main connections
-        self.table_connections()
+        # Set up local signal/slot connections
+        self.setup_connections()
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
+        # Initialization complete
         self.logger.info('Trial mix widget initialized')
 
     def on_enter(self):
@@ -69,11 +71,11 @@ class TrialMix(QWidget):
         self.aci_data_model.reset()
         self.doe_data_model.reset()
 
-    def table_connections(self):
-        """Set up signal/slot connections for the tables."""
+    def setup_connections(self):
+        """Set local signal/slot connections, i.e. the connections within the same QWidget."""
 
-        # Calculate the proportion for the trial mix
-        self.ui.pushButton_trial_mix.clicked.connect(self.sample_mixture)
+        # Calculate the proportion for the trial mix when requested by the user
+        self.ui.pushButton_trial_mix.clicked.connect(self.handle_pushButton_trial_mix_clicked)
 
     def create_table_columns(self, unit):
         """
@@ -253,100 +255,49 @@ class TrialMix(QWidget):
         # Set the fixed height of the table.
         table_widget.setFixedHeight(total_height)
 
-    def mce_calculation_engine(self):
+    def run_engine(self, engine_class, data_model_attr, instance_attr):
         """
-        Initialize and run the MCE calculation engine.
+        Instantiate and run a calculation engine, then display any errors.
 
-        This method instantiates the MCE calculation engine with the current data models,
-        executes the calculation process, and if any errors occur during the calculations,
-        retrieves and formats the errors from the MCE data model, and displays them in a critical message box.
-        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
+        :param engine_class: The engine class to instantiate (MCE, ACI or DOE).
+        :param str data_model_attr: Name of the data-model attribute (e.g. "mce_data_model").
+        :param str instance_attr: Name of the instance attribute to assign the engine to (e.g. "mce").
         """
 
-        self.mce = MCE(self.data_model, self.mce_data_model)
+        # Instantiate and store
+        engine = engine_class(self.data_model, getattr(self, data_model_attr))
+        setattr(self, instance_attr, engine)
 
-        # Execute the calculations; if any step fails, run() returns False
-        if not self.mce.run():
-            # Retrieve the errors from the MCE data model and format them as "key: value" per line
-            errors_dict = self.mce_data_model.calculation_errors
-            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
+        # Run and check for failure
+        if not engine.run():
+            # Gather errors
+            data_model = getattr(self, data_model_attr)
+            errors = data_model.calculation_errors
+            message = "\n".join(f"{k}: {v}" for k, v in errors.items())
 
-            # Create a QMessageBox instance
+            # Show modal critical box
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Icon.Critical)
-            msg_box.setWindowTitle("Error de Cálculo")
-            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
+            msg_box.setWindowTitle("Calculation Error")
+            msg_box.setText(f"Errors occurred during calculations:\n{message}")
             msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-
-            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
-            msg_box.finished.connect(self.get_back_regular_concrete_widget)
-            # Execute the message box (modal)
+            msg_box.finished.connect(self.handle_TrialMix_regular_concrete_requested_MainWindow)
             msg_box.exec()
+
+    def mce_calculation_engine(self):
+        """Run the MCE calculation engine."""
+
+        self.run_engine(MCE, "mce_data_model", "mce")
 
     def aci_calculation_engine(self):
-        """
-        Initialize and run the ACI calculation engine.
+        """Run the ACI calculation engine."""
 
-        This method instantiates the ACI calculation engine with the current data models,
-        executes the calculation process, and if any errors occur during the calculations,
-        retrieves and formats the errors from the ACI data model, and displays them in a critical message box.
-        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
-        """
-
-        self.aci = ACI(self.data_model, self.aci_data_model)
-
-        # Execute the calculations; if any step fails, run() returns False
-        if not self.aci.run():
-            # Retrieve the errors from the ACI data model and format them as "key: value" per line
-            errors_dict = self.aci_data_model.calculation_errors
-            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
-
-            # Create a QMessageBox instance
-            msg_box = QMessageBox(self)
-            msg_box.setIcon(QMessageBox.Icon.Critical)
-            msg_box.setWindowTitle("Error de Cálculo")
-            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
-            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-
-            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
-            msg_box.finished.connect(self.get_back_regular_concrete_widget)
-            # Execute the message box (modal)
-            msg_box.exec()
+        self.run_engine(ACI, "aci_data_model", "aci")
 
     def doe_calculation_engine(self):
-        """
-        Initialize and run the DoE calculation engine.
+        """Run the DoE calculation engine."""
 
-        This method instantiates the DoE calculation engine with the current data models,
-        executes the calculation process, and if any errors occur during the calculations,
-        retrieves and formats the errors from the DoE data model, and displays them in a critical message box.
-        After the message box is closed, it triggers the get_back_regular_concrete_widget method.
-        """
-
-        self.doe = DOE(self.data_model, self.doe_data_model)
-
-        # Execute the calculations; if any step fails, run() returns False
-        if not self.doe.run():
-            # Retrieve the errors from the DoE data model and format them as "key: value" per line
-            errors_dict = self.doe_data_model.calculation_errors
-            errors_message = "\n".join(f"{key}: {value}" for key, value in errors_dict.items())
-
-            # Create a QMessageBox instance
-            msg_box = QMessageBox(self)
-            msg_box.setIcon(QMessageBox.Icon.Critical)
-            msg_box.setWindowTitle("Error de Cálculo")
-            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{errors_message}")
-            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-
-            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
-            msg_box.finished.connect(self.get_back_regular_concrete_widget)
-            # Execute the message box (modal)
-            msg_box.exec()
-
-    def get_back_regular_concrete_widget(self):
-        """Emit a signal to go to the RegularConcrete widget."""
-
-        self.regular_concrete_requested.emit()
+        self.run_engine(DOE, "doe_data_model", "doe")
 
     def load_results(self, method):
         """
@@ -372,11 +323,11 @@ class TrialMix(QWidget):
 
         # Select the corresponding data model according to the method
         if method == "MCE":
-            current_method_data_model: MCEDataModel = self.mce_data_model
+            current_data_model = self.mce_data_model
         elif method == "ACI":
-            current_method_data_model: ACIDataModel = self.aci_data_model
+            current_data_model = self.aci_data_model
         elif method == "DoE":
-            current_method_data_model: DOEDataModel = self.doe_data_model
+            current_data_model = self.doe_data_model
         else:
             self.logger.error(f"Unknown method: {method}")
             return
@@ -386,37 +337,37 @@ class TrialMix(QWidget):
         # ------------------------
         # Column 1 values: Absolute volumes
         col1 = [
-            current_method_data_model.get_data('water.water_abs_volume'),
-            current_method_data_model.get_data('cementitious_material.cement.cement_abs_volume'),
-            current_method_data_model.get_data('cementitious_material.scm.scm_abs_volume'),
-            current_method_data_model.get_data('fine_aggregate.fine_abs_volume'),
-            current_method_data_model.get_data('coarse_aggregate.coarse_abs_volume'),
-            current_method_data_model.get_data('air.entrapped_air_content'),
-            current_method_data_model.get_data('air.entrained_air_content'),
-            current_method_data_model.get_data('summation.total_abs_volume')
+            current_data_model.get_data('water.water_abs_volume'),
+            current_data_model.get_data('cementitious_material.cement.cement_abs_volume'),
+            current_data_model.get_data('cementitious_material.scm.scm_abs_volume'),
+            current_data_model.get_data('fine_aggregate.fine_abs_volume'),
+            current_data_model.get_data('coarse_aggregate.coarse_abs_volume'),
+            current_data_model.get_data('air.entrapped_air_content'),
+            current_data_model.get_data('air.entrained_air_content'),
+            current_data_model.get_data('summation.total_abs_volume')
         ]
 
         # Column 2 values: Contents
         col2 = [
-            current_method_data_model.get_data('water.water_content_correction'),
-            current_method_data_model.get_data('cementitious_material.cement.cement_content'),
-            current_method_data_model.get_data('cementitious_material.scm.scm_content'),
-            current_method_data_model.get_data('fine_aggregate.fine_content_wet'),
-            current_method_data_model.get_data('coarse_aggregate.coarse_content_wet'),
+            current_data_model.get_data('water.water_content_correction'),
+            current_data_model.get_data('cementitious_material.cement.cement_content'),
+            current_data_model.get_data('cementitious_material.scm.scm_content'),
+            current_data_model.get_data('fine_aggregate.fine_content_wet'),
+            current_data_model.get_data('coarse_aggregate.coarse_content_wet'),
             "-",  # For entrapped air
             "-",  # For entrained air
-            current_method_data_model.get_data('summation.total_content')
+            current_data_model.get_data('summation.total_content')
         ]
 
         # Column 3 values: Volumes
         col3 = [
-            current_method_data_model.get_data('water.water_volume'),
-            current_method_data_model.get_data('cementitious_material.cement.cement_volume'),
-            current_method_data_model.get_data('cementitious_material.scm.scm_volume'),
-            current_method_data_model.get_data('fine_aggregate.fine_volume'),
-            current_method_data_model.get_data('coarse_aggregate.coarse_volume'),
-            current_method_data_model.get_data('air.entrapped_air_content'),
-            current_method_data_model.get_data('air.entrained_air_content'),
+            current_data_model.get_data('water.water_volume'),
+            current_data_model.get_data('cementitious_material.cement.cement_volume'),
+            current_data_model.get_data('cementitious_material.scm.scm_volume'),
+            current_data_model.get_data('fine_aggregate.fine_volume'),
+            current_data_model.get_data('coarse_aggregate.coarse_volume'),
+            current_data_model.get_data('air.entrapped_air_content'),
+            current_data_model.get_data('air.entrained_air_content'),
             "-" # For total volume
         ]
 
@@ -449,14 +400,14 @@ class TrialMix(QWidget):
         # ------------------------------------------------------
         # Column 1: Chemical admixture contents
         admixture_col1 = [
-            current_method_data_model.get_data('chemical_admixtures.WRA.WRA_content'),
-            current_method_data_model.get_data('chemical_admixtures.AEA.AEA_content')
+            current_data_model.get_data('chemical_admixtures.WRA.WRA_content'),
+            current_data_model.get_data('chemical_admixtures.AEA.AEA_content')
         ]
 
         # Column 2: Chemical admixture volumes
         admixture_col2 = [
-            current_method_data_model.get_data('chemical_admixtures.WRA.WRA_volume'),
-            current_method_data_model.get_data('chemical_admixtures.AEA.AEA_volume')
+            current_data_model.get_data('chemical_admixtures.WRA.WRA_volume'),
+            current_data_model.get_data('chemical_admixtures.AEA.AEA_volume')
         ]
 
         # Filter out rows where any column value is None
@@ -478,9 +429,15 @@ class TrialMix(QWidget):
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
                 self.ui.tableWidget_2.setItem(new_row, j, item)
 
-    def sample_mixture(self):
+    def handle_TrialMix_regular_concrete_requested_MainWindow(self):
+        """Emit a signal to go to the RegularConcrete widget."""
+
+        # When the button is clicked, the signal is emitted
+        self.request_regular_concrete_from_trial.emit()
+
+    def handle_pushButton_trial_mix_clicked(self):
         """
-        Provide the material content for the mix per cubic meter at a volume specified by the user.
+        Calculate the material content for the mix per cubic meter at a volume specified by the user.
         Also consider a waste factor if required by the user. This method processes two tables with different logic:
 
         For self.ui.tableWidget:
@@ -641,3 +598,5 @@ class TrialMix(QWidget):
             # Update columns for table2: third (index 2) and fourth (index 3)
             table2.setItem(row, 2, item_new_1)
             table2.setItem(row, 3, item_new_2)
+
+        self.logger.info("The proportioning process has been done successfully")

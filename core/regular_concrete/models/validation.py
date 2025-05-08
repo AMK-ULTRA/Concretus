@@ -1,4 +1,4 @@
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from logger import Logger
 from settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENESS_MODULUS_SIEVES, MAXIMUM_SCM,
                       NMS_BY_CATEGORY, ENTRAINED_AIR, FINENESS_MODULUS_LIMITS, CEMENT_TYPE)
@@ -6,11 +6,13 @@ from settings import (COARSE_RANGES, FINE_RANGES, MINIMUM_SPEC_STRENGTH, FINENES
 
 class Validation:
     def __init__(self, data_model):
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
         # Connect to the data model
         self.data_model: RegularConcreteDataModel = data_model
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
+        # Initialization complete
         self.logger.info('Validation logic is active')
 
     def calculate_grading_percentages(self):

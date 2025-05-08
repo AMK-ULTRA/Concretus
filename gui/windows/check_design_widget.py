@@ -4,7 +4,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget, QMessageBox
 
 from gui.ui.ui_check_design_widget import Ui_CheckDesignWidget
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from core.regular_concrete.models.validation import Validation
 from logger import Logger
 from settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS, NMS_VALID, ERROR_KEYS
@@ -12,7 +12,7 @@ from settings import VALID_STYLE, INVALID_STYLE, FINENESS_MODULUS_LIMITS, NMS_VA
 
 class CheckDesign(QWidget):
     # Define custom signals
-    regular_concrete_requested = pyqtSignal()
+    request_regular_concrete_from_check = pyqtSignal()
     plot_requested = pyqtSignal(str)
 
     def __init__(self, data_model, parent=None):
@@ -20,6 +20,10 @@ class CheckDesign(QWidget):
         self.ui = Ui_CheckDesignWidget()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
         # Connect to the data model
         self.data_model: RegularConcreteDataModel = data_model
 
@@ -29,8 +33,7 @@ class CheckDesign(QWidget):
         # Global signal/slot connections
         self.global_connections()
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
+        # Initialization complete
         self.logger.info('Check design widget initialized')
 
     def on_enter(self):
@@ -73,13 +76,15 @@ class CheckDesign(QWidget):
     def global_connections(self):
         """Set global signal/slot connections, i.e. the connections between different QWidgets."""
 
-        # Minimum GUI update every time units change
-        self.data_model.units_changed.connect(lambda units: self.update_units(units))
-        # Go to Regular Concrete widget when requested by the user
-        self.ui.pushButton_review_design.clicked.connect(self.get_back_button_clicked)
-        # Show the plot (fine or coarse aggregate) when requested by the user
-        self.ui.pushButton_fine_graph.clicked.connect(partial(self.display_plot_button_clicked, "fine"))
-        self.ui.pushButton_coarse_graph.clicked.connect(partial(self.display_plot_button_clicked, "coarse"))
+        # Change the display of units when the current system of units changes
+        self.data_model.units_changed.connect(lambda units: self.handle_CheckDesign_units_changed(units))
+        # Show the regular concrete widget when requested by the user
+        self.ui.pushButton_review_design.clicked.connect(self.handle_CheckDesign_regular_concrete_requested_MainWindow)
+        # Show the plot dialog when requested by the user
+        self.ui.pushButton_fine_graph.clicked.connect(
+            partial(self.handle_CheckDesign_plot_requested_MainWindow, "fine"))
+        self.ui.pushButton_coarse_graph.clicked.connect(
+            partial(self.handle_CheckDesign_plot_requested_MainWindow, "coarse"))
 
     @staticmethod
     def load_style(style_file):
@@ -93,6 +98,83 @@ class CheckDesign(QWidget):
 
         with open(style_file, 'r') as f:
             return f.read()
+
+    def apply_validation_style(self, line_edit, is_valid):
+        """
+        Apply a sheet style for validation fields.
+
+        :param any line_edit: The QLineEdit widget to apply the sheet style (e.g. self.ui.lineEdit_SCM_max).
+        :param bool | None is_valid: Is True, a valid sheet style is applied; is False, an invalid sheet style
+                                     is applied; is None, clear any sheet style previously applied.
+        """
+
+        # Load the style
+        valid_sheet_style = self.load_style(VALID_STYLE)
+        invalid_sheet_style = self.load_style(INVALID_STYLE)
+        clear_sheet_style = ""
+
+        if is_valid is True:
+            line_edit.setStyleSheet(valid_sheet_style)
+        elif is_valid is False:
+            line_edit.setStyleSheet(invalid_sheet_style)
+        elif is_valid is None:
+            line_edit.setStyleSheet(clear_sheet_style)
+
+    def clean_up_fields(self):
+        """Clear the text content of specified line edits and reset their styles."""
+
+        # Fields to clean
+        clear_fields = [
+            self.ui.lineEdit_SCM_type,
+            self.ui.lineEdit_SCM_actual,
+            self.ui.lineEdit_SCM_max,
+            self.ui.lineEdit_exposure_class_2,
+            self.ui.lineEdit_air_NMS,
+            self.ui.lineEdit_NMS,
+            self.ui.lineEdit_air_actual,
+            self.ui.lineEdit_air_min,
+            self.ui.lineEdit_cement_used
+        ]
+
+        for field in clear_fields:
+            field.clear()
+            self.apply_validation_style(field, None)
+
+    def update_progress_bar(self):
+        """
+        Update the progress bar based on the number of validation errors.
+        0 errors correspond to 100% progress and 7 errors to 0% progress.
+        """
+
+        # Retrieve the dictionary with all errors
+        validation_errors = self.data_model.validation_errors
+
+        # Using the ERROR_KEYS dictionary, assign 0 if key exists in validation_errors, otherwise 1
+        errors = {key: 0 if key in validation_errors else 1 for key in ERROR_KEYS}
+
+        # Retrieve the scores for coarse and fine gradings
+        coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
+        fine_scores = self.data_model.get_design_value('validation.fine_scores')
+
+        # Determine the maximum score for coarse and fine; use 1 if empty
+        weighted_error_1 = max(coarse_scores.values(), default=1)
+        weighted_error_2 = max(fine_scores.values(), default=1)
+
+        # Update the errors dictionary with the weighted values for coarse and fine grading requirements
+        errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] = weighted_error_1
+        errors["GRADING REQUIREMENTS FOR FINE AGGREGATE"] = weighted_error_2
+
+        # Determine the validations that were passed
+        validation_passed = sum(errors.values())
+
+        # Total number of validation categories
+        max_validation = 7
+
+        # Calculate the progress percentage
+        progress_value = (validation_passed / max_validation) * 100
+
+        # Update the progress bar with the computed value
+        self.ui.progressBar.setValue(int(round(progress_value)))
 
     def validate_inputs(self):
         """
@@ -216,10 +298,7 @@ class CheckDesign(QWidget):
             msg_box.setWindowTitle("Errores en Datos de Entrada")
             msg_box.setText(message)
             msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-
-            # Connect the finished signal to call get_back_button_clicked regardless of how the box is closed
-            msg_box.finished.connect(self.get_back_button_clicked)
-            # Execute the message box (modal)
+            msg_box.finished.connect(self.handle_CheckDesign_regular_concrete_requested_MainWindow)
             msg_box.exec()
 
             return False  # Indicate that validation did not pass
@@ -229,118 +308,6 @@ class CheckDesign(QWidget):
             self.data_model.clear_validation_errors("DATA ENTRY")
 
             return True # Indicate that validation pass
-
-    def apply_validation_style(self, line_edit, is_valid):
-        """
-        Apply a sheet style for validation fields.
-
-        :param any line_edit: The QLineEdit widget to apply the sheet style (e.g. self.ui.lineEdit_SCM_max).
-        :param bool | None is_valid: Is True, a valid sheet style is applied; is False, an invalid sheet style
-                                     is applied; is None, clear any sheet style previously applied.
-        """
-
-        # Load the style
-        valid_sheet_style = self.load_style(VALID_STYLE)
-        invalid_sheet_style = self.load_style(INVALID_STYLE)
-        clear_sheet_style = ""
-
-        if is_valid is True:
-            line_edit.setStyleSheet(valid_sheet_style)
-        elif is_valid is False:
-            line_edit.setStyleSheet(invalid_sheet_style)
-        elif is_valid is None:
-            line_edit.setStyleSheet(clear_sheet_style)
-
-    def clean_up_fields(self):
-        """Clear the text content of specified line edits and reset their styles."""
-
-        # Fields to clean
-        clear_fields = [
-            self.ui.lineEdit_SCM_type,
-            self.ui.lineEdit_SCM_actual,
-            self.ui.lineEdit_SCM_max,
-            self.ui.lineEdit_exposure_class_2,
-            self.ui.lineEdit_air_NMS,
-            self.ui.lineEdit_NMS,
-            self.ui.lineEdit_air_actual,
-            self.ui.lineEdit_air_min,
-            self.ui.lineEdit_cement_used
-        ]
-
-        for field in clear_fields:
-            field.clear()
-            self.apply_validation_style(field, None)
-
-    def update_progress_bar(self):
-        """
-        Update the progress bar based on the number of validation errors.
-        0 errors correspond to 100% progress and 7 errors to 0% progress.
-        """
-
-        # Retrieve the dictionary with all errors
-        validation_errors = self.data_model.validation_errors
-
-        # Using the ERROR_KEYS dictionary, assign 0 if key exists in validation_errors, otherwise 1
-        errors = {key: 0 if key in validation_errors else 1 for key in ERROR_KEYS}
-
-        # Retrieve the scores for coarse and fine gradings
-        coarse_scores = self.data_model.get_design_value('validation.coarse_scores')
-        fine_scores = self.data_model.get_design_value('validation.fine_scores')
-
-        # Determine the maximum score for coarse and fine; use 1 if empty
-        weighted_error_1 = max(coarse_scores.values(), default=1)
-        weighted_error_2 = max(fine_scores.values(), default=1)
-
-        # Update the errors dictionary with the weighted values for coarse and fine grading requirements
-        errors["GRADING REQUIREMENTS FOR COARSE AGGREGATE"] = weighted_error_1
-        errors["GRADING REQUIREMENTS FOR FINE AGGREGATE"] = weighted_error_2
-
-        # Determine the validations that were passed
-        validation_passed = sum(errors.values())
-
-        # Total number of validation categories
-        max_validation = 7
-
-        # Calculate the progress percentage
-        progress_value = (validation_passed / max_validation) * 100
-
-        # Update the progress bar with the computed value
-        self.ui.progressBar.setValue(int(round(progress_value)))
-
-    def get_back_button_clicked(self):
-        """Pressing the button emits a signal to go to the RegularConcrete widget."""
-
-        # When the button is pressed, the signal is emitted
-        self.regular_concrete_requested.emit()
-
-    def display_plot_button_clicked(self, aggregate_type):
-        """
-        Pressing the button emits a signal to go show the plotted grading curve.
-
-        :param str aggregate_type: The aggregate to be plotted.
-        """
-
-        # When the button is pressed, the signal is emitted along with the type of aggregate to be plotted
-        self.plot_requested.emit(aggregate_type)
-
-    def update_units(self, units):
-        """
-        Update fields that depend on the selected unit system (only for the specified compressive strength fields).
-
-        :param str units: The system of units to update the fields.
-        """
-
-        # Initialize the variables
-        unit_suffix = None
-
-        if units == 'SI':
-            unit_suffix = 'MPa'
-        elif units == 'MKS':
-            unit_suffix = 'kgf/cm²'
-
-        # Update the labels
-        self.ui.label_spec_strength_actual.setText(f"Valor actual ({unit_suffix})")
-        self.ui.label_spec_strength_min.setText(f"Valor mínimo ({unit_suffix})")
 
     def grading_requirements(self):
         """
@@ -537,3 +504,38 @@ class CheckDesign(QWidget):
         # Apply validation style only if valid is not None (i.e., True or False)
         if valid is not None:
             self.apply_validation_style(self.ui.lineEdit_air_actual, valid)
+
+    def handle_CheckDesign_regular_concrete_requested_MainWindow(self):
+        """Pressing the button emits a signal to go to the RegularConcrete widget."""
+
+        # When the button is clicked, the signal is emitted
+        self.request_regular_concrete_from_check.emit()
+
+    def handle_CheckDesign_plot_requested_MainWindow(self, aggregate_type):
+        """
+        Pressing the button emits a signal to go show the plotted grading curve.
+
+        :param str aggregate_type: The aggregate to be plotted.
+        """
+
+        # When the button is clicked, the signal is emitted along with the type of aggregate to be plotted
+        self.plot_requested.emit(aggregate_type)
+
+    def handle_CheckDesign_units_changed(self, units):
+        """
+        Update fields that depend on the selected unit system (only for the specified compressive strength fields).
+
+        :param str units: The system of units to update the fields.
+        """
+
+        # Initialize the variables
+        unit_suffix = None
+
+        if units == 'SI':
+            unit_suffix = 'MPa'
+        elif units == 'MKS':
+            unit_suffix = 'kgf/cm²'
+
+        # Update the labels
+        self.ui.label_spec_strength_actual.setText(f"Valor actual ({unit_suffix})")
+        self.ui.label_spec_strength_min.setText(f"Valor mínimo ({unit_suffix})")

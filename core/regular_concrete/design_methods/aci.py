@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from math import log, exp
 
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from core.regular_concrete.models.aci_data_model import ACIDataModel
 from logger import Logger
 from settings import (K_FACTOR, QUARTILES, WATER_CONTENT_NAE, WATER_CONTENT_AE, MAX_W_CM_ACI,
@@ -977,12 +977,15 @@ class ACI:
             # Add up all absolute volumes and contents
             if entrained_air:
                 total_abs_volume = sum(
-                    [water_abs_volume, cement_abs_volume, scm_abs_volume, fine_abs_volume, coarse_abs_volume, entrained_air_content])
+                    [water_abs_volume, cement_abs_volume, scm_abs_volume, fine_abs_volume, coarse_abs_volume,
+                     entrained_air_content])
             else:
                 total_abs_volume = sum(
-                    [water_abs_volume, cement_abs_volume, scm_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_content])
-            total_content = [water_content_correction, cement_content, scm_content, fine_content_wet, coarse_content_wet]
-            total_sum = sum(round(value) for value in total_content)
+                    [water_abs_volume, cement_abs_volume, scm_abs_volume, fine_abs_volume, coarse_abs_volume,
+                     entrapped_air_content])
+
+            total_content = sum(
+                [water_content_correction, cement_content, scm_content, fine_content_wet, coarse_content_wet])
 
             # Store all the results in a dictionary
             self.calculation_results = {
@@ -1013,7 +1016,7 @@ class ACI:
                 "AEA_content": aea_content,
                 "AEA_volume": aea_volume,
                 "total_abs_volume": total_abs_volume,
-                "total_content": total_sum
+                "total_content": total_content
             }
 
             self.logger.info(f"Calculations completed successfully")

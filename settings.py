@@ -27,14 +27,19 @@ STYLE_PATH = ASSETS_DIR / "styles" # Style directory
 IMAGES_DIR = BASE_DIR / "assets" / "images"
 
 # Icons
+ICON_LOGO = IMAGES_DIR / "logo.ico"
 ICON_SETTINGS = IMAGES_DIR / "settings.png"
 ICON_PRINT = IMAGES_DIR / "print.png"
+ICON_RESTART = IMAGES_DIR / "restart.png"
 ICON_EXIT = IMAGES_DIR / "exit.png"
-ICON_ABOUT = IMAGES_DIR / "about.png"
+ICON_REGULAR_CONCRETE = IMAGES_DIR / "regular_concrete.png"
 ICON_CHECK_DESIGN = IMAGES_DIR / "check_design.png"
 ICON_TRIAL_MIX = IMAGES_DIR / "trial_mix.png"
-ICON_RESTART = IMAGES_DIR / "restart.png"
+ICON_ADJUST_TRIAL_MIX = IMAGES_DIR / "adjust_trial_mix.png"
+ICON_ADJUST_MATERIALS = IMAGES_DIR / "adjust_materials.png"
+ICON_ADJUST_ADMIXTURES =IMAGES_DIR / "adjust_admixtures.png"
 ICON_HELP_MANUAL = IMAGES_DIR / "help_manual.png"
+ICON_ABOUT = IMAGES_DIR / "about.png"
 
 # Images
 # IMAGE_LOGO = IMAGES_DIR / "logo.png"
@@ -869,8 +874,8 @@ FINE_RANGES = {
 # Threshold values for the fineness modulus
 FINENESS_MODULUS_LIMITS = {
     "MCE": {
-        "FM_MINIMUM": 2.30,
-        "FM_MAXIMUM": 3.10
+        "FM_MINIMUM": None,
+        "FM_MAXIMUM": None
     },
     "ACI": {
         "FM_MINIMUM": 2.30,

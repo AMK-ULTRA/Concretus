@@ -644,9 +644,13 @@
   <tabstop>lineEdit_exposure_class</tabstop>
   <tabstop>lineEdit_spec_strength_actual</tabstop>
   <tabstop>lineEdit_spec_strength_min</tabstop>
+  <tabstop>lineEdit_exposure_class_3</tabstop>
+  <tabstop>lineEdit_cement_used</tabstop>
+  <tabstop>lineEdit_cement_required</tabstop>
   <tabstop>lineEdit_SCM_type</tabstop>
   <tabstop>lineEdit_SCM_actual</tabstop>
   <tabstop>lineEdit_SCM_max</tabstop>
+  <tabstop>lineEdit_exposure_class_2</tabstop>
   <tabstop>lineEdit_air_NMS</tabstop>
   <tabstop>lineEdit_air_actual</tabstop>
   <tabstop>lineEdit_air_min</tabstop>

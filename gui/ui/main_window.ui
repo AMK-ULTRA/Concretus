@@ -28,11 +28,14 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>790</width>
+     <width>840</width>
      <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_start">
+    <property name="locale">
+     <locale language="Spanish" country="Venezuela"/>
+    </property>
     <property name="title">
      <string>Inicio</string>
     </property>
@@ -43,10 +46,16 @@
     <addaction name="action_quit"/>
    </widget>
    <widget class="QMenu" name="menu_design">
+    <property name="locale">
+     <locale language="Spanish" country="Venezuela"/>
+    </property>
     <property name="title">
      <string>Diseño</string>
     </property>
     <widget class="QMenu" name="menu_regular_concrete">
+     <property name="locale">
+      <locale language="Spanish" country="Venezuela"/>
+     </property>
      <property name="title">
       <string>Concreto Normal</string>
      </property>
@@ -60,18 +69,41 @@
     <property name="enabled">
      <bool>true</bool>
     </property>
+    <property name="locale">
+     <locale language="Spanish" country="Venezuela"/>
+    </property>
     <property name="title">
      <string>Verificación</string>
     </property>
     <addaction name="action_check_design"/>
    </widget>
    <widget class="QMenu" name="menu_proportioning">
+    <property name="locale">
+     <locale language="Spanish" country="Venezuela"/>
+    </property>
     <property name="title">
      <string>Dosificación</string>
     </property>
+    <widget class="QMenu" name="menu_adjust_trial_mix">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="locale">
+      <locale language="Spanish" country="Venezuela"/>
+     </property>
+     <property name="title">
+      <string>Ajustar Mezcla de Prueba</string>
+     </property>
+     <addaction name="action_adjust_materials"/>
+     <addaction name="action_adjust_admixtures"/>
+    </widget>
     <addaction name="action_trial_mix"/>
+    <addaction name="menu_adjust_trial_mix"/>
    </widget>
    <widget class="QMenu" name="menu_help">
+    <property name="locale">
+     <locale language="Spanish" country="Venezuela"/>
+    </property>
     <property name="title">
      <string>Ayuda</string>
     </property>
@@ -105,7 +137,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>MCE</string>
+    <string>MCE (2009)</string>
    </property>
   </action>
   <action name="action_ACI">
@@ -113,7 +145,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>ACI</string>
+    <string>ACI PRC-211.1 (2022)</string>
    </property>
   </action>
   <action name="action_DoE">
@@ -121,7 +153,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>DoE</string>
+    <string>DoE (1997)</string>
    </property>
   </action>
   <action name="action_check_design">
@@ -153,6 +185,16 @@
   <action name="action_restart">
    <property name="text">
     <string>Reiniciar Cómputos</string>
+   </property>
+  </action>
+  <action name="action_adjust_materials">
+   <property name="text">
+    <string>Ajustar Materiales Principales</string>
+   </property>
+  </action>
+  <action name="action_adjust_admixtures">
+   <property name="text">
+    <string>Ajustar Aditivos</string>
    </property>
   </action>
  </widget>

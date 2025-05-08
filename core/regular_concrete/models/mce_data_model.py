@@ -4,9 +4,14 @@ from logger import Logger
 class MCEDataModel:
 
     def __init__(self):
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
+        # Data structure
         self.mce_data = self.create_empty_mce_data() # data model
         self.calculation_errors: dict[str, str] = {}  # dictionary with all the errors
-        self.logger = Logger(__name__)
+
+        # Initialization complete
         self.logger.info("Data model for MCE method initialized")
 
     # -------------------------------------------- Design MCE data --------------------------------------------

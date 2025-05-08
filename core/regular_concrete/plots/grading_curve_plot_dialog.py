@@ -4,7 +4,7 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialog, QVBoxLayout
 import pyqtgraph as pg
 
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from logger import Logger
 from settings import COARSE_RANGES, FINE_RANGES
 
@@ -16,7 +16,13 @@ class PlotDialog(QDialog):
         """
 
         super().__init__(parent)
-        self.data_model: RegularConcreteDataModel = data_model # Connect to the data model
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
+        # Connect to the data model
+        self.data_model: RegularConcreteDataModel = data_model
+        # Set up the basics
         self.aggregate_type = aggregate_type
         self.setWindowTitle("Curva granulométrica")
         self.resize(1000, 600)
@@ -33,7 +39,7 @@ class PlotDialog(QDialog):
         self.plot_widget = pg.PlotWidget()
         # Set a background color
         self.plot_widget.setBackground('k') # Leave the default color
-        # Set the x-axis in logarithmic mode.
+        # Set the x-axis in logarithmic mode
         self.plot_widget.setLogMode(x=True, y=False)
         # Set axis labels: X as Sieve Opening (mm), Y as Cumulative Passing (%)
         self.plot_widget.getPlotItem().setLabels(bottom="Abertura del cedazo (mm)",
@@ -60,12 +66,11 @@ class PlotDialog(QDialog):
         layout.addWidget(self.plot_widget)
         self.setLayout(layout)
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
-        self.logger.info('Plotting dialog initialized')
-
         # Call plot_curves passing the aggregate type ("fine" or "coarse")
         self.plot_curves(self.aggregate_type)
+
+        # Initialization complete
+        self.logger.info('Grading curve plotting dialog initialized')
 
     @staticmethod
     def get_limits(limits):

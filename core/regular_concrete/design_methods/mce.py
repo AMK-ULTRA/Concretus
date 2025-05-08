@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from math import log10
 
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from core.regular_concrete.models.mce_data_model import MCEDataModel
 from logger import Logger
 from settings import (COMBINED_GRADING, CEMENT_FACTOR_1, CEMENT_FACTOR_2, MIN_CEMENT_MCE, K_FACTOR, QUARTILES, CONSTANTS,
@@ -1058,8 +1058,7 @@ class MCE:
             # Add up all absolute volumes and contents
             total_abs_volume = sum(
                 [water_abs_volume, cement_abs_volume, fine_abs_volume, coarse_abs_volume, entrapped_air_content])
-            total_content = [water_content_correction, cement_content, fine_content_wet, coarse_content_wet]
-            total_sum = sum(round(value) for value in total_content)
+            total_content = sum([water_content_correction, cement_content, fine_content_wet, coarse_content_wet])
 
             # Store all the results in a dictionary
             self.calculation_results = {
@@ -1087,7 +1086,7 @@ class MCE:
                 "WRA_content": wra_content,
                 "WRA_volume": wra_volume,
                 "total_abs_volume": total_abs_volume,
-                "total_content": total_sum
+                "total_content": total_content
             }
 
             self.logger.info(f"Calculations completed successfully.")

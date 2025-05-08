@@ -96,6 +96,6 @@ class Ui_TrialMixWidget(object):
         self.label_waste.setText(_translate("TrialMixWidget", "Desperdicio (%)"))
         self.radioButton_waste.setText(_translate("TrialMixWidget", "Considerar desperdicio"))
         self.pushButton_trial_mix.setText(_translate("TrialMixWidget", "Calcular proporción"))
-        self.groupBox_materials.setTitle(_translate("TrialMixWidget", "Materiales principales"))
+        self.groupBox_materials.setTitle(_translate("TrialMixWidget", "Cantidades de los materiales principales"))
         self.tableWidget.setSortingEnabled(False)
-        self.groupBox_admixtures.setTitle(_translate("TrialMixWidget", "Aditivos"))
+        self.groupBox_admixtures.setTitle(_translate("TrialMixWidget", "Cantidades de los aditivos"))

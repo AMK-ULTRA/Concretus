@@ -5,18 +5,21 @@ from logger import Logger
 
 class RegularConcreteDataModel(QObject):
     """
-    Central data model for the concrete regular procedure
+    Central data model for the concrete regular procedure.
     Manages all workflow and notifies components of changes.
     """
 
     # Create the main custom signals
     language_changed = pyqtSignal(str)  # Emit when the system language changes
-    units_changed = pyqtSignal(str)  # Emit when the system of units changes
-    method_changed = pyqtSignal(str) # Emit when the method for the specific regular procedure changes
-    step_changed = pyqtSignal(int)  # Current step value in the workflow
+    units_changed = pyqtSignal(str)     # Emit when the system of units changes
+    method_changed = pyqtSignal(str)    # Emit when the design method changes
+    step_changed = pyqtSignal(int)      # Emit when the workflow step changes
 
     def __init__(self):
         super().__init__()
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
 
         # Default state
         self._current_step = INITIAL_STEP
@@ -28,7 +31,7 @@ class RegularConcreteDataModel(QObject):
         self.design_data = self.create_empty_design_data() # data model
         self.validation_errors: dict[str, str] = {} # dictionary with all the errors
 
-        self.logger = Logger(__name__)
+        # Initialization complete
         self.logger.info("Data model initialized")
 
     # -------------------------------------------- Principal properties --------------------------------------------

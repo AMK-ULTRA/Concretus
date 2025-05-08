@@ -5,7 +5,7 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit, QDialog
 
 from gui.ui.ui_regular_concrete_widget import Ui_RegularConcreteWidget
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from gui.windows.conversion_dialog import ConversionDialog
 from logger import Logger
 from settings import MIN_SPEC_STRENGTH, MAX_SPEC_STRENGTH, SIEVES, FINE_RETAINED_STATE, COARSE_RETAINED_STATE
@@ -52,11 +52,12 @@ class RegularConcrete(QWidget):
         self.ui = Ui_RegularConcreteWidget()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
         # Connect to the data model
         self.data_model: RegularConcreteDataModel = data_model
-
-        # Global signal/slot connections
-        self.global_connections()
 
         # Create an instance of the event filter
         self.delete_key_filter = DeleteKeyEventFilter()
@@ -65,20 +66,20 @@ class RegularConcrete(QWidget):
         self.ui.tableWidget_fine.installEventFilter(self.delete_key_filter)
         self.ui.tableWidget_coarse.installEventFilter(self.delete_key_filter)
 
-        # Set up the main connections
+        # Set up local signal/slot connections
         self.setup_connections()
-        self.table_connections()
+        # Set up global signal/slot connections
+        self.global_connections()
 
         # Default "% Retained" state for each table
         self.fine_retained_state = FINE_RETAINED_STATE
         self.coarse_retained_state = COARSE_RETAINED_STATE
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
-        self.logger.info('Regular concrete widget initialized')
+        # Run a method update before completing initialization
+        self.handle_RegularConcrete_units_changed(self.data_model.units)
 
-        # Run a method update
-        self.update_units(self.data_model.units)
+        # Initialization complete
+        self.logger.info('Regular concrete widget initialized')
 
     def on_enter(self):
         """Prepare widget when it becomes visible."""
@@ -101,38 +102,31 @@ class RegularConcrete(QWidget):
     def global_connections(self):
         """Set global signal/slot connections, i.e. the connections between different QWidgets."""
 
-        # Load current unit system and method whenever units/method changes
-        self.data_model.units_changed.connect(lambda units: self.update_units(units))
-        self.data_model.method_changed.connect(lambda method: self.update_method(method))
+        # Change the display of units when the current system of units changes
+        self.data_model.units_changed.connect(lambda units: self.handle_RegularConcrete_units_changed(units))
+        # Change, enable, and disable a series of objects according to a method when the current method changes
+        self.data_model.method_changed.connect(lambda method: self.handle_RegularConcrete_method_changed(method))
 
     def setup_connections(self):
-        """Set up main connections."""
+        """Set local signal/slot connections, i.e. the connections within the same QWidget."""
 
         # Initialize the convert dialog when requested by the user
-        self.ui.pushButton_WRA_converter.clicked.connect(partial(self.show_conversion_dialog, "WRA"))
-        self.ui.pushButton_AEA_converter.clicked.connect(partial(self.show_conversion_dialog, "AEA"))
+        self.ui.pushButton_WRA_conversion.clicked.connect(partial(self.handle_admixture_conversion_clicked, "WRA"))
+        self.ui.pushButton_AEA_conversion.clicked.connect(partial(self.handle_admixture_conversion_clicked, "AEA"))
+        # Toggle between "% Passing" and "% Retained" state on the grading tables
+        self.ui.radioButton_fine_retained.toggled.connect(
+            lambda checked: self.handle_retained_column_toggled(self.ui.tableWidget_fine, checked))
+        self.ui.radioButton_coarse_retained.toggled.connect(
+            lambda checked: self.handle_retained_column_toggled(self.ui.tableWidget_coarse, checked))
 
-    def show_conversion_dialog(self, admixture_type):
+    def set_index(self, index):
         """
-        Launch the conversion dialog and update the dosage value in the corresponding QDoubleSpinBox in the UI.
+        Set a widget as the current widget of the QStackedWidget using its index.
 
-        :param str admixture_type: The admixture type for which the conversion dialog will open.
-                                   This can be "AEA" or "WRA."
+        :param index: The index of the widget.
         """
 
-        self.logger.info(f'The conversion dialog has been selected for {admixture_type}')
-
-        conversion_dialog = ConversionDialog(self.data_model, admixture_type, self)
-        if conversion_dialog.exec() == QDialog.DialogCode.Accepted:
-            conversion_dialog.conversion_tool()
-
-            # Write the new calculated value
-            if admixture_type == "WRA":
-                dosage = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage')
-                self.ui.doubleSpinBox_WRA_dosage.setValue(dosage) if dosage is not None else None
-            elif admixture_type == "AEA":
-                dosage = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
-                self.ui.doubleSpinBox_AEA_dosage.setValue(dosage) if dosage is not None else None
+        self.ui.stackedWidget.setCurrentIndex(index)
 
     def save_data(self):
         """Store all form data in the data model."""
@@ -339,19 +333,8 @@ class RegularConcrete(QWidget):
         """Set the default settings for the grading tables."""
 
         # Enable "% Passing" and disable "% Retained" by default
-        self.toggle_passing_retained(self.ui.tableWidget_fine, self.fine_retained_state)
-        self.toggle_passing_retained(self.ui.tableWidget_coarse, self.coarse_retained_state)
-
-    def table_connections(self):
-        """Set up signal/slot connections for the grading tables."""
-
-        # Toggle between "% Passing" and "% Retained" state
-        self.ui.radioButton_fine_retained.toggled.connect(
-            lambda checked: self.toggle_passing_retained(self.ui.tableWidget_fine, checked)
-        )
-        self.ui.radioButton_coarse_retained.toggled.connect(
-            lambda checked: self.toggle_passing_retained(self.ui.tableWidget_coarse, checked)
-        )
+        self.handle_retained_column_toggled(self.ui.tableWidget_fine, self.fine_retained_state)
+        self.handle_retained_column_toggled(self.ui.tableWidget_coarse, self.coarse_retained_state)
 
     def table_item_delegate(self):
         """Set the item delegate for each grading table."""
@@ -361,41 +344,6 @@ class RegularConcrete(QWidget):
         self.ui.tableWidget_fine.setItemDelegateForColumn(2, numeric_delegate)
         self.ui.tableWidget_coarse.setItemDelegateForColumn(1, numeric_delegate)
         self.ui.tableWidget_coarse.setItemDelegateForColumn(2, numeric_delegate)
-
-    def toggle_passing_retained(self, table, retained_enabled):
-        """
-        Enable "% Passing" and disable "% Retained", or vice versa.
-
-        :param table: The table to modify.
-        :param bool retained_enabled: True to enable "% Retained", False to enable "% Passing".
-        """
-
-        # Record the change in the logger
-        table_name = "fine" if table == self.ui.tableWidget_fine else "coarse"
-        self.logger.info(f'QRadioButton for {table_name} table is active: {retained_enabled}')
-
-        for row in range(table.rowCount()):
-            # Enable or disable "% Passing"
-            item_passing = table.item(row, 1)
-            if not item_passing:
-                item_passing = QTableWidgetItem()
-                table.setItem(row, 1, item_passing)
-            item_passing.setFlags(
-                item_passing.flags() & ~Qt.ItemFlag.ItemIsEnabled & ~Qt.ItemFlag.ItemIsSelectable
-                if retained_enabled
-                else item_passing.flags() | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
-            )
-
-            # Enable or disable "% Retained"
-            item_retained = table.item(row, 2)
-            if not item_retained:
-                item_retained = QTableWidgetItem()
-                table.setItem(row, 2, item_retained)
-            item_retained.setFlags(
-                item_retained.flags() & ~Qt.ItemFlag.ItemIsEnabled & ~Qt.ItemFlag.ItemIsSelectable
-                if not retained_enabled
-                else item_retained.flags() | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
-            )
 
     def populate_tables(self, method):
         """
@@ -440,7 +388,7 @@ class RegularConcrete(QWidget):
         self.table_item_delegate()
         self.logger.info(f'The set of sieves for the {method} method has been generated')
 
-    def update_units(self, units):
+    def handle_RegularConcrete_units_changed(self, units):
         """
         Update fields that depend on the selected unit system.
 
@@ -490,7 +438,7 @@ class RegularConcrete(QWidget):
 
         self.logger.info(f'A complete update of the unit system to {units} has been made')
 
-    def update_method(self, method):
+    def handle_RegularConcrete_method_changed(self, method):
         """
         Update fields that depend on the selected method.
 
@@ -678,3 +626,60 @@ class RegularConcrete(QWidget):
             self.logger.info(f'A complete update of the current method "{method}" has been made')
         else:
             self.logger.warning('An invalid configuration dictionary has been selected')
+
+    def handle_admixture_conversion_clicked(self, admixture_type):
+        """
+        Launch the conversion dialog and update the dosage value in the corresponding QDoubleSpinBox in the UI.
+
+        :param str admixture_type: The admixture type for which the conversion dialog will open.
+                                   This can be "AEA" or "WRA."
+        """
+
+        self.logger.info(f'The conversion dialog has been selected for {admixture_type}')
+
+        conversion_dialog = ConversionDialog(self.data_model, admixture_type, self)
+        if conversion_dialog.exec() == QDialog.DialogCode.Accepted:
+            conversion_dialog.conversion_tool()
+
+            # Write the new calculated value
+            if admixture_type == "WRA":
+                dosage = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage')
+                self.ui.doubleSpinBox_WRA_dosage.setValue(dosage) if dosage is not None else None
+            elif admixture_type == "AEA":
+                dosage = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
+                self.ui.doubleSpinBox_AEA_dosage.setValue(dosage) if dosage is not None else None
+
+    def handle_retained_column_toggled(self, table, retained_enabled):
+        """
+        Enable "% Passing" and disable "% Retained", or vice versa.
+
+        :param table: The table to modify.
+        :param bool retained_enabled: True to enable "% Retained", False to enable "% Passing".
+        """
+
+        # Record the change in the logger
+        table_name = "fine" if table == self.ui.tableWidget_fine else "coarse"
+        self.logger.info(f'QRadioButton for {table_name} table is active: {retained_enabled}')
+
+        for row in range(table.rowCount()):
+            # Enable or disable "% Passing"
+            item_passing = table.item(row, 1)
+            if not item_passing:
+                item_passing = QTableWidgetItem()
+                table.setItem(row, 1, item_passing)
+            item_passing.setFlags(
+                item_passing.flags() & ~Qt.ItemFlag.ItemIsEnabled & ~Qt.ItemFlag.ItemIsSelectable
+                if retained_enabled
+                else item_passing.flags() | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
+            )
+
+            # Enable or disable "% Retained"
+            item_retained = table.item(row, 2)
+            if not item_retained:
+                item_retained = QTableWidgetItem()
+                table.setItem(row, 2, item_retained)
+            item_retained.setFlags(
+                item_retained.flags() & ~Qt.ItemFlag.ItemIsEnabled & ~Qt.ItemFlag.ItemIsSelectable
+                if not retained_enabled
+                else item_retained.flags() | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
+            )

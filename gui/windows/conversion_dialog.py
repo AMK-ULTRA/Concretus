@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 
 from gui.ui.ui_conversion_dialog import Ui_ConversionDialog
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from logger import Logger
 
 class ConversionDialog(QDialog):
@@ -11,13 +11,17 @@ class ConversionDialog(QDialog):
         self.ui = Ui_ConversionDialog()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
-        # Connect to the data model
-        self.data_model: RegularConcreteDataModel = data_model
-        # Save the admixture type
-        self.admixture_type = admixture_type
 
         # Initialize the logger
         self.logger = Logger(__name__)
+
+        # Connect to the data model
+        self.data_model: RegularConcreteDataModel = data_model
+
+        # Save the admixture type
+        self.admixture_type = admixture_type
+
+        # Initialization complete
         self.logger.info('Conversion dialog initialized')
 
     def conversion_tool(self):

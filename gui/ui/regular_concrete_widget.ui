@@ -83,6 +83,9 @@
          <property name="text">
           <string>Nombre del proyecto</string>
          </property>
+         <property name="buddy">
+          <cstring>lineEdit_name</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -93,6 +96,9 @@
          <property name="text">
           <string>Ubicación</string>
          </property>
+         <property name="buddy">
+          <cstring>lineEdit_location</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -102,6 +108,9 @@
         <widget class="QLabel" name="label_method">
          <property name="text">
           <string>Metodología</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBox_method</cstring>
          </property>
         </widget>
        </item>
@@ -132,6 +141,9 @@
          <property name="text">
           <string>Solicitante</string>
          </property>
+         <property name="buddy">
+          <cstring>lineEdit_purchaser</cstring>
+         </property>
         </widget>
        </item>
        <item row="3" column="1">
@@ -141,6 +153,9 @@
         <widget class="QLabel" name="label_date">
          <property name="text">
           <string>Fecha</string>
+         </property>
+         <property name="buddy">
+          <cstring>dateEdit_date</cstring>
          </property>
         </widget>
        </item>
@@ -188,6 +203,9 @@
             <property name="text">
              <string>Valor (mm)</string>
             </property>
+            <property name="buddy">
+             <cstring>spinBox_slump_value</cstring>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -211,6 +229,9 @@
             <property name="text">
              <string>Rango (mm)</string>
             </property>
+            <property name="buddy">
+             <cstring>comboBox_slump_range</cstring>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -226,11 +247,14 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <layout class="QFormLayout" name="formLayout_17">
+           <layout class="QFormLayout" name="formLayout_class_exposure_1">
             <item row="0" column="0">
              <widget class="QLabel" name="label_1">
               <property name="text">
                <string>Grupo #1</string>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_1</cstring>
               </property>
              </widget>
             </item>
@@ -252,6 +276,9 @@
               <property name="text">
                <string>Grupo #2</string>
               </property>
+              <property name="buddy">
+               <cstring>comboBox_2</cstring>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
@@ -260,11 +287,14 @@
            </layout>
           </item>
           <item>
-           <layout class="QFormLayout" name="formLayout_18">
+           <layout class="QFormLayout" name="formLayout_class_exposure_2">
             <item row="0" column="0">
              <widget class="QLabel" name="label_3">
               <property name="text">
                <string>Group #3</string>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_3</cstring>
               </property>
              </widget>
             </item>
@@ -275,6 +305,9 @@
              <widget class="QLabel" name="label_4">
               <property name="text">
                <string>Group #4</string>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_4</cstring>
               </property>
              </widget>
             </item>
@@ -365,13 +398,16 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_strength" stretch="1,0">
             <item>
-             <layout class="QFormLayout" name="formLayout_5">
+             <layout class="QFormLayout" name="formLayout_spec_strength">
               <item row="0" column="0">
                <widget class="QLabel" name="label_spec_strength">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistencia de cálculo especificada (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="buddy">
+                 <cstring>spinBox_spec_strength</cstring>
                 </property>
                </widget>
               </item>
@@ -388,11 +424,14 @@
              </layout>
             </item>
             <item>
-             <layout class="QFormLayout" name="formLayout_19">
+             <layout class="QFormLayout" name="formLayout_spec_strength_time">
               <item row="0" column="0">
-               <widget class="QLabel" name="label_days">
+               <widget class="QLabel" name="label_spec_strength_time">
                 <property name="text">
                  <string>a los</string>
+                </property>
+                <property name="buddy">
+                 <cstring>comboBox_spec_strength_time</cstring>
                 </property>
                </widget>
               </item>
@@ -414,7 +453,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_std_dev" stretch="0,0">
             <item>
              <widget class="QGroupBox" name="groupBox_std_dev_known">
               <property name="sizePolicy">
@@ -441,6 +480,9 @@
                  <property name="text">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valor (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
+                 <property name="buddy">
+                  <cstring>doubleSpinBox_std_dev_value</cstring>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="1">
@@ -458,6 +500,9 @@
                  <property name="text">
                   <string>Número de ensayos</string>
                  </property>
+                 <property name="buddy">
+                  <cstring>spinBox_test_nro</cstring>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="1">
@@ -474,6 +519,9 @@
                 <widget class="QLabel" name="label_defective_level">
                  <property name="text">
                   <string>Fracción defectiva (%)</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>comboBox_defective_level</cstring>
                  </property>
                 </widget>
                </item>
@@ -588,6 +636,9 @@
                  <property name="text">
                   <string>Control de calidad</string>
                  </property>
+                 <property name="buddy">
+                  <cstring>comboBox_qual_control</cstring>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="1">
@@ -617,6 +668,9 @@
                  <property name="text">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Margen (kgf/cm&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
+                 <property name="buddy">
+                  <cstring>spinBox_margin</cstring>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="1">
@@ -638,7 +692,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
+        <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -655,11 +709,14 @@
      <widget class="QWidget" name="cementitious_materials">
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,1">
        <item>
-        <layout class="QFormLayout" name="formLayout_9">
+        <layout class="QFormLayout" name="formLayout_cement">
          <item row="1" column="0">
           <widget class="QLabel" name="label_cement_type">
            <property name="text">
             <string>Tipo de cemento</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_cement_type</cstring>
            </property>
           </widget>
          </item>
@@ -673,6 +730,9 @@
            </property>
            <property name="text">
             <string>Clase de resistencia</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_cement_class</cstring>
            </property>
           </widget>
          </item>
@@ -698,6 +758,9 @@
            <property name="text">
             <string>Densidad relativa</string>
            </property>
+           <property name="buddy">
+            <cstring>doubleSpinBox_cement_relative_density</cstring>
+           </property>
           </widget>
          </item>
          <item row="3" column="1">
@@ -717,6 +780,9 @@
           <widget class="QLabel" name="label_cement_seller">
            <property name="text">
             <string>Marca de cemento</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_cement_seller</cstring>
            </property>
           </widget>
          </item>
@@ -751,6 +817,9 @@
             <property name="text">
              <string>Tipo</string>
             </property>
+            <property name="buddy">
+             <cstring>comboBox_SCM_type</cstring>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -767,6 +836,9 @@
             <property name="text">
              <string>Contenido (%)</string>
             </property>
+            <property name="buddy">
+             <cstring>spinBox_SCM_content</cstring>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -780,6 +852,9 @@
            <widget class="QLabel" name="label_SCM_relative_density">
             <property name="text">
              <string>Densidad relativa</string>
+            </property>
+            <property name="buddy">
+             <cstring>doubleSpinBox_SCM_relative_density</cstring>
             </property>
            </widget>
           </item>
@@ -800,7 +875,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer">
+        <spacer name="verticalSpacer_1">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -820,7 +895,7 @@
      <widget class="QWidget" name="fine_aggregate">
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,1">
+        <layout class="QGridLayout" name="gridLayout_fine" columnstretch="1,1,1">
          <item row="0" column="0">
           <widget class="QGroupBox" name="groupBox_fine_info">
            <property name="sizePolicy">
@@ -838,6 +913,9 @@
               <property name="text">
                <string>Nombre</string>
               </property>
+              <property name="buddy">
+               <cstring>lineEdit_fine_name</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -847,6 +925,9 @@
              <widget class="QLabel" name="label_fine_source">
               <property name="text">
                <string>Lugar</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_fine_source</cstring>
               </property>
              </widget>
             </item>
@@ -860,6 +941,9 @@
               </property>
               <property name="wordWrap">
                <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_fine_type</cstring>
               </property>
              </widget>
             </item>
@@ -892,6 +976,9 @@
               <property name="wordWrap">
                <bool>false</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_relative_density</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -915,6 +1002,9 @@
               <property name="wordWrap">
                <bool>true</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_pus</cstring>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
@@ -937,6 +1027,9 @@
               </property>
               <property name="wordWrap">
                <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_puc</cstring>
               </property>
              </widget>
             </item>
@@ -970,6 +1063,9 @@
               <property name="wordWrap">
                <bool>true</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_mc</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -996,6 +1092,9 @@
               <property name="wordWrap">
                <bool>true</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_fine_abs</cstring>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
@@ -1017,7 +1116,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_gradation">
+        <widget class="QGroupBox" name="groupBox_fine_gradation">
          <property name="title">
           <string>Granulometría</string>
          </property>
@@ -1107,7 +1206,7 @@
      <widget class="QWidget" name="coarse_aggregate">
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,1,1">
+        <layout class="QGridLayout" name="gridLayout_coarse" columnstretch="1,1,1">
          <item row="0" column="0">
           <widget class="QGroupBox" name="groupBox_coarse_info">
            <property name="title">
@@ -1119,6 +1218,9 @@
               <property name="text">
                <string>Nombre</string>
               </property>
+              <property name="buddy">
+               <cstring>lineEdit_coarse_name</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -1128,6 +1230,9 @@
              <widget class="QLabel" name="label_coarse_source">
               <property name="text">
                <string>Lugar</string>
+              </property>
+              <property name="buddy">
+               <cstring>lineEdit_coarse_source</cstring>
               </property>
              </widget>
             </item>
@@ -1141,6 +1246,9 @@
               </property>
               <property name="wordWrap">
                <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>comboBox_coarse_type</cstring>
               </property>
              </widget>
             </item>
@@ -1167,6 +1275,9 @@
               <property name="wordWrap">
                <bool>false</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_relative_density</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -1189,6 +1300,9 @@
               </property>
               <property name="wordWrap">
                <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_pus</cstring>
               </property>
              </widget>
             </item>
@@ -1215,6 +1329,9 @@
               </property>
               <property name="wordWrap">
                <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_puc</cstring>
               </property>
              </widget>
             </item>
@@ -1251,6 +1368,9 @@
               <property name="wordWrap">
                <bool>true</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_mc</cstring>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -1277,6 +1397,9 @@
               <property name="wordWrap">
                <bool>true</bool>
               </property>
+              <property name="buddy">
+               <cstring>doubleSpinBox_coarse_abs</cstring>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
@@ -1298,7 +1421,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_gradation_2">
+        <widget class="QGroupBox" name="groupBox_coarse_gradation">
          <property name="title">
           <string>Granulometría</string>
          </property>
@@ -1386,6 +1509,9 @@
          <property name="text">
           <string>Tipo</string>
          </property>
+         <property name="buddy">
+          <cstring>comboBox_water_type</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -1417,6 +1543,9 @@
          <property name="text">
           <string>Lugar</string>
          </property>
+         <property name="buddy">
+          <cstring>lineEdit_water_source</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -1426,6 +1555,9 @@
         <widget class="QLabel" name="label_water_density">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Densidad (kg/m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="buddy">
+          <cstring>doubleSpinBox_water_density</cstring>
          </property>
         </widget>
        </item>
@@ -1580,7 +1712,7 @@
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QPushButton" name="pushButton_WRA_converter">
+           <widget class="QPushButton" name="pushButton_WRA_conversion">
             <property name="text">
              <string>Convertir a porcentaje de material cementante</string>
             </property>
@@ -1667,7 +1799,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_AEA_converter">
+           <widget class="QPushButton" name="pushButton_AEA_conversion">
             <property name="text">
              <string>Convertir a porcentaje de material cementante</string>
             </property>
@@ -1677,7 +1809,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -1761,7 +1893,7 @@
   <tabstop>lineEdit_AEA_name</tabstop>
   <tabstop>doubleSpinBox_AEA_relative_density</tabstop>
   <tabstop>doubleSpinBox_AEA_dosage</tabstop>
-  <tabstop>pushButton_AEA_converter</tabstop>
+  <tabstop>pushButton_AEA_conversion</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -1788,12 +1920,12 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>108</x>
-     <y>66</y>
+     <x>137</x>
+     <y>447</y>
     </hint>
     <hint type="destinationlabel">
-     <x>108</x>
-     <y>66</y>
+     <x>531</x>
+     <y>447</y>
     </hint>
    </hints>
   </connection>
@@ -1804,12 +1936,12 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>108</x>
-     <y>66</y>
+     <x>136</x>
+     <y>305</y>
     </hint>
     <hint type="destinationlabel">
-     <x>108</x>
-     <y>66</y>
+     <x>335</x>
+     <y>279</y>
     </hint>
    </hints>
   </connection>

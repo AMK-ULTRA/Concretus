@@ -91,7 +91,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_materials">
      <property name="title">
-      <string>Materiales principales</string>
+      <string>Cantidades de los materiales principales</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -137,7 +137,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_admixtures">
      <property name="title">
-      <string>Aditivos</string>
+      <string>Cantidades de los aditivos</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">

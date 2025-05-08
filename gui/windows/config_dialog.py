@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 
 from gui.ui.ui_config_dialog import Ui_ConfigDialog
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from logger import Logger
 from settings import LANGUAGES, UNIT_SYSTEM
 
@@ -13,6 +13,10 @@ class ConfigDialog(QDialog):
         self.ui = Ui_ConfigDialog()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
         # Connect to the data model
         self.data_model: RegularConcreteDataModel = data_model
 
@@ -23,8 +27,7 @@ class ConfigDialog(QDialog):
         # Load the previous configuration
         self.load_config()
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
+        # Initialization complete
         self.logger.info('Configuration dialog initialized')
 
     def get_lang_key(self):

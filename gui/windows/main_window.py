@@ -4,18 +4,22 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget, Q
 from PyQt6.QtGui import QActionGroup, QIcon
 
 from gui.ui.ui_main_window import Ui_MainWindow
-from core.regular_concrete.models.data_model import RegularConcreteDataModel
+from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
+from core.regular_concrete.models.mce_data_model import MCEDataModel
+from core.regular_concrete.models.aci_data_model import ACIDataModel
+from core.regular_concrete.models.doe_data_model import DOEDataModel
 from gui.windows.welcome_widget import Welcome
 from gui.windows.regular_concrete_widget import RegularConcrete
 from gui.windows.check_design_widget import CheckDesign
 from gui.windows.trial_mix_widget import TrialMix
+from gui.windows.adjust_mix_dialog import AdjustTrialMixDialog
 from gui.windows.about_dialog import AboutDialog
 from gui.windows.config_dialog import ConfigDialog
-from core.regular_concrete.plots.grading_curve import PlotDialog
+from core.regular_concrete.plots.grading_curve_plot_dialog import PlotDialog
 from logger import Logger
 from settings import (ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, ICON_RESTART,
-                      ICON_HELP_MANUAL)
-
+                      ICON_HELP_MANUAL, ICON_ADJUST_TRIAL_MIX, ICON_REGULAR_CONCRETE, ICON_ADJUST_MATERIALS,
+                      ICON_ADJUST_ADMIXTURES)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -24,15 +28,21 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         # Run the .setupUi() method to show the GUI
         self.ui.setupUi(self)
-        # Create an instance of the data model
+
+        # Initialize the logger
+        self.logger = Logger(__name__)
+
+        # Create an instance of the main data model
         self.data_model = RegularConcreteDataModel()
+        # Create an instance for the data model of each method
+        self.mce_data_model = MCEDataModel()
+        self.aci_data_model = ACIDataModel()
+        self.doe_data_model = DOEDataModel()
 
         # Group menu actions
         self.group_action()
         # Apply resource paths
         self.apply_resource_paths()
-        # Set up the main connections
-        self.setup_connections()
 
         # Create an empty reference to the widgets
         self.welcome = None
@@ -45,28 +55,70 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stacked_widget)
         self.init_components() # Initialize the components for the QStackedWidget
 
-        # Global signal/slot connections
-        self.global_connections()
-
         # Create a permanent label to display the current unit system on the right side
         self.units_label = QLabel(f"Unidades: {self.data_model.units}")
         self.ui.statusbar.addPermanentWidget(self.units_label)
 
-        # Initialize the logger
-        self.logger = Logger(__name__)
+        # Set up local signal/slot connections
+        self.setup_connections()
+        # Set up global signal/slot connections
+        self.global_connections()
+
+        # Initialization complete
         self.logger.info('Main window initialized')
 
     def global_connections(self):
         """Set global signal/slot connections, i.e. the connections between different QWidgets."""
 
         # Enable the QActions according to the current step
-        self.data_model.step_changed.connect(lambda current_step: self.enable_actions(current_step))
-        # When requested, show the RegularWidget widget
-        self.check_design.regular_concrete_requested.connect(partial(self.navigate_to, self.regular_concrete))
-        # Show the plot (fine or coarse aggregate) when requested by the user
-        self.check_design.plot_requested.connect(lambda aggregate_type: self.show_plot_dialog(aggregate_type))
-        # Change the display of units when the current unit system changes
-        self.data_model.units_changed.connect(lambda unit: self.update_unit_system(unit))
+        self.data_model.step_changed.connect(lambda current_step: self.handle_MainWindow_step_changed(current_step))
+        # Change the display of units when the current system of units changes
+        self.data_model.units_changed.connect(lambda units: self.handle_MainWindow_units_changed(units))
+        # Show the regular concrete widget when requested by the user
+        self.check_design.request_regular_concrete_from_check.connect(partial(self.navigate_to, self.regular_concrete))
+        self.trial_mix.request_regular_concrete_from_trial.connect(partial(self.navigate_to, self.regular_concrete))
+        # Show the plot dialog when requested by the user
+        self.check_design.plot_requested.connect(lambda agg_type: self.handle_CheckDesign_plot_requested(agg_type))
+
+    def setup_connections(self):
+        """Set local signal/slot connections, i.e. the connections within the same QWidget."""
+
+        # Initialize the dialogs when requested by the user
+        self.ui.action_config.triggered.connect(self.handle_action_config_triggered)
+        self.ui.action_report.triggered.connect(self.handle_action_report_triggered)
+        self.ui.action_about.triggered.connect(self.handle_action_about_triggered)
+        self.ui.action_adjust_materials.triggered.connect(self.handle_action_adjust_materials_triggered)
+        self.ui.action_adjust_admixtures.triggered.connect(self.handle_action_adjust_admixtures_triggered)
+
+        # Initialize the widgets (RegularConcrete, CheckDesign & TrialMix) when requested by the user
+        self.ui.action_MCE.triggered.connect(partial(self.handle_show_regular_concrete_triggered, "MCE", None))
+        self.ui.action_ACI.triggered.connect(partial(self.handle_show_regular_concrete_triggered, "ACI", None))
+        self.ui.action_DoE.triggered.connect(partial(self.handle_show_regular_concrete_triggered, "DoE", None))
+        self.ui.action_check_design.triggered.connect(self.handle_show_check_design_triggered)
+        self.ui.action_trial_mix.triggered.connect(self.handle_show_trial_mix_triggered)
+
+        # Restart the workflow
+        self.ui.action_restart.triggered.connect(self.handle_action_restart_triggered)
+
+        # Initialize the Exit MessageBox when requested by the user
+        self.ui.action_quit.triggered.connect(self.close)
+
+    def apply_resource_paths(self):
+        """Apply resource paths for the icons."""
+
+        # Paths are configured in the settings.py file
+        self.ui.action_config.setIcon(QIcon(str(ICON_SETTINGS)))
+        self.ui.action_report.setIcon(QIcon(str(ICON_PRINT)))
+        self.ui.action_quit.setIcon(QIcon(str(ICON_EXIT)))
+        self.ui.action_about.setIcon(QIcon(str(ICON_ABOUT)))
+        self.ui.menu_regular_concrete.setIcon(QIcon(str(ICON_REGULAR_CONCRETE)))
+        self.ui.action_check_design.setIcon(QIcon(str(ICON_CHECK_DESIGN)))
+        self.ui.action_trial_mix.setIcon(QIcon(str(ICON_TRIAL_MIX)))
+        self.ui.menu_adjust_trial_mix.setIcon(QIcon(str(ICON_ADJUST_TRIAL_MIX)))
+        self.ui.action_adjust_materials.setIcon(QIcon(str(ICON_ADJUST_MATERIALS)))
+        self.ui.action_adjust_admixtures.setIcon(QIcon(str(ICON_ADJUST_ADMIXTURES)))
+        self.ui.action_restart.setIcon(QIcon(str(ICON_RESTART)))
+        self.ui.action_manual.setIcon(QIcon(str(ICON_HELP_MANUAL)))
 
     def group_action(self):
         """Set up QActionGroup for multiple menu actions."""
@@ -77,40 +129,6 @@ class MainWindow(QMainWindow):
         method_group.addAction(self.ui.action_ACI)
         method_group.addAction(self.ui.action_DoE)
 
-    def apply_resource_paths(self):
-        """Apply resource paths for the icons."""
-
-        # Paths are configured in the settings.py file
-        self.ui.action_config.setIcon(QIcon(str(ICON_SETTINGS)))
-        self.ui.action_report.setIcon(QIcon(str(ICON_PRINT)))
-        self.ui.action_quit.setIcon(QIcon(str(ICON_EXIT)))
-        self.ui.action_about.setIcon(QIcon(str(ICON_ABOUT)))
-        self.ui.action_check_design.setIcon(QIcon(str(ICON_CHECK_DESIGN)))
-        self.ui.action_trial_mix.setIcon(QIcon(str(ICON_TRIAL_MIX)))
-        self.ui.action_restart.setIcon(QIcon(str(ICON_RESTART)))
-        self.ui.action_manual.setIcon(QIcon(str(ICON_HELP_MANUAL)))
-
-    def setup_connections(self):
-        """Set up the menu connections."""
-
-        # Initialize the dialogs (Config, Report & About) when requested by the user
-        self.ui.action_config.triggered.connect(self.show_config_dialog)
-        self.ui.action_report.triggered.connect(self.show_report_dialog)
-        self.ui.action_about.triggered.connect(self.show_about_dialog)
-
-        # Initialize the widgets (RegularConcrete, CheckDesign & TrialMix) when requested by the user
-        self.ui.action_MCE.triggered.connect(partial(self.show_regular_concrete, "MCE"))
-        self.ui.action_ACI.triggered.connect(partial(self.show_regular_concrete, "ACI"))
-        self.ui.action_DoE.triggered.connect(partial(self.show_regular_concrete, "DoE"))
-        self.ui.action_check_design.triggered.connect(self.show_check_design)
-        self.ui.action_trial_mix.triggered.connect(self.show_trial_mix)
-
-        # Restart the workflow
-        self.ui.action_restart.triggered.connect(self.reset_system)
-
-        # Initialize the Exit MessageBox when requested by the user
-        self.ui.action_quit.triggered.connect(self.close)
-
     def init_components(self):
         """Initialize all widgets and add them to the QStackedWidget."""
 
@@ -118,7 +136,7 @@ class MainWindow(QMainWindow):
         self.welcome = Welcome(self.data_model, self)
         self.regular_concrete = RegularConcrete(self.data_model, self)
         self.check_design = CheckDesign(self.data_model, self)
-        self.trial_mix = TrialMix(self.data_model, self)
+        self.trial_mix = TrialMix(self.data_model,self.mce_data_model, self.aci_data_model, self.doe_data_model, self)
 
         # Add each widget to the QStackedWidget
         self.stacked_widget.addWidget(self.welcome)
@@ -127,80 +145,7 @@ class MainWindow(QMainWindow):
         self.stacked_widget.addWidget(self.trial_mix)
 
         # Display the welcome widget
-        self.show_welcome()
-
-    def update_unit_system(self, new_units):
-        """
-        Update the units label when the unit system changes.
-
-        :param str new_units: A string representing the new unit system.
-        """
-
-        self.units_label.setText(f"Unidades: {new_units}")
-
-    def enable_actions(self, current_step):
-        """
-        Enable the appropriate actions based on the current step and if some validation error keys do not exist.
-
-        :param int current_step: The current step in the workflow.
-        """
-
-        actions_to_enable = {
-            2: self.ui.action_check_design,
-            3: self.ui.action_trial_mix,
-        }
-
-        if current_step in actions_to_enable:
-            action = actions_to_enable[current_step]
-
-            # If the action is Trial Mix, check that the error keys does not exist
-            if action == self.ui.action_trial_mix:
-                method = self.data_model.method
-                if method == "ACI":
-                    required_keys = [
-                        "GRADING REQUIREMENTS FOR FINE AGGREGATE",
-                        "FINENESS MODULUS",
-                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
-                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
-                        "MINIMUM ENTRAINED AIR",
-                        "DATA ENTRY"
-                    ]
-                elif method in ("MCE", "DoE"):
-                    required_keys = [
-                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
-                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
-                        "MINIMUM ENTRAINED AIR",
-                        "DATA ENTRY"
-                    ]
-                else:
-                    required_keys = []
-
-                # Check if any the error keys exist in the validation errors dictionary
-                missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
-
-                if method == "ACI":
-                    has_fineness_modulus_error = "FINENESS MODULUS" in self.data_model.validation_errors
-                    has_grading_requirements_error = "GRADING REQUIREMENTS FOR FINE AGGREGATE" in self.data_model.validation_errors
-
-                    if has_fineness_modulus_error and not has_grading_requirements_error:
-                        missing_keys.remove("FINENESS MODULUS")
-                    elif has_grading_requirements_error and not has_fineness_modulus_error:
-                        missing_keys.remove("GRADING REQUIREMENTS FOR FINE AGGREGATE")
-
-                if not missing_keys:
-                    # If no critical error keys exist, enable the action
-                    action.setEnabled(True)
-                    return
-                else:
-                    # Keep the action disabled
-                    action.setEnabled(False)
-                    return
-
-            # If all validations pass or the action is not Trial Mix, enable the action
-            if action == self.ui.action_check_design:
-                action.setEnabled(True)
-                # Disable the Trial Mix widget
-                self.ui.action_trial_mix.setEnabled(False)
+        self.handle_show_welcome_triggered()
 
     def navigate_to(self, widget):
         """
@@ -223,7 +168,97 @@ class MainWindow(QMainWindow):
             if hasattr(widget, 'on_enter'):
                 widget.on_enter()
 
-    def show_config_dialog(self):
+    def handle_MainWindow_step_changed(self, current_step):
+        """
+        Enable the appropriate actions based on the current step and if some validation error keys do not exist.
+
+        :param int current_step: The current step in the workflow.
+        """
+
+        actions_to_enable = {
+            2: self.ui.action_check_design,
+            3: self.ui.action_trial_mix,
+            4: self.ui.menu_adjust_trial_mix,
+        }
+
+        if current_step in actions_to_enable:
+            action = actions_to_enable[current_step]
+
+            if action == self.ui.action_check_design:
+                action.setEnabled(True)
+                # Disable the other actions
+                self.ui.action_trial_mix.setEnabled(False)
+                self.ui.menu_adjust_trial_mix.setEnabled(False)
+
+            elif action == self.ui.action_trial_mix:
+                method = self.data_model.method
+
+                # Define error keys for each method
+                if method == "ACI":
+                    required_keys = [
+                        "GRADING REQUIREMENTS FOR FINE AGGREGATE",
+                        "FINENESS MODULUS",
+                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                        "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
+                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                        "MINIMUM ENTRAINED AIR",
+                        "DATA ENTRY"
+                    ]
+                elif method in ("MCE", "DoE"):
+                    required_keys = [
+                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                        "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
+                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                        "MINIMUM ENTRAINED AIR",
+                        "DATA ENTRY"
+                    ]
+                else:
+                    required_keys = []
+
+                # Check if any the error keys exist in the validation errors dictionary
+                missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
+
+                if method == "ACI":
+                    has_fineness_modulus_error = "FINENESS MODULUS" in self.data_model.validation_errors
+                    has_grading_requirements_error = "GRADING REQUIREMENTS FOR FINE AGGREGATE" in self.data_model.validation_errors
+
+                    if has_fineness_modulus_error and not has_grading_requirements_error:
+                        missing_keys.remove("FINENESS MODULUS")
+                    elif has_grading_requirements_error and not has_fineness_modulus_error:
+                        missing_keys.remove("GRADING REQUIREMENTS FOR FINE AGGREGATE")
+
+                if not missing_keys:
+                    # If no critical error keys exist, enable the action
+                    action.setEnabled(True)
+                else:
+                    # Keep the action disabled
+                    action.setEnabled(False)
+
+            elif action == self.ui.menu_adjust_trial_mix:
+                action.setEnabled(True)
+
+    def handle_MainWindow_units_changed(self, new_units):
+        """
+        Update the units label when the unit system changes.
+
+        :param str new_units: A string representing the new unit system.
+        """
+
+        self.units_label.setText(f"Unidades: {new_units}")
+
+    def handle_CheckDesign_plot_requested(self, aggregate_type):
+        """
+        Launch the Grading Curve Plotting dialog.
+
+        :param str aggregate_type: The type of aggregate to plot ("fine" or "coarse").
+        """
+
+        self.logger.info('The grading curve plotting dialog has been selected')
+
+        plot_dialog = PlotDialog(self.data_model, aggregate_type, self)
+        plot_dialog.exec()
+
+    def handle_action_config_triggered(self):
         """Launch the Configuration dialog."""
 
         self.logger.info('The configuration dialog has been selected')
@@ -232,12 +267,12 @@ class MainWindow(QMainWindow):
         if config_dialog.exec() == QDialog.DialogCode.Accepted:
             config_dialog.save_config()
 
-    def show_report_dialog(self):
+    def handle_action_report_triggered(self):
         """Launch the Report dialog."""
 
         self.logger.info('The report dialog has been selected')
 
-    def show_about_dialog(self):
+    def handle_action_about_triggered(self):
         """Launch the About dialog."""
 
         self.logger.info('The about dialog has been selected')
@@ -245,56 +280,65 @@ class MainWindow(QMainWindow):
         about_dialog = AboutDialog(self)
         about_dialog.exec()
 
-    def show_plot_dialog(self, aggregate_type):
-        """
-        Launch the About dialog.
+    def handle_action_adjust_materials_triggered(self):
+        """Launch the Adjust Trial Mix dialog."""
 
-        :param str aggregate_type: The type of aggregate to plot ("fine" or "coarse").
-        """
+        self.logger.info('The adjust trial mix dialog has been selected')
 
-        self.logger.info('The plot dialog has been selected')
+        adjust_trial_mix = AdjustTrialMixDialog(self.data_model, self.mce_data_model, self.aci_data_model,
+                                                self.doe_data_model, self)
+        adjust_trial_mix.exec()
 
-        plot_dialog = PlotDialog(self.data_model, aggregate_type, self)
-        plot_dialog.exec()
+    def handle_action_adjust_admixtures_triggered(self):
+        """Return to the Chemical Admixtures widget."""
 
-    def show_welcome(self):
-        """Displays the Welcome widget."""
+        self.logger.info('The adjust admixture action has been selected')
 
-        self.navigate_to(self.welcome)
+        # partial(lambda data_model: self.show_regular_concrete(data_model.method, 6), self.data_model)
+        # lambda: self.show_regular_concrete(self.data_model.method, 6)
+        self.handle_show_regular_concrete_triggered(self.data_model.method, 6)
 
-    def show_regular_concrete(self, method):
-        """
-        Displays the Regular Concrete widget.
-
-        :param str method: The method to update the fields in the widget.
-        """
-
-        self.logger.info('The Regular Concrete design has been selected')
-        self.data_model.method = method
-
-        self.navigate_to(self.regular_concrete)
-
-    def show_check_design(self):
-        """Displays the Checking Design widget."""
-
-        self.logger.info('The Check Design has been selected')
-
-        self.navigate_to(self.check_design)
-
-    def show_trial_mix(self):
-        """Displays the Trial Mix widget."""
-
-        self.logger.info('The Check Design has been selected')
-
-        self.navigate_to(self.trial_mix)
-
-    def reset_system(self):
-        """Does nothing by now."""
+    def handle_action_restart_triggered(self):
+        """Restart the workflow."""
 
         self.logger.info('The restart action has been selected')
 
+    def handle_show_welcome_triggered(self):
+        """Display the Welcome widget."""
+
+        self.navigate_to(self.welcome)
+
+    def handle_show_regular_concrete_triggered(self, method, index=None):
+        """
+        Display the Regular Concrete widget.
+
+        :param str method: The method to update the fields in the widget.
+        :param int index: The index of the widget to display when the regular concrete widget is called.
+        """
+
+        self.logger.info('The regular concrete design has been selected')
+        self.data_model.method = method
+        if index:
+            self.regular_concrete.set_index(index)
+
+        self.navigate_to(self.regular_concrete)
+
+    def handle_show_check_design_triggered(self):
+        """Display the Checking Design widget."""
+
+        self.logger.info('The check design has been selected')
+
+        self.navigate_to(self.check_design)
+
+    def handle_show_trial_mix_triggered(self):
+        """Display the Trial Mix widget."""
+
+        self.logger.info('The check design has been selected')
+
+        self.navigate_to(self.trial_mix)
+
     def confirm_exit(self):
-        """Confirming the user's exit action by displaying a QMessageBox."""
+        """Confirm the user's exit action by displaying a QMessageBox."""
 
         reply = QMessageBox.question(self, 'Confirmación', "¿Estás seguro de que deseas salir?",
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
