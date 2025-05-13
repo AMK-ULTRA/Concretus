@@ -4,7 +4,7 @@ from PyQt6.QtGui import QPixmap
 from core.regular_concrete.models.regular_concrete_data_model import RegularConcreteDataModel
 from gui.ui.ui_welcome_widget import Ui_WelcomeWidget
 from logger import Logger
-from settings import IMAGE_PYQT_LOGO, IMAGE_ABOUT
+from settings import IMAGE_PYQT_LOGO, IMAGE_LOGO
 
 
 class Welcome(QWidget):
@@ -37,4 +37,4 @@ class Welcome(QWidget):
 
         # Images
         self.ui.label_pyqt_logo.setPixmap(QPixmap(str(IMAGE_PYQT_LOGO)))
-        self.ui.label_logo.setPixmap(QPixmap(str(IMAGE_ABOUT)))
+        self.ui.label_logo.setPixmap(QPixmap(str(IMAGE_LOGO)))

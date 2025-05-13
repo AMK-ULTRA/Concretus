@@ -27,6 +27,7 @@ class MCEDataModel:
                     'correction_factor_2': None,
                     'corrected_cement_content': None,
                     'min_cement_content': None,
+                    'fictitious_alpha': None,
                     'cement_content': None,
                     'cement_abs_volume': None,
                     'cement_volume': None
@@ -52,6 +53,7 @@ class MCEDataModel:
                 'fine_content_wet': None,
                 'fine_abs_volume': None,
                 'fine_volume': None
+
             },
             'coarse_aggregate': {
                 'coarse_content_ssd': None,
@@ -76,8 +78,8 @@ class MCEDataModel:
                     'margin': None
                 },
             },
-            'water_cement_ratio': {
-                'used_alpha': None,
+            'water_cementitious_materials_ratio': {
+                'w_cm': None,
                 'design_alpha': None,
                 'correction_factor_1': None,
                 'correction_factor_2': None,

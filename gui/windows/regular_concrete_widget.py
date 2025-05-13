@@ -127,6 +127,7 @@ class RegularConcrete(QWidget):
         """
 
         self.ui.stackedWidget.setCurrentIndex(index)
+        self.ui.comboBox.setCurrentIndex(index)
 
     def save_data(self):
         """Store all form data in the data model."""
@@ -171,7 +172,7 @@ class RegularConcrete(QWidget):
             (self.ui.lineEdit_cement_seller, 'cementitious_materials.cement_seller', 'text'),
             (self.ui.comboBox_cement_type, 'cementitious_materials.cement_type', 'currentText'),
             (self.ui.comboBox_cement_class, 'cementitious_materials.cement_class', 'currentText'),
-            (self.ui.doubleSpinBox_cement_relative_density, 'cementitious_materials.relative_density', 'value'),
+            (self.ui.doubleSpinBox_cement_relative_density, 'cementitious_materials.cement_relative_density', 'value'),
             (self.ui.groupBox_SCM, 'cementitious_materials.SCM.SCM_checked', 'isChecked'),
             (self.ui.comboBox_SCM_type, 'cementitious_materials.SCM.SCM_type', 'currentText'),
             (self.ui.spinBox_SCM_content, 'cementitious_materials.SCM.SCM_content', 'value'),
@@ -205,6 +206,9 @@ class RegularConcrete(QWidget):
 
             # Chemical Admixtures
             (self.ui.groupBox_WRA, 'chemical_admixtures.WRA.WRA_checked', 'isChecked'),
+            (self.ui.radioButton_plasticizer, 'chemical_admixtures.WRA.WRA_action.plasticizer', 'isChecked'),
+            (self.ui.radioButton_water_reducer, 'chemical_admixtures.WRA.WRA_action.water_reducer', 'isChecked'),
+            (self.ui.radioButton_cement_economizer, 'chemical_admixtures.WRA.WRA_action.cement_economizer', 'isChecked'),
             (self.ui.comboBox_WRA_type, 'chemical_admixtures.WRA.WRA_type', 'currentText'),
             (self.ui.lineEdit_WRA_name, 'chemical_admixtures.WRA.WRA_name', 'text'),
             (self.ui.doubleSpinBox_WRA_relative_density, 'chemical_admixtures.WRA.WRA_relative_density', 'value'),

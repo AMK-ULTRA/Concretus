@@ -41,11 +41,20 @@ class CementitiousMaterial:
 @dataclass
 class Cement(CementitiousMaterial):
 
-    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, k=117.2, n=0.16, m=1.3, theta=None):
+    def cement_content(self, slump, alpha, nms, agg_types, exposure_classes, k=117.2, n=0.16, m=1.3, theta=None,
+                       wra_checked=False, wra_action_cement_economizer=False, wra_action_water_reducer=False,
+                       effectiveness=None):
         """
         Calculate the cement content in kilogram-force per cubic meter of mixture (kgf/m³) using the triangular_relationship.
         The parameters k, n, m are constants that depend on the characteristics of the component materials of
         the mixture and the conditions under which it is prepared.
+
+        If a WRA is used as a cement economizer, there will be a reduction in the cement content according to
+        the effectiveness of the admixture. For this purpose, a fictitious alpha (water-cement ratio) is used.
+
+        If a WRA is used as a pure water reducer, the actual water-cement ratio (reduced alpha) will be lower.
+        However, for cement content calculations within this scope, the original water-cement ratio (original alpha),
+        unaffected by the WRA, is used. To obtain original alpha, divide reduced alpha by (1−WRA_effectiveness).
 
         :param int slump: The required slump of the concrete in fresh state (in mm).
         :param float alpha: The ratio of water to cement used.
@@ -59,12 +68,27 @@ class Cement(CementitiousMaterial):
         :param float m: Constant (default 1.3).
         :param float theta: A constant used to modify the triangular relationship,
                             this value will be specific to the particular materials, design and slump (if provided).
+        :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param bool wra_action_cement_economizer: True if a water-reducing admixture is used as a cement economizer,
+                                                  otherwise False.
+        :param bool wra_action_water_reducer: True if a water-reducing admixture is used as a pure water reducer,
+                                              otherwise False.
+        :param float effectiveness: WRA effectiveness percentage.
         :return: The calculated cement content in kilogram-force per cubic meter (kgf/m³).
         :rtype: float
         """
 
         # Convert slump to centimeters
         slump = 0.1 * slump
+
+        # Use a fictitious alpha if a WRA is used as a cement economizer
+        if wra_checked and wra_action_cement_economizer:
+            alpha = alpha / (1 - effectiveness / 100)
+            self.mce_data_model.update_data('cementitious_material.cement.fictitious_alpha', alpha)
+
+        # Use the original alpha if a WRA is used as a pure water reducer
+        elif wra_checked and wra_action_water_reducer:
+            alpha = alpha / (1 - effectiveness / 100)
 
         if theta is None or theta <= 0:
             # Calculate the design cement content
@@ -663,12 +687,13 @@ class AbramsLaw:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
     def water_cement_ratio(self, target_strength, target_strength_time, nms, agg_types, exposure_classes,
-                           wra_checked=False, effectiveness=None, m=None, n=None):
+                           wra_checked=False, wra_action_water_reducer=False, effectiveness=None, m=None, n=None):
         """
         Calculate the water-cement ratio. The parameters m and n are constants that depend on the age of test,
         the characteristics of the component materials of the mixture and the way the mixture is made.
 
-        If a WRA is used, there will be a reduction in the w/c ratio according to the effectiveness of the admixture.
+        If a WRA is used as a pure water reducer, there will be a reduction in the w/c ratio
+        according to the effectiveness of the admixture.
 
         :param float target_strength: The target strength of the mixture design.
         :param str target_strength_time: The expected time to reach the target strength,
@@ -679,6 +704,8 @@ class AbramsLaw:
         :param list[str] exposure_classes: A list containing all possible exposure classes, in no particular order,
                                            (e.g., ['Agua dulce', 'Moderada', 'Despreciable', 'Atmósfera común']).
         :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param bool wra_action_water_reducer: True if a water-reducing admixture is used as a pure water reducer,
+                                              otherwise False.
         :param float effectiveness: WRA effectiveness percentage.
         :param float m: A constant.
         :param float n: A constant.
@@ -716,8 +743,10 @@ class AbramsLaw:
                 raise ValueError(error_msg)
 
             # Store correction factors in the data model
-            self.mce_data_model.update_data('water_cement_ratio.correction_factor_1', correction_factor_1)
-            self.mce_data_model.update_data('water_cement_ratio.correction_factor_2', correction_factor_2)
+            self.mce_data_model.update_data('water_cementitious_materials_ratio.correction_factor_1',
+                                            correction_factor_1)
+            self.mce_data_model.update_data('water_cementitious_materials_ratio.correction_factor_2',
+                                            correction_factor_2)
 
         # Calculate the alpha according to Abrams' Law
         design_alpha = (log10(m) - log10(target_strength)) / log10(n)
@@ -732,22 +761,22 @@ class AbramsLaw:
         # The final alpha is the minimum between the corrected alpha and the minimum allowed alpha
         alpha = min(corrected_alpha, min_alpha)
 
-        # Apply a reduction to the final alpha if a WRA is used
-        if wra_checked:
+        # Apply a reduction to the final alpha if a WRA is used as a pure water reducer
+        if wra_checked and wra_action_water_reducer:
             reduced_alpha = (1 - effectiveness / 100) * alpha
         else:
             reduced_alpha = None
 
         # Store intermediate calculation results in the MCE data model for reference
-        self.mce_data_model.update_data('water_cement_ratio.design_alpha', design_alpha)
-        self.mce_data_model.update_data('water_cement_ratio.corrected_alpha', corrected_alpha)
-        self.mce_data_model.update_data('water_cement_ratio.min_alpha', min_alpha)
-        self.mce_data_model.update_data('water_cement_ratio.fina_alpha', alpha)
-        self.mce_data_model.update_data('water_cement_ratio.reduced_alpha', reduced_alpha)
-        self.mce_data_model.update_data('water_cement_ratio.m', m)
-        self.mce_data_model.update_data('water_cement_ratio.n', n)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.design_alpha', design_alpha)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.corrected_alpha', corrected_alpha)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.min_alpha', min_alpha)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.fina_alpha', alpha)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.reduced_alpha', reduced_alpha)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.m', m)
+        self.mce_data_model.update_data('water_cementitious_materials_ratio.n', n)
 
-        return reduced_alpha if wra_checked else alpha
+        return reduced_alpha if wra_checked and wra_action_water_reducer else alpha
 
 @dataclass
 class Admixture:
@@ -790,6 +819,9 @@ class Admixture:
 @dataclass
 class WRA(Admixture):
     wra_checked: bool
+    wra_action_plasticizer: bool
+    wra_action_water_reducer: bool
+    wra_action_cement_economizer: bool
     relative_density: float
     dosage: float
     effectiveness: float
@@ -869,7 +901,7 @@ class MCE:
 
             # Instantiate the components with their corresponding data
             self.cement = Cement(
-                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density')
+                relative_density=self.data_model.get_design_value('cementitious_materials.cement_relative_density')
             )
             self.water = Water(density=self.data_model.get_design_value('water.water_density'))
             self.air = Air()
@@ -915,6 +947,12 @@ class MCE:
             self.abrams_law = AbramsLaw()
             self.wra = WRA(
                 wra_checked=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked'),
+                wra_action_plasticizer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.plasticizer'),
+                wra_action_water_reducer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.water_reducer'),
+                wra_action_cement_economizer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.cement_economizer'),
                 relative_density=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density'),
                 dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
                 effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
@@ -977,17 +1015,24 @@ class MCE:
             agg_types = (self.coarse_agg.agg_type, self.fine_agg.agg_type)
             exposure_classes = list(self.hardened_concrete.exposure_classes.values())
             wra_checked = self.wra.wra_checked
+            wra_action_water_reducer = self.wra.wra_action_water_reducer
             wra_effectiveness = self.wra.effectiveness
 
             alpha = self.abrams_law.water_cement_ratio(target_strength, target_strength_time, nominal_max_size,
-                                                       agg_types, exposure_classes, wra_checked, wra_effectiveness)
+                                                       agg_types, exposure_classes, wra_checked, wra_action_water_reducer,
+                                                       wra_effectiveness)
 
             # D. Cement Content and Absolute Volume
             slump = self.fresh_concrete.slump
             cement_relative_density = self.cement.relative_density
             water_density = self.water.density
+            wra_action_cement_economizer = self.wra.wra_action_cement_economizer
 
-            cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes)
+            cement_content = self.cement.cement_content(slump, alpha, nominal_max_size, agg_types, exposure_classes,
+                                                        wra_checked=wra_checked,
+                                                        wra_action_cement_economizer=wra_action_cement_economizer,
+                                                        wra_action_water_reducer=wra_action_water_reducer,
+                                                        effectiveness=wra_effectiveness)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density)
 
             # E. Air Content
@@ -1063,7 +1108,7 @@ class MCE:
             # Store all the results in a dictionary
             self.calculation_results = {
                 "target_strength": target_strength,
-                "used_alpha": alpha,
+                "w_cm": alpha,
                 "beta_mean": beta_mean,
                 "beta_economic": beta_economic,
                 "beta": beta_value,
@@ -1109,8 +1154,8 @@ class MCE:
             # The key paths according to MCE data model schema
             if key == "target_strength":
                 data_key = "spec_strength.target_strength.target_strength_value"
-            elif key == "used_alpha":
-                data_key = "water_cement_ratio.used_alpha"
+            elif key == "w_cm":
+                data_key = "water_cementitious_materials_ratio.w_cm"
             elif key in ("beta_mean", "beta_economic", "beta"):
                 data_key = f"beta.{key}"
             elif key == "entrapped_air_content":

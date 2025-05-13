@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QDialog
 
 from gui.ui.ui_about_dialog import Ui_AboutDialog
 from logger import Logger
-from settings import IMAGE_ABOUT
+from settings import IMAGE_LOGO
 
 
 class AboutDialog(QDialog):
@@ -27,4 +27,4 @@ class AboutDialog(QDialog):
         """Apply resource paths (images and icons) from settings.py."""
 
         # Logo image
-        self.ui.label_logo.setPixmap(QPixmap(str(IMAGE_ABOUT)))
+        self.ui.label_logo.setPixmap(QPixmap(str(IMAGE_LOGO)))

@@ -37,14 +37,14 @@ ICON_CHECK_DESIGN = IMAGES_DIR / "check_design.png"
 ICON_TRIAL_MIX = IMAGES_DIR / "trial_mix.png"
 ICON_ADJUST_TRIAL_MIX = IMAGES_DIR / "adjust_trial_mix.png"
 ICON_ADJUST_MATERIALS = IMAGES_DIR / "adjust_materials.png"
-ICON_ADJUST_ADMIXTURES =IMAGES_DIR / "adjust_admixtures.png"
+ICON_ADJUST_ADMIXTURES = IMAGES_DIR / "adjust_admixtures.png"
+ICON_GET_BACK_DESIGN = IMAGES_DIR / "get_back_design"
 ICON_HELP_MANUAL = IMAGES_DIR / "help_manual.png"
 ICON_ABOUT = IMAGES_DIR / "about.png"
 
 # Images
-# IMAGE_LOGO = IMAGES_DIR / "logo.png"
 IMAGE_PYQT_LOGO = IMAGES_DIR / "pyqt_logo.png"
-IMAGE_ABOUT = IMAGES_DIR / "about_logo.png"
+IMAGE_LOGO = IMAGES_DIR / "logo.png"
 
 # Styles
 VALID_STYLE = STYLE_PATH / "valid.css"

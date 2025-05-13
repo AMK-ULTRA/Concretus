@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AdjustMixDialog</class>
+ <widget class="QDialog" name="AdjustMixDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>855</width>
+    <height>460</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>855</width>
+    <height>460</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>855</width>
+    <height>460</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Ajuste de materiales principales</string>
+  </property>
+  <property name="locale">
+   <locale language="Spanish" country="Venezuela"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+   <item>
+    <widget class="QGroupBox" name="groupBox_percentage">
+     <property name="title">
+      <string>Distribución volumétrica actual de la mezcla (%)</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_cementitious">
+        <item>
+         <widget class="QLabel" name="label_cementitious">
+          <property name="text">
+           <string>Material cementante</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_cementitious</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_cementitious">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_water">
+        <item>
+         <widget class="QLabel" name="label_water">
+          <property name="text">
+           <string>Agua</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_water</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_water">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_air">
+        <item>
+         <widget class="QLabel" name="label_air">
+          <property name="text">
+           <string>Aire</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_air</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_air">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_fine_agg">
+        <item>
+         <widget class="QLabel" name="label_fine_agg">
+          <property name="text">
+           <string>Agregado fino</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_fine_agg</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_fine_agg">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_coarse_agg">
+        <item>
+         <widget class="QLabel" name="label_coarse_agg">
+          <property name="text">
+           <string>Agregado grueso</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineEdit_coarse_agg</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_coarse_agg">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_materials">
+     <property name="title">
+      <string>Modificar cantidades de la mezcla de prueba</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QGroupBox" name="groupBox_adjust_water">
+        <property name="title">
+         <string>Agua</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QFormLayout" name="formLayout_water_used">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_water_used">
+             <property name="text">
+              <string>Agua utilizada (L)</string>
+             </property>
+             <property name="buddy">
+              <cstring>doubleSpinBox_water_used</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_water_used">
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_air_measured">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_air_measured">
+             <property name="text">
+              <string>Aire medido (%)</string>
+             </property>
+             <property name="buddy">
+              <cstring>doubleSpinBox_air_measured</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_air_measured">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_keep_a_cm">
+             <property name="text">
+              <string>Mantener relación a/cm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit_w_cm_used">
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_keep_corase_agg">
+           <property name="text">
+            <string>Mantener proporción de agreagado grueso</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_keep_fine_agg">
+           <property name="text">
+            <string>Mantener proporción de agreagado fino</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_adjust_cementitious">
+        <property name="title">
+         <string>Material cementante</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QFormLayout" name="formLayout_cementitious_used">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_cementitious_used">
+             <property name="text">
+              <string>Nueva cantidad (kg)</string>
+             </property>
+             <property name="buddy">
+              <cstring>doubleSpinBox_cementitious_used</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_cementitious_used">
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_air_measured_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_air_measured_2">
+             <property name="text">
+              <string>Aire medido (%)</string>
+             </property>
+             <property name="buddy">
+              <cstring>doubleSpinBox_air_measured_2</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_air_measured_2">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_keep_a_cm_2">
+             <property name="text">
+              <string>Mantener relación a/cm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit_w_cm_used_2">
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_keep_corase_agg_2">
+           <property name="text">
+            <string>Mantener proporción de agreagado grueso</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_keep_fine_agg_2">
+           <property name="text">
+            <string>Mantener proporción de agreagado fino</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_adjust_agg">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Proporción con respecto al &lt;span style=&quot; font-weight:700;&quot;&gt;volumen absoluto&lt;/span&gt; total de los agregados&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="title">
+         <string>Agregados</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <widget class="QGroupBox" name="groupBox_coarse">
+           <property name="title">
+            <string>Ajustar proporción de agregado grueso</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <item>
+             <layout class="QFormLayout" name="formLayout_coarse_prop_actual">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_coarse_prop_actual">
+                <property name="text">
+                 <string>Proporción actual (%)</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineEdit_coarse_prop_actual</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_coarse_prop_actual">
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QFormLayout" name="formLayout_coarse_prop_range">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_coarse_prop_range">
+                <property name="text">
+                 <string>Rango recomendado</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineEdit_coarse_prop_range</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_coarse_prop_range">
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_prop"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_fine">
+           <property name="title">
+            <string>Ajustar proporción de agregado fino</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <layout class="QFormLayout" name="formLayout_fine_prop_actual">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_fine_prop_actual">
+                <property name="text">
+                 <string>Proporción actual (%)</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineEdit_fine_prop_actual</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_fine_prop_actual">
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QFormLayout" name="formLayout_fine_prop_range">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_fine_prop_range">
+                <property name="text">
+                 <string>Rango recomendado</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineEdit_fine_prop_range</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_fine_prop_range">
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_prop"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton_apply_adjustments">
+     <property name="text">
+      <string>Aplicar ajustes</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>lineEdit_cementitious</tabstop>
+  <tabstop>lineEdit_water</tabstop>
+  <tabstop>lineEdit_air</tabstop>
+  <tabstop>lineEdit_fine_agg</tabstop>
+  <tabstop>lineEdit_coarse_agg</tabstop>
+  <tabstop>groupBox_adjust_water</tabstop>
+  <tabstop>doubleSpinBox_water_used</tabstop>
+  <tabstop>doubleSpinBox_air_measured</tabstop>
+  <tabstop>checkBox_keep_a_cm</tabstop>
+  <tabstop>radioButton_keep_corase_agg</tabstop>
+  <tabstop>radioButton_keep_fine_agg</tabstop>
+  <tabstop>groupBox_adjust_cementitious</tabstop>
+  <tabstop>doubleSpinBox_cementitious_used</tabstop>
+  <tabstop>doubleSpinBox_air_measured_2</tabstop>
+  <tabstop>checkBox_keep_a_cm_2</tabstop>
+  <tabstop>radioButton_keep_corase_agg_2</tabstop>
+  <tabstop>radioButton_keep_fine_agg_2</tabstop>
+  <tabstop>groupBox_adjust_agg</tabstop>
+  <tabstop>groupBox_coarse</tabstop>
+  <tabstop>lineEdit_coarse_prop_actual</tabstop>
+  <tabstop>lineEdit_coarse_prop_range</tabstop>
+  <tabstop>doubleSpinBox_coarse_prop</tabstop>
+  <tabstop>groupBox_fine</tabstop>
+  <tabstop>lineEdit_fine_prop_actual</tabstop>
+  <tabstop>lineEdit_fine_prop_range</tabstop>
+  <tabstop>doubleSpinBox_fine_prop</tabstop>
+  <tabstop>pushButton_apply_adjustments</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

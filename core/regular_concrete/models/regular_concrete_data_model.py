@@ -135,7 +135,7 @@ class RegularConcreteDataModel(QObject):
                 'cement_seller': None,
                 'cement_type': None,
                 'cement_class': None,
-                'relative_density': None,
+                'cement_relative_density': None,
                 'SCM': {
                     'SCM_checked': None,
                     'SCM_type': None,
@@ -199,6 +199,11 @@ class RegularConcreteDataModel(QObject):
             'chemical_admixtures': {
                 'WRA': {
                 'WRA_checked': None,
+                'WRA_action': {
+                    'plasticizer': None,
+                    'water_reducer': None,
+                    'cement_economizer': None,
+                },
                 'WRA_type': None,
                 'WRA_name': None,
                 'WRA_relative_density': None,
@@ -218,7 +223,63 @@ class RegularConcreteDataModel(QObject):
                 'fine_category': None,
                 'fine_scores': None,
                 'exposure_classes': None,
-            }
+            },
+            'trial_mix': {
+                'adjustments': {
+                    'water': {
+                        'water_abs_volume': None,
+                        'water_content_correction': None,
+                        'water_volume': None,
+                    },
+                    'cementitious_material': {
+                        'cement': {
+                            'cement_abs_volume': None,
+                            'cement_content': None,
+                            'cement_volume': None,
+                        },
+                        'scm': {
+                            'scm_abs_volume': None,
+                            'scm_content': None,
+                            'scm_volume': None,
+                        },
+                    },
+                    'fine_aggregate': {
+                        'fine_abs_volume': None,
+                        'fine_content_ssd': None,
+                        'fine_content_wet': None,
+                        'fine_volume': None,
+                    },
+                    'coarse_aggregate': {
+                        'coarse_abs_volume': None,
+                        'coarse_content_ssd': None,
+                        'coarse_content_wet': None,
+                        'coarse_volume': None,
+                    },
+                    'air': {
+                        'entrapped_air_content': None,
+                        'entrained_air_content': None,
+                    },
+                    'water_cementitious_materials_ratio': {
+                        'w_cm': None
+                    },
+                    'chemical_admixtures': {
+                        'WRA': {
+                            'WRA_content': None,
+                            'WRA_volume': None,
+                        },
+                        'AEA': {
+                            'AEA_content': None,
+                            'AEA_volume': None,
+                        },
+                    },
+                    'summation': {
+                        'total_abs_volume': None,
+                        'total_content': None,
+                    },
+                },
+                'trial_mix_volume': None,
+                'trial_mix_waste': None
+            },
         }
 
     def update_design_data(self, key_path, value):

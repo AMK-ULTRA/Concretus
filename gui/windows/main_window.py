@@ -19,7 +19,7 @@ from core.regular_concrete.plots.grading_curve_plot_dialog import PlotDialog
 from logger import Logger
 from settings import (ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, ICON_RESTART,
                       ICON_HELP_MANUAL, ICON_ADJUST_TRIAL_MIX, ICON_REGULAR_CONCRETE, ICON_ADJUST_MATERIALS,
-                      ICON_ADJUST_ADMIXTURES)
+                      ICON_ADJUST_ADMIXTURES, ICON_GET_BACK_DESIGN)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -79,6 +79,10 @@ class MainWindow(QMainWindow):
         self.trial_mix.request_regular_concrete_from_trial.connect(partial(self.navigate_to, self.regular_concrete))
         # Show the plot dialog when requested by the user
         self.check_design.plot_requested.connect(lambda agg_type: self.handle_CheckDesign_plot_requested(agg_type))
+        # Enable test mix adjustments if the test mix volume is non-zero
+        self.trial_mix.adjust_mix_dialog_enabled.connect(lambda factor: self.handle_TrialMix_adjust_mix_dialog_enabled(factor))
+        # Enable the admixture adjustment action if a chemical admixture has been used
+        self.trial_mix.adjust_admixtures_action_enabled.connect(self.handle_TrialMix_adjust_admixtures_action_enabled)
 
     def setup_connections(self):
         """Set local signal/slot connections, i.e. the connections within the same QWidget."""
@@ -88,7 +92,10 @@ class MainWindow(QMainWindow):
         self.ui.action_report.triggered.connect(self.handle_action_report_triggered)
         self.ui.action_about.triggered.connect(self.handle_action_about_triggered)
         self.ui.action_adjust_materials.triggered.connect(self.handle_action_adjust_materials_triggered)
+
+        # Set the Regular Concrete widget as the current widget
         self.ui.action_adjust_admixtures.triggered.connect(self.handle_action_adjust_admixtures_triggered)
+        self.ui.action_get_back_design.triggered.connect(self.handle_action_get_back_design_triggered)
 
         # Initialize the widgets (RegularConcrete, CheckDesign & TrialMix) when requested by the user
         self.ui.action_MCE.triggered.connect(partial(self.handle_show_regular_concrete_triggered, "MCE", None))
@@ -117,6 +124,7 @@ class MainWindow(QMainWindow):
         self.ui.menu_adjust_trial_mix.setIcon(QIcon(str(ICON_ADJUST_TRIAL_MIX)))
         self.ui.action_adjust_materials.setIcon(QIcon(str(ICON_ADJUST_MATERIALS)))
         self.ui.action_adjust_admixtures.setIcon(QIcon(str(ICON_ADJUST_ADMIXTURES)))
+        self.ui.action_get_back_design.setIcon(QIcon(str(ICON_GET_BACK_DESIGN)))
         self.ui.action_restart.setIcon(QIcon(str(ICON_RESTART)))
         self.ui.action_manual.setIcon(QIcon(str(ICON_HELP_MANUAL)))
 
@@ -170,72 +178,119 @@ class MainWindow(QMainWindow):
 
     def handle_MainWindow_step_changed(self, current_step):
         """
-        Enable the appropriate actions based on the current step and if some validation error keys do not exist.
+        Enable the appropriate actions based on the current step and validation status.
 
         :param int current_step: The current step in the workflow.
         """
 
-        actions_to_enable = {
-            2: self.ui.action_check_design,
-            3: self.ui.action_trial_mix,
-            4: self.ui.menu_adjust_trial_mix,
+        # Disable all the actions
+        self._disable_all_actions()
+
+        # Mapping the steps and their corresponding actions
+        actions_map = {
+            2: self._handle_step_2_actions,
+            3: self._handle_step_3_actions,
+            4: self._handle_step_4_actions,
         }
 
-        if current_step in actions_to_enable:
-            action = actions_to_enable[current_step]
+        if current_step in actions_map:
+            actions_map[current_step]()
 
-            if action == self.ui.action_check_design:
-                action.setEnabled(True)
-                # Disable the other actions
-                self.ui.action_trial_mix.setEnabled(False)
-                self.ui.menu_adjust_trial_mix.setEnabled(False)
+    def _disable_all_actions(self):
+        """Disable all relevant actions to maintain a clean state."""
 
-            elif action == self.ui.action_trial_mix:
-                method = self.data_model.method
+        self.ui.action_check_design.setEnabled(False)
+        self.ui.action_trial_mix.setEnabled(False)
+        self.ui.menu_adjust_trial_mix.setEnabled(False)
+        self.ui.action_get_back_design.setEnabled(False)
 
-                # Define error keys for each method
-                if method == "ACI":
-                    required_keys = [
-                        "GRADING REQUIREMENTS FOR FINE AGGREGATE",
-                        "FINENESS MODULUS",
-                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
-                        "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
-                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
-                        "MINIMUM ENTRAINED AIR",
-                        "DATA ENTRY"
-                    ]
-                elif method in ("MCE", "DoE"):
-                    required_keys = [
-                        "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
-                        "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
-                        "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
-                        "MINIMUM ENTRAINED AIR",
-                        "DATA ENTRY"
-                    ]
-                else:
-                    required_keys = []
+    def _handle_step_2_actions(self):
+        """Configure the actions for step 2."""
 
-                # Check if any the error keys exist in the validation errors dictionary
-                missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
+        self.ui.action_check_design.setEnabled(True)
 
-                if method == "ACI":
-                    has_fineness_modulus_error = "FINENESS MODULUS" in self.data_model.validation_errors
-                    has_grading_requirements_error = "GRADING REQUIREMENTS FOR FINE AGGREGATE" in self.data_model.validation_errors
+    def _handle_step_3_actions(self):
+        """Configure the actions for step 3 based on method-specific validations."""
 
-                    if has_fineness_modulus_error and not has_grading_requirements_error:
-                        missing_keys.remove("FINENESS MODULUS")
-                    elif has_grading_requirements_error and not has_fineness_modulus_error:
-                        missing_keys.remove("GRADING REQUIREMENTS FOR FINE AGGREGATE")
+        method = self.data_model.method
 
-                if not missing_keys:
-                    # If no critical error keys exist, enable the action
-                    action.setEnabled(True)
-                else:
-                    # Keep the action disabled
-                    action.setEnabled(False)
+        # Define the error keys required according to the method
+        required_keys = self._get_required_keys_for_method(method)
 
-            elif action == self.ui.menu_adjust_trial_mix:
-                action.setEnabled(True)
+        # Check if error keys exist in the validation error dictionary
+        missing_keys = self._get_missing_validation_keys(required_keys, method)
+
+        # Enable action if there are no critical errors
+        self.ui.action_trial_mix.setEnabled(not missing_keys)
+
+    @staticmethod
+    def _get_required_keys_for_method(method):
+        """
+        Return the error keys required by the method.
+
+        :param str method: The current method in used.
+        """
+
+        if method == "ACI":
+            return [
+                "GRADING REQUIREMENTS FOR FINE AGGREGATE",
+                "FINENESS MODULUS",
+                "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
+                "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                "MINIMUM ENTRAINED AIR",
+                "DATA ENTRY"
+            ]
+        elif method in ("MCE", "DoE"):
+            return [
+                "MINIMUM SPECIFIED COMPRESSIVE STRENGTH",
+                "CEMENTITIOUS MATERIAL REQUIRED DUE TO SULFATE EXPOSURE",
+                "MAXIMUM CONTENT OF SUPPLEMENTARY CEMENTITIOUS MATERIAL (SCM)",
+                "MINIMUM ENTRAINED AIR",
+                "DATA ENTRY"
+            ]
+        else:
+            return []
+
+    def _get_missing_validation_keys(self, required_keys, method):
+        """
+        Determine which validation keys are missing, considering special cases.
+
+        :param list[str] required_keys: The keys required by the method.
+        :param str method: The current method in used.
+        """
+
+        missing_keys = [key for key in required_keys if key in self.data_model.validation_errors]
+
+        # Special handling for the ACI method
+        if method == "ACI":
+            self._handle_special_aci_validation(missing_keys)
+
+        return missing_keys
+
+    def _handle_special_aci_validation(self, missing_keys):
+        """
+        Handles special validation for the ACI method related to "FINENESS MODULUS" and "GRADING REQUIREMENTS".
+
+        :param list[str] missing_keys: A list containing all missing validation keys required by the method.
+        """
+
+        has_fineness_modulus_error = "FINENESS MODULUS" in self.data_model.validation_errors
+        has_grading_requirements_error = "GRADING REQUIREMENTS FOR FINE AGGREGATE" in self.data_model.validation_errors
+
+        # If only one of the two errors is present, we remove it from the critical errors
+        if has_fineness_modulus_error and not has_grading_requirements_error:
+            if "FINENESS MODULUS" in missing_keys:
+                missing_keys.remove("FINENESS MODULUS")
+        elif has_grading_requirements_error and not has_fineness_modulus_error:
+            if "GRADING REQUIREMENTS FOR FINE AGGREGATE" in missing_keys:
+                missing_keys.remove("GRADING REQUIREMENTS FOR FINE AGGREGATE")
+
+    def _handle_step_4_actions(self):
+        """Configure the actions for step 4."""
+
+        self.ui.menu_adjust_trial_mix.setEnabled(True)
+        self.ui.action_get_back_design.setEnabled(True)
 
     def handle_MainWindow_units_changed(self, new_units):
         """
@@ -257,6 +312,24 @@ class MainWindow(QMainWindow):
 
         plot_dialog = PlotDialog(self.data_model, aggregate_type, self)
         plot_dialog.exec()
+
+    def handle_TrialMix_adjust_mix_dialog_enabled(self, factor):
+        """
+        Enable the trial mix adjustment dialog if the trial mix volume (or factor) is greater than 0,
+        otherwise, disable it.
+
+        :param factor: Trial mix volume selected by the user.
+        """
+
+        if factor > 0:
+            self.ui.action_adjust_materials.setEnabled(True)
+        else:
+            self.ui.action_adjust_materials.setEnabled(False)
+
+    def handle_TrialMix_adjust_admixtures_action_enabled(self):
+        """Enable the admixture adjustment if any chemical admixture has been used."""
+
+        self.ui.action_adjust_admixtures.setEnabled(True)
 
     def handle_action_config_triggered(self):
         """Launch the Configuration dialog."""
@@ -287,16 +360,29 @@ class MainWindow(QMainWindow):
 
         adjust_trial_mix = AdjustTrialMixDialog(self.data_model, self.mce_data_model, self.aci_data_model,
                                                 self.doe_data_model, self)
-        adjust_trial_mix.exec()
+        if adjust_trial_mix.exec() == QDialog.DialogCode.Accepted:
+            # Load the results in the trial mix widget
+            self.trial_mix.load_results("trial mix adjustments")
+            # Clean up the proportions from the previous trial mix
+            self.trial_mix.clear_last_two_columns("materials_table")
+            self.trial_mix.clear_last_two_columns("admixture_table")
+
+        # Disable the action
+        self.ui.action_adjust_materials.setEnabled(False)
 
     def handle_action_adjust_admixtures_triggered(self):
         """Return to the Chemical Admixtures widget."""
 
         self.logger.info('The adjust admixture action has been selected')
 
-        # partial(lambda data_model: self.show_regular_concrete(data_model.method, 6), self.data_model)
-        # lambda: self.show_regular_concrete(self.data_model.method, 6)
         self.handle_show_regular_concrete_triggered(self.data_model.method, 6)
+
+    def handle_action_get_back_design_triggered(self):
+        """Return to the first widget in the Regular Concrete widget."""
+
+        self.logger.info('The get back design action has been selected')
+
+        self.handle_show_regular_concrete_triggered(self.data_model.method, 0)
 
     def handle_action_restart_triggered(self):
         """Restart the workflow."""
@@ -333,7 +419,7 @@ class MainWindow(QMainWindow):
     def handle_show_trial_mix_triggered(self):
         """Display the Trial Mix widget."""
 
-        self.logger.info('The check design has been selected')
+        self.logger.info('The trial mix has been selected')
 
         self.navigate_to(self.trial_mix)
 

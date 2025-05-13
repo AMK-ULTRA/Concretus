@@ -187,7 +187,7 @@ class CheckDesign(QWidget):
         # Retrieve inputs from the data model
         fine_relative_density = self.data_model.get_design_value('fine_aggregate.physical_prop.relative_density_SSD')
         coarse_relative_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.relative_density_SSD')
-        cement_relative_density = self.data_model.get_design_value('cementitious_materials.relative_density')
+        cement_relative_density = self.data_model.get_design_value('cementitious_materials.cement_relative_density')
         scm_relative_density = self.data_model.get_design_value('cementitious_materials.SCM.SCM_relative_density')
         scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
         scm_checked = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
@@ -203,8 +203,14 @@ class CheckDesign(QWidget):
         exposure_class_doe = self.data_model.get_design_value('field_requirements.exposure_class.items_3')
         nominal_max_size = self.data_model.get_design_value('coarse_aggregate.NMS')
         passing_600 = self.data_model.get_design_value('fine_aggregate.gradation.passing')
+        coarse_moisture = self.data_model.get_design_value('coarse_aggregate.moisture.moisture_content')
         coarse_absorption = self.data_model.get_design_value('coarse_aggregate.moisture.absorption_content')
+        fine_moisture = self.data_model.get_design_value('fine_aggregate.moisture.moisture_content')
+        fine_absorption = self.data_model.get_design_value('fine_aggregate.moisture.absorption_content')
         wra_checked = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
+        wra_plasticizer = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_action.plasticizer')
+        wra_water_reducer = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_action.water_reducer')
+        wra_cement_economizer = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_action.cement_economizer')
         wra_relative_density = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density')
         wra_dosage = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage')
         wra_effectiveness = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
@@ -257,13 +263,17 @@ class CheckDesign(QWidget):
         # Validate AEA requirements
         if entrained_air and not aea_checked:
             warnings.append("Aditivo incorporador de aire requerido (diseño con aire incorporado).")
+        if aea_checked and not entrained_air:
+            warnings.append("Aditivo incorporador de aire no requerido (diseño sin aire incorporado).")
         if aea_dosage == 0 and aea_checked:
             warnings.append("La dosis del aditivo incorporador de aire no puede ser cero.")
 
         # Validate WRA requirements
-        if wra_checked and not wra_effectiveness:
-            warnings.append("Ingrese la efectividad del reductor de agua.")
-        if wra_dosage == 0 and wra_checked:
+        if wra_checked and not any([wra_plasticizer, wra_water_reducer, wra_cement_economizer]):
+            warnings.append("Seleccione el efecto deseado del aditivo reductor de agua.")
+        if wra_checked and not wra_plasticizer and not wra_effectiveness:
+            warnings.append("Ingrese la efectividad del aditivo reductor de agua.")
+        if wra_checked and not wra_dosage:
             warnings.append("La dosis del aditivo reductor de agua no puede ser cero.")
 
         # Validate nominal maximum size
@@ -280,9 +290,15 @@ class CheckDesign(QWidget):
         if method == "DoE" and passing_600.get("No. 30 (0,600 mm)", 1) is None:
             warnings.append("El celda para el cedazo No. 30 (0,600 mm) no puede estar vacía.")
 
-        # Validate the absorption percentage of the coarse aggregate
-        if method == "ACI" and coarse_absorption == 0:
-            warnings.append("El porcentaje de absorción del agregado grueso no puede ser cero.")
+        # Validate the absorption and moisture percentage
+        if coarse_moisture == 0:
+            warnings.append("El porcentaje de humedad del agregado grueso no pueden ser cero.")
+        if coarse_absorption == 0:
+            warnings.append("El porcentaje de absorción del agregado grueso no pueden ser cero.")
+        if fine_moisture == 0:
+            warnings.append("El porcentaje de humedad del agregado fino no pueden ser cero.")
+        if fine_absorption == 0:
+            warnings.append("El porcentaje de absorción del agregado fino no pueden ser cero.")
 
         # If there are warnings, display them in a QMessageBox and connect the signals
         if warnings:
@@ -295,7 +311,7 @@ class CheckDesign(QWidget):
             # Create the QMessageBox
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Icon.Warning)
-            msg_box.setWindowTitle("Errores en Datos de Entrada")
+            msg_box.setWindowTitle("Errores en datos de diseño")
             msg_box.setText(message)
             msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg_box.finished.connect(self.handle_CheckDesign_regular_concrete_requested_MainWindow)

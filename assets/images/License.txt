@@ -1,0 +1,48 @@
+License
+
+ICON_LOGO ->
+<a href="https://www.flaticon.com/free-icons/concrete" title="concrete icons">Concrete icons created by Freepik - Flaticon</a>
+
+ICON_ABOUT ->
+<a href="https://www.flaticon.com/free-icons/info" title="info icons">Info icons created by Freepik - Flaticon</a>
+
+ICON_RESTART ->
+<a href="https://www.flaticon.com/free-icons/restart" title="restart icons">Restart icons created by Freepik - Flaticon</a>
+
+ICON_CHECK_DESIGN ->
+<a href="https://www.flaticon.com/free-icons/foursquare-check-in" title="foursquare check in icons">Foursquare check in icons created by Freepik - Flaticon</a>
+
+ICON_GET_BACK_DESIGN ->
+<a href="https://www.flaticon.com/free-icons/left-arrow" title="left arrow icons">Left arrow icons created by Freepik - Flaticon</a>
+
+ICON_EXIT ->
+<a href="https://www.flaticon.com/free-icons/logout" title="logout icons">Logout icons created by Ardiansyah - Flaticon</a>
+
+ICON_ADJUST_MATERIALS ->
+<a href="https://www.flaticon.com/free-icons/cement" title="cement icons">Cement icons created by Freepik - Flaticon</a>
+
+ICON_ADJUST_ADMIXTURES ->
+<a href="https://www.flaticon.com/free-icons/detergent" title="detergent icons">Detergent icons created by surang - Flaticon</a>
+
+ICON_TRIAL_MIX ->
+<a href="https://www.flaticon.com/free-icons/wheelbarrow" title="wheelbarrow icons">Wheelbarrow icons created by monkik - Flaticon</a>
+
+GET HELP ->
+<a href="https://www.flaticon.com/free-icons/help" title="help icons">Help icons created by maswan - Flaticon</a>
+
+ICON_PRINT ->
+<a href="https://www.flaticon.com/free-icons/print" title="print icons">Print icons created by Freepik - Flaticon</a>
+
+ICON_SETTINGS ->
+<a href="https://www.flaticon.com/free-icons/settings" title="settings icons">Settings icons created by Freepik - Flaticon</a>
+
+ICON_ADJUST_TRIAL_MIX ->
+<a href="https://www.flaticon.com/free-icons/user-interface" title="user interface icons">User interface icons created by Nendra Wahyu  - Flaticon</a>
+
+IMAGE_LOGO ->
+<a href="https://www.flaticon.com/free-icons/concrete" title="concrete icons">Concrete icons created by Freepik - Flaticon</a>
+
+ICON_LOGO ->
+<a href="https://www.flaticon.com/free-icons/concrete" title="concrete icons">Concrete icons created by Freepik - Flaticon</a>
+
+IMAGE_PYQT_LOGO ->

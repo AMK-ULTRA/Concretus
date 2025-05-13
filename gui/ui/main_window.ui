@@ -99,6 +99,7 @@
     </widget>
     <addaction name="action_trial_mix"/>
     <addaction name="menu_adjust_trial_mix"/>
+    <addaction name="action_get_back_design"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="locale">
@@ -188,13 +189,27 @@
    </property>
   </action>
   <action name="action_adjust_materials">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Ajustar Materiales Principales</string>
    </property>
   </action>
   <action name="action_adjust_admixtures">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Ajustar Aditivos</string>
+   </property>
+  </action>
+  <action name="action_get_back_design">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Ajustar Parámetros de Diseño</string>
    </property>
   </action>
  </widget>

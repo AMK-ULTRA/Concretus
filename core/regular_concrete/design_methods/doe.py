@@ -40,11 +40,17 @@ class CementitiousMaterial:
             raise ZeroDivisionError(error_msg)
         return content / (relative_density * water_density)
 
-    def cementitious_content(self, water_content, w_cm, exposure_classes, scm_checked, scm_percentage=None):
+    def cementitious_content(self, water_content, w_cm, exposure_classes, scm_checked, scm_percentage=None,
+                             wra_checked=False, wra_action_water_reducer=False):
         """
         Calculate the cementitious material content based on water content and water-to-cementitious
         materials ratio (w/cm). If supplementary cementitious materials (SCM) are used,
         this method also calculates the cement and SCM contents separately.
+
+        If a WRA is used as a pure water reducer, the actual water-cement ratio will be lower.
+        However, for cementitious content calculations within this scope, the original water content,
+        unaffected by the WRA, is used. To do this, the water content received is added to
+        the amount that was reduced when using the WRA, this amount will be retrieved from the data model.
 
         :param float water_content: The water content in kg/m³ for the concrete mix.
         :param float w_cm: The water-to-cementitious materials ratio.
@@ -52,9 +58,16 @@ class CementitiousMaterial:
                                            (e.g., ['XC1', 'XS2', 'XF4', 'XA1']).
         :param bool scm_checked: True if a supplementary cementitious material is used, otherwise False.
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
+        :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param bool wra_action_water_reducer: True if a water-reducing admixture is used as a pure water reducer,
+                                              otherwise False.
         :return: A tuple containing the cement content and SCM content, respectively (in kg/m³).
         :rtype: tuple[float, float]
         """
+
+        if wra_checked and wra_action_water_reducer:
+            water_correction_wra = self.doe_data_model.get_data('water.water_content.wra_correction')
+            water_content = water_content + (-water_correction_wra)
 
         # Determine minimum required cementitious content based on exposure classes
         min_cementitious_content = max(
@@ -139,11 +152,15 @@ class Water:
         return water_content / density
 
     def water_content(self, slump_range, nms, agg_types, entrained_air, scm_checked=False, scm_percentage=None,
-                      wra_checked=False, effectiveness=None):
+                      wra_checked=False, wra_action_cement_economizer=False, wra_action_water_reducer=False,
+                      effectiveness=None):
         """
         Calculate the required water content for concrete, adjusting based on slump, nominal maximum
         size of aggregate (NMS) and aggregate types. If SCM or WRA is used, it is also taken into account for
         water calculation.
+
+        If a WRA is used as a cement economizer or pure water reducer, then the reduction will be effective,
+        otherwise it will not.
 
         :param str slump_range: Slump range of the concrete in fresh state (in mm).
         :param str nms: The nominal maximum size of the coarse aggregate.
@@ -153,6 +170,10 @@ class Water:
         :param bool scm_checked: True if an SCM is used, otherwise False.
         :param int scm_percentage: Percentage of total cementitious material that is SCM.
         :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
+        :param bool wra_action_cement_economizer: True if a water-reducing admixture is used as a cement economizer,
+                                                  otherwise False.
+        :param bool wra_action_water_reducer: True if a water-reducing admixture is used as a pure water reducer,
+                                              otherwise False.
         :param float effectiveness: WRA effectiveness percentage.
         :return: The water content (in kg/m³).
         :rtype: float
@@ -212,7 +233,7 @@ class Water:
                 water_correction_scm = - WATER_CONTENT_REDUCTION.get(scm_percentage_range, {}).get(slump_range, 0)
 
         # Apply WRA corrections if applicable
-        if wra_checked:
+        if wra_checked and (wra_action_cement_economizer or wra_action_water_reducer):
             water_correction_wra = -(effectiveness / 100) * water_content
 
         # Store intermediate values in data model
@@ -749,6 +770,9 @@ class Admixture:
 @dataclass
 class WRA(Admixture):
     wra_checked: bool
+    wra_action_plasticizer: bool
+    wra_action_water_reducer: bool
+    wra_action_cement_economizer: bool
     relative_density: float
     dosage: float
     effectiveness: float
@@ -837,7 +861,7 @@ class DOE:
 
             # Instantiate the components with their corresponding data
             self.cement = Cement(
-                relative_density=self.data_model.get_design_value('cementitious_materials.relative_density'),
+                relative_density=self.data_model.get_design_value('cementitious_materials.cement_relative_density'),
                 cement_class=self.data_model.get_design_value("cementitious_materials.cement_class")
             )
             self.scm = SCM(
@@ -892,6 +916,12 @@ class DOE:
             self.abrams_law = AbramsLaw()
             self.wra = WRA(
                 wra_checked=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked'),
+                wra_action_plasticizer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.plasticizer'),
+                wra_action_water_reducer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.water_reducer'),
+                wra_action_cement_economizer=self.data_model.get_design_value(
+                    'chemical_admixtures.WRA.WRA_action.cement_economizer'),
                 relative_density=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_relative_density'),
                 dosage=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_dosage'),
                 effectiveness=self.data_model.get_design_value('chemical_admixtures.WRA.WRA_effectiveness')
@@ -975,9 +1005,12 @@ class DOE:
             wra_checked = self.wra.wra_checked
             wra_effectiveness = self.wra.effectiveness
             water_density = self.water.density
+            wra_action_cement_economizer = self.wra.wra_action_cement_economizer
+            wra_action_water_reducer = self.wra.wra_action_water_reducer
 
             water_content = self.water.water_content(slump_range, nominal_max_size, agg_types, entrained_air, scm_checked,
-                                                     scm_percentage, wra_checked, wra_effectiveness)
+                                                     scm_percentage, wra_checked, wra_action_cement_economizer,
+                                                     wra_action_water_reducer, wra_effectiveness)
             water_abs_volume = self.water.water_volume(water_content, water_density)
 
             # E. Cementitious Materials Content and Absolute Volume
@@ -986,7 +1019,8 @@ class DOE:
             scm_type = self.scm.scm_type
 
             cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm, exposure_classes,
-                                                                           scm_checked, scm_percentage)
+                                                                           scm_checked, scm_percentage, wra_checked,
+                                                                           wra_action_water_reducer)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density,
                                                             "Cemento")
 
@@ -1010,8 +1044,8 @@ class DOE:
             else:
                 w_cm_recalculated = water_content / (cement_content + scm_content)
 
-                if w_cm_recalculated != w_cm:
-                    w_cm = w_cm_recalculated # If the minimum cementitious material has been selected, adjust the w/cm ratio
+                if w_cm_recalculated != w_cm: # If the minimum cementitious material has been selected, or a WRA has been
+                    w_cm = w_cm_recalculated  # used as a cement economizer, then the w/cm ratio is adjusted.
 
             # G. Fine Content and Absolute Volume
             fine_relative_density = self.fine_agg.relative_density
@@ -1113,7 +1147,7 @@ class DOE:
             self.calculation_results = {
                 "target_strength_value": target_strength,
                 "w_cm": w_cm,
-                "entrapped_air_content": "-" if not entrained_air else None,
+                "entrapped_air_content": 0 if not entrained_air else None,
                 "entrained_air_content": entrained_air_content if entrained_air else None,
                 "final_content": water_content,
                 "water_content_correction": water_content_correction,

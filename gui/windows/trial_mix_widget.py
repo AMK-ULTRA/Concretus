@@ -15,6 +15,8 @@ from logger import Logger
 class TrialMix(QWidget):
     # Define a custom signal
     request_regular_concrete_from_trial = pyqtSignal()
+    adjust_mix_dialog_enabled = pyqtSignal(float)
+    adjust_admixtures_action_enabled = pyqtSignal()
 
     def __init__(self, data_model, mce_data_model, aci_data_model, doe_data_model, parent=None):
         super().__init__(parent)
@@ -59,10 +61,12 @@ class TrialMix(QWidget):
         elif self.data_model.method == "DoE":
             self.doe_calculation_engine()
 
+        self.save_trial_mix_results()
         self.create_table_columns(unit)
         self.create_table_rows(method)
         self.adjust_table_height()
         self.load_results(method)
+        self.handle_adjust_admixtures_action_enabled()
 
     def on_exit(self):
         """Clean up widget when navigating away."""
@@ -230,11 +234,11 @@ class TrialMix(QWidget):
         """
 
         # Adjust both tables using the helper method
-        self.adjust_single_table_height(self.ui.tableWidget)
-        self.adjust_single_table_height(self.ui.tableWidget_2)
+        self._adjust_single_table_height(self.ui.tableWidget)
+        self._adjust_single_table_height(self.ui.tableWidget_2)
 
     @staticmethod
-    def adjust_single_table_height(table_widget):
+    def _adjust_single_table_height(table_widget):
         """
         Adjusts the vertical size of a single QTableWidget to fit its content exactly.
 
@@ -299,6 +303,72 @@ class TrialMix(QWidget):
 
         self.run_engine(DOE, "doe_data_model", "doe")
 
+    def save_trial_mix_results(self):
+        """
+        Save the trial mix’s absolute volumes, contents, and volumes from the current data model into
+        the main data model (RegularConcreteDataModel).
+        """
+
+        # Validate current design method
+        method = self.data_model.method
+        if method not in ["MCE", "ACI", "DoE"]:
+            raise ValueError(f"Invalid method: {method}. Must be one of: MCE, ACI, DoE")
+        self.logger.info(f"Saving the trial mix’s absolute volumes, contents, and volumes from the {method} data model "
+                         f"into the main data model (RegularConcreteDataModel).")
+
+        # Select the appropriate data model
+        data_models = {
+            "MCE": self.mce_data_model,
+            "ACI": self.aci_data_model,
+            "DoE": self.doe_data_model,
+        }
+        source_dm = data_models[method]
+
+        # Define a mapping of (destination_key, source_key)
+        mappings = [
+            # Water to cementitious material ratio
+            ("trial_mix.adjustments.water_cementitious_materials_ratio.w_cm", "water_cementitious_materials_ratio.w_cm"),
+
+            # Absolute volumes
+            ("trial_mix.adjustments.water.water_abs_volume", "water.water_abs_volume"),
+            ("trial_mix.adjustments.cementitious_material.cement.cement_abs_volume",
+             "cementitious_material.cement.cement_abs_volume"),
+            ("trial_mix.adjustments.cementitious_material.scm.scm_abs_volume",
+             "cementitious_material.scm.scm_abs_volume"),
+            ("trial_mix.adjustments.fine_aggregate.fine_abs_volume", "fine_aggregate.fine_abs_volume"),
+            ("trial_mix.adjustments.coarse_aggregate.coarse_abs_volume", "coarse_aggregate.coarse_abs_volume"),
+            ("trial_mix.adjustments.air.entrapped_air_content", "air.entrapped_air_content"),
+            ("trial_mix.adjustments.air.entrained_air_content", "air.entrained_air_content"),
+            ("trial_mix.adjustments.summation.total_abs_volume", "summation.total_abs_volume"),
+
+            # Contents
+            ("trial_mix.adjustments.water.water_content_correction", "water.water_content_correction"),
+            ("trial_mix.adjustments.cementitious_material.cement.cement_content",
+             "cementitious_material.cement.cement_content"),
+            ("trial_mix.adjustments.cementitious_material.scm.scm_content", "cementitious_material.scm.scm_content"),
+            ("trial_mix.adjustments.fine_aggregate.fine_content_wet", "fine_aggregate.fine_content_wet"),
+            ("trial_mix.adjustments.fine_aggregate.fine_content_ssd", "fine_aggregate.fine_content_ssd"),
+            ("trial_mix.adjustments.coarse_aggregate.coarse_content_wet", "coarse_aggregate.coarse_content_wet"),
+            ("trial_mix.adjustments.coarse_aggregate.coarse_content_ssd", "coarse_aggregate.coarse_content_ssd"),
+            ("trial_mix.adjustments.summation.total_content", "summation.total_content"),
+
+            # Volumes
+            ("trial_mix.adjustments.water.water_volume", "water.water_volume"),
+            ("trial_mix.adjustments.cementitious_material.cement.cement_volume",
+             "cementitious_material.cement.cement_volume"),
+            ("trial_mix.adjustments.cementitious_material.scm.scm_volume", "cementitious_material.scm.scm_volume"),
+            ("trial_mix.adjustments.fine_aggregate.fine_volume", "fine_aggregate.fine_volume"),
+            ("trial_mix.adjustments.coarse_aggregate.coarse_volume", "coarse_aggregate.coarse_volume"),
+        ]
+
+        # Loop through mappings, fetch and save each value
+        for dest_key, src_key in mappings:
+            try:
+                value = source_dm.get_data(src_key)
+            except (AttributeError, KeyError) as e:
+                raise ValueError(f"Could not retrieve '{src_key}' from {method} model: {e}")
+            self.data_model.update_design_data(dest_key, value)
+
     def load_results(self, method):
         """
         Load trial mix results into two QTableWidgets based on the specified design method.
@@ -318,7 +388,7 @@ class TrialMix(QWidget):
         - Filters out any row where any value is None.
         - Populates the table with the valid rows.
 
-        :param str method: The design method for which to load results ("MCE", "ACI", or "DoE").
+        :param str method: The design method for which to load results ("MCE", "ACI", "DoE" or "trial mix adjustments").
         """
 
         # Select the corresponding data model according to the method
@@ -328,47 +398,57 @@ class TrialMix(QWidget):
             current_data_model = self.aci_data_model
         elif method == "DoE":
             current_data_model = self.doe_data_model
+        elif method == "trial mix adjustments":
+            current_data_model = self.data_model
         else:
             self.logger.error(f"Unknown method: {method}")
             return
+
+        # Determine which getter method and prefix to use based on the method
+        if method == "trial mix adjustments":
+            get_method = current_data_model.get_design_value
+            prefix = "trial_mix.adjustments."
+        else:
+            get_method = current_data_model.get_data
+            prefix = ""
 
         # ------------------------
         # Process Materials Table (self.ui.tableWidget)
         # ------------------------
         # Column 1 values: Absolute volumes
         col1 = [
-            current_data_model.get_data('water.water_abs_volume'),
-            current_data_model.get_data('cementitious_material.cement.cement_abs_volume'),
-            current_data_model.get_data('cementitious_material.scm.scm_abs_volume'),
-            current_data_model.get_data('fine_aggregate.fine_abs_volume'),
-            current_data_model.get_data('coarse_aggregate.coarse_abs_volume'),
-            current_data_model.get_data('air.entrapped_air_content'),
-            current_data_model.get_data('air.entrained_air_content'),
-            current_data_model.get_data('summation.total_abs_volume')
+            get_method(f'{prefix}water.water_abs_volume'),
+            get_method(f'{prefix}cementitious_material.cement.cement_abs_volume'),
+            get_method(f'{prefix}cementitious_material.scm.scm_abs_volume'),
+            get_method(f'{prefix}fine_aggregate.fine_abs_volume'),
+            get_method(f'{prefix}coarse_aggregate.coarse_abs_volume'),
+            get_method(f'{prefix}air.entrapped_air_content'),
+            get_method(f'{prefix}air.entrained_air_content'),
+            get_method(f'{prefix}summation.total_abs_volume')
         ]
 
         # Column 2 values: Contents
         col2 = [
-            current_data_model.get_data('water.water_content_correction'),
-            current_data_model.get_data('cementitious_material.cement.cement_content'),
-            current_data_model.get_data('cementitious_material.scm.scm_content'),
-            current_data_model.get_data('fine_aggregate.fine_content_wet'),
-            current_data_model.get_data('coarse_aggregate.coarse_content_wet'),
+            get_method(f'{prefix}water.water_content_correction'),
+            get_method(f'{prefix}cementitious_material.cement.cement_content'),
+            get_method(f'{prefix}cementitious_material.scm.scm_content'),
+            get_method(f'{prefix}fine_aggregate.fine_content_wet'),
+            get_method(f'{prefix}coarse_aggregate.coarse_content_wet'),
             "-",  # For entrapped air
             "-",  # For entrained air
-            current_data_model.get_data('summation.total_content')
+            get_method(f'{prefix}summation.total_content')
         ]
 
         # Column 3 values: Volumes
         col3 = [
-            current_data_model.get_data('water.water_volume'),
-            current_data_model.get_data('cementitious_material.cement.cement_volume'),
-            current_data_model.get_data('cementitious_material.scm.scm_volume'),
-            current_data_model.get_data('fine_aggregate.fine_volume'),
-            current_data_model.get_data('coarse_aggregate.coarse_volume'),
-            current_data_model.get_data('air.entrapped_air_content'),
-            current_data_model.get_data('air.entrained_air_content'),
-            "-" # For total volume
+            get_method(f'{prefix}water.water_volume'),
+            get_method(f'{prefix}cementitious_material.cement.cement_volume'),
+            get_method(f'{prefix}cementitious_material.scm.scm_volume'),
+            get_method(f'{prefix}fine_aggregate.fine_volume'),
+            get_method(f'{prefix}coarse_aggregate.coarse_volume'),
+            get_method(f'{prefix}air.entrapped_air_content'),
+            get_method(f'{prefix}air.entrained_air_content'),
+            "-"  # For total volume
         ]
 
         # Filter out rows where any column value is None
@@ -390,9 +470,9 @@ class TrialMix(QWidget):
                         text = f"{value:.1f}"
                 else:
                     text = str(value)
-                item = QTableWidgetItem(text) # Create a QTableWidgetItem
-                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter) # Align text to center
-                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
+                item = QTableWidgetItem(text)  # Create a QTableWidgetItem
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)  # Align text to center
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)  # Make the cell non-editable
                 self.ui.tableWidget.setItem(new_row, j, item)
 
         # ------------------------------------------------------
@@ -400,14 +480,14 @@ class TrialMix(QWidget):
         # ------------------------------------------------------
         # Column 1: Chemical admixture contents
         admixture_col1 = [
-            current_data_model.get_data('chemical_admixtures.WRA.WRA_content'),
-            current_data_model.get_data('chemical_admixtures.AEA.AEA_content')
+            get_method(f'{prefix}chemical_admixtures.WRA.WRA_content'),
+            get_method(f'{prefix}chemical_admixtures.AEA.AEA_content')
         ]
 
         # Column 2: Chemical admixture volumes
         admixture_col2 = [
-            current_data_model.get_data('chemical_admixtures.WRA.WRA_volume'),
-            current_data_model.get_data('chemical_admixtures.AEA.AEA_volume')
+            get_method(f'{prefix}chemical_admixtures.WRA.WRA_volume'),
+            get_method(f'{prefix}chemical_admixtures.AEA.AEA_volume')
         ]
 
         # Filter out rows where any column value is None
@@ -424,10 +504,55 @@ class TrialMix(QWidget):
                     text = f"{value:.3f}"
                 else:
                     text = str(value)
-                item = QTableWidgetItem(text) # Create a QTableWidgetItem
-                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter) # Align text to center
-                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable) # Make the cell non-editable
+                item = QTableWidgetItem(text)  # Create a QTableWidgetItem
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)  # Align text to center
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)  # Make the cell non-editable
                 self.ui.tableWidget_2.setItem(new_row, j, item)
+
+    def clear_last_two_columns(self, table_widget):
+        """
+        Clear data from the last two columns of a QTableWidget.
+
+        This method preserves data in all columns except the last two.
+        Useful for cleaning certain data before updates or when refreshing only part of a table's content.
+        For our case, clean up the proportions from the previous trial mix.
+
+        Also, clear the value of the trial mix volume and the percentage of waste.
+
+        :param str table_widget: The key associated with the QTableWidget object from which data will be deleted.
+        """
+
+        # Get the table to clean up
+        tables = {
+            'materials_table': self.ui.tableWidget,
+            'admixture_table': self.ui.tableWidget_2,
+        }
+        table = tables[table_widget]
+
+        # Get table dimensions
+        row_count = table.rowCount()
+        column_count = table.columnCount()
+
+        # Check if table has at least two columns
+        if column_count < 2:
+            self.logger.warning("Table has fewer than 2 columns, nothing to clear")
+            return
+
+        # Calculate which columns to clear (last two)
+        first_column_to_clear = column_count - 2
+
+        # Clear data from the last two columns
+        for row in range(row_count):
+            for col in range(first_column_to_clear, column_count):
+                # Remove item from this cell
+                table.setItem(row, col, None)
+
+        # Reset these UI fields
+        self.ui.doubleSpinBox_volume.setValue(0.0)
+        self.ui.spinBox_waste.setValue(0)
+
+        self.logger.debug(
+            f"Cleared last two columns of table -> {table}, columns {first_column_to_clear} and {first_column_to_clear + 1}")
 
     def handle_TrialMix_regular_concrete_requested_MainWindow(self):
         """Emit a signal to go to the RegularConcrete widget."""
@@ -456,6 +581,8 @@ class TrialMix(QWidget):
         - Convert the value from the first column (assumed to be in kg) to grams by multiplying by 1000.
         - Convert the value from the second column (assumed to be in Liters) to milliliters by multiplying by 1000.
         - Update the third (index 2) and fourth (index 3) columns with these converted values.
+
+        At the end, it sends a signal to enable the test mix adjustments if the test mix volume is non-zero.
         """
 
         # ------------------------
@@ -466,7 +593,7 @@ class TrialMix(QWidget):
         table = self.ui.tableWidget
         row_count = table.rowCount()
 
-        # Get the primary factor from the volume specified by th user
+        # Get the primary factor from the volume specified by the user
         factor = self.ui.doubleSpinBox_volume.value()
 
         # Check if waste adjustment is active, and get the additional factor if so
@@ -599,4 +726,20 @@ class TrialMix(QWidget):
             table2.setItem(row, 2, item_new_1)
             table2.setItem(row, 3, item_new_2)
 
+        # Enable test mix adjustments if the test mix volume is non-zero
+        self.adjust_mix_dialog_enabled.emit(factor)
+
+        # Save the volume of the test mixture and the percentage of waste (as factors) in the data model
+        self.data_model.update_design_data('trial_mix_volume', factor)
+        self.data_model.update_design_data('trial_mix_waste', waste)
+
         self.logger.info("The proportioning process has been done successfully")
+
+    def handle_adjust_admixtures_action_enabled(self):
+        """Emit a signal to enable the admixture adjustment action."""
+
+        wra_is_enabled = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
+        aea_is_enabled = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
+
+        if wra_is_enabled or aea_is_enabled:
+            self.adjust_admixtures_action_enabled.emit()
