@@ -124,6 +124,9 @@
    </property>
   </action>
   <action name="action_report">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Imprimir Reporte</string>
    </property>

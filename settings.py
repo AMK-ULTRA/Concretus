@@ -22,9 +22,8 @@ REPORTS_DIR = BASE_DIR / "reports"  # Reports directory
 GUI_DIR = BASE_DIR / "gui"  # Graphical interface files directory
 TESTS_DIR = BASE_DIR / "tests"  # Tests directory
 STYLE_PATH = ASSETS_DIR / "styles" # Style directory
-
-# Visual media files path
-IMAGES_DIR = BASE_DIR / "assets" / "images"
+IMAGES_DIR = BASE_DIR / "assets" / "images" # Visual media files path
+FILES_DIR = BASE_DIR / "assets" / "files" # Files directory
 
 # Icons
 ICON_LOGO = IMAGES_DIR / "logo.ico"
@@ -45,6 +44,9 @@ ICON_ABOUT = IMAGES_DIR / "about.png"
 # Images
 IMAGE_PYQT_LOGO = IMAGES_DIR / "pyqt_logo.png"
 IMAGE_LOGO = IMAGES_DIR / "logo.png"
+
+# User manual
+USER_MANUAL = FILES_DIR / "Manual de Usuario.pdf"
 
 # Styles
 VALID_STYLE = STYLE_PATH / "valid.css"

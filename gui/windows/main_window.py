@@ -1,6 +1,7 @@
+import shutil
 from functools import partial
 
-from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget, QLabel
+from PyQt6.QtWidgets import QMainWindow, QMessageBox, QDialog, QStackedWidget, QLabel, QFileDialog
 from PyQt6.QtGui import QActionGroup, QIcon
 
 from gui.ui.ui_main_window import Ui_MainWindow
@@ -19,7 +20,7 @@ from core.regular_concrete.plots.grading_curve_plot_dialog import PlotDialog
 from logger import Logger
 from settings import (ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, ICON_RESTART,
                       ICON_HELP_MANUAL, ICON_ADJUST_TRIAL_MIX, ICON_REGULAR_CONCRETE, ICON_ADJUST_MATERIALS,
-                      ICON_ADJUST_ADMIXTURES, ICON_GET_BACK_DESIGN)
+                      ICON_ADJUST_ADMIXTURES, ICON_GET_BACK_DESIGN, USER_MANUAL)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -92,6 +93,7 @@ class MainWindow(QMainWindow):
         self.ui.action_report.triggered.connect(self.handle_action_report_triggered)
         self.ui.action_about.triggered.connect(self.handle_action_about_triggered)
         self.ui.action_adjust_materials.triggered.connect(self.handle_action_adjust_materials_triggered)
+        self.ui.action_manual.triggered.connect(self.handle_action_manual_triggered)
 
         # Set the Regular Concrete widget as the current widget
         self.ui.action_adjust_admixtures.triggered.connect(self.handle_action_adjust_admixtures_triggered)
@@ -352,6 +354,41 @@ class MainWindow(QMainWindow):
 
         about_dialog = AboutDialog(self)
         about_dialog.exec()
+
+    def handle_action_manual_triggered(self):
+        """Allow the user to save a copy of the user manual in PDF format"""
+
+        self.logger.info('The user manual has been selected')
+
+        try:
+            # Verify that the manual exists
+            if not USER_MANUAL.exists():
+                QMessageBox.critical(self, "Error", "No se pudo encontrar el manual de usuario.")
+                return
+
+            # Open dialog to select where to save the file
+            destination_path, _ = QFileDialog.getSaveFileName(
+                self,
+                "Guardar Manual de Usuario",
+                "Manual de Usuario - Concretus.pdf",
+                "Archivos PDF (*.pdf)"
+            )
+
+            # If the user cancels the dialog, destination_path will be an empty string
+            if destination_path:
+                # Force .pdf extension
+                if not destination_path.lower().endswith('.pdf'):
+                    destination_path += '.pdf'
+
+                # Copy the PDF file to the selected location
+                shutil.copy(str(USER_MANUAL), destination_path)
+                QMessageBox.information(
+                    self,
+                    "Éxito",
+                    f"El Manual de Usuario se guardó correctamente en:\n{destination_path}"
+                )
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo guardar el manual: {str(e)}")
 
     def handle_action_adjust_materials_triggered(self):
         """Launch the Adjust Trial Mix dialog."""

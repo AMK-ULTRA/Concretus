@@ -51,6 +51,7 @@ class Ui_MainWindow(object):
         self.action_config = QtGui.QAction(parent=MainWindow)
         self.action_config.setObjectName("action_config")
         self.action_report = QtGui.QAction(parent=MainWindow)
+        self.action_report.setEnabled(False)
         self.action_report.setObjectName("action_report")
         self.action_quit = QtGui.QAction(parent=MainWindow)
         self.action_quit.setObjectName("action_quit")
