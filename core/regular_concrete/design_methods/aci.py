@@ -64,6 +64,7 @@ class CementitiousMaterial:
         if wra_checked and wra_action_water_reducer:
             water_correction_wra = self.aci_data_model.get_data('water.water_content.wra_correction')
             water_content = water_content + (-water_correction_wra)
+            self.aci_data_model.update_data('water.water_content.without_wra_correction', water_content)
 
         # Calculate the total cementitious content from water content and w/cm ratio
         initial_cementitious_content = water_content / w_cm
@@ -77,6 +78,7 @@ class CementitiousMaterial:
         # Store intermediate values in the data model
         self.aci_data_model.update_data('cementitious_material.base_content', initial_cementitious_content)
         self.aci_data_model.update_data('cementitious_material.min_content', min_cementitious_content)
+        self.aci_data_model.update_data('cementitious_material.final_content', cementitious_content_final)
 
         # If SCM is used, calculate SCM content and cement content separately
         if scm_checked and scm_percentage is not None:
@@ -620,8 +622,10 @@ class AbramsLaw:
         # Store intermediate calculation results in the ACI data model for reference
         self.aci_data_model.update_data('water_cementitious_materials_ratio.w_cm_by_strength', w_cm_by_strength)
         self.aci_data_model.update_data('water_cementitious_materials_ratio.w_cm_by_durability', w_cm_by_durability)
+        self.aci_data_model.update_data('water_cementitious_materials_ratio.w_cm_previous', min(w_cm_by_strength, w_cm_by_durability))
 
         # Return the more restrictive (lower) w/cm ratio to satisfy both strength and durability
+        # This could change later if a minimum cementitious material content is selected
         return min(w_cm_by_strength, w_cm_by_durability)
 
 @dataclass

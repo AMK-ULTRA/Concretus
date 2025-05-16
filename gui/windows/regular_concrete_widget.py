@@ -118,6 +118,8 @@ class RegularConcrete(QWidget):
             lambda checked: self.handle_retained_column_toggled(self.ui.tableWidget_fine, checked))
         self.ui.radioButton_coarse_retained.toggled.connect(
             lambda checked: self.handle_retained_column_toggled(self.ui.tableWidget_coarse, checked))
+        # Clear the entrained air value when this option is not checked by the user
+        self.ui.groupBox_air.clicked.connect(self.handle_groupBox_air_clicked)
 
     def set_index(self, index):
         """
@@ -470,6 +472,25 @@ class RegularConcrete(QWidget):
         elif method == "DoE":
             self.ui.doubleSpinBox_std_dev_value.setMaximum(10 if self.data_model.units == 'SI' else 100)
 
+        # Clean the slump value if the method in use is not "MCE"
+        if method != "MCE":
+            self.ui.spinBox_slump_value.setMinimum(0)
+            self.ui.spinBox_slump_value.setValue(0)
+            self.ui.spinBox_slump_value.clear()
+        elif method == "MCE":
+            self.ui.spinBox_slump_value.setMinimum(25)
+
+        # Clean the default value for air entrained if the method in use is not "MCE"
+        if method != "MCE":
+            self.ui.doubleSpinBox_user_defined.setMinimum(3.5)
+            self.ui.doubleSpinBox_user_defined.setMaximum(10.0)
+            self.ui.doubleSpinBox_user_defined.setValue(3.5)
+        elif method == "MCE":
+            self.ui.doubleSpinBox_user_defined.setMinimum(0.0)
+            self.ui.doubleSpinBox_user_defined.setValue(0.0)
+            self.ui.doubleSpinBox_user_defined.clear()
+
+
         # A dictionary to map all method configurations
         method_config = {
             "MCE": {
@@ -494,7 +515,7 @@ class RegularConcrete(QWidget):
                 "qual_control_enabled": True,
                 "margin_enabled": False,
                 "cement_types": ("Tipo I", "Tipo II", "Tipo III", "Tipo IV", "Tipo V"),
-                "cement_class_enabled": False,
+                "cement_class": (),
                 "cement_relative_density": 3.33,
                 "scm_enabled": False,
                 "scm_types": None,
@@ -529,7 +550,7 @@ class RegularConcrete(QWidget):
                 "margin_enabled": False,
                 "cement_types": ("Tipo I", "Tipo IA", "Tipo II", "Tipo IIA",
                                  "Tipo III", "Tipo IIIA", "Tipo IV", "Tipo V"),
-                "cement_class_enabled": False,
+                "cement_class": (),
                 "cement_relative_density": 3.15,
                 "scm_enabled": True,
                 "scm_types": ("Cenizas volantes", "Cemento de escoria", "Humo de sílice"),
@@ -564,7 +585,8 @@ class RegularConcrete(QWidget):
                 "margin_enabled": True,
                 "cement_types": ("CEM I", "CEM I (SR)", "CEM II", "CEM III", "CEM III (SR)", "CEM IV", "CEM IV (SR)",
                                  "CEM V"),
-                "cement_class_enabled": True,
+                "cement_class": ("42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]",
+                                 "52.5 [Cemento portland de endurecimiento rápido]"),
                 "cement_relative_density": 3.15,
                 "scm_enabled": True,
                 "scm_types": ["Cenizas volantes"],
@@ -610,8 +632,7 @@ class RegularConcrete(QWidget):
             self.ui.spinBox_margin.setEnabled(config["margin_enabled"])
             self.ui.comboBox_cement_type.clear()
             self.ui.comboBox_cement_type.addItems(config["cement_types"])
-            self.ui.label_cement_class.setEnabled(config["cement_class_enabled"])
-            self.ui.comboBox_cement_class.setEnabled(config["cement_class_enabled"])
+            self.ui.comboBox_cement_class.addItems(config["cement_class"])
             self.ui.doubleSpinBox_cement_relative_density.setValue(config["cement_relative_density"])
             self.ui.groupBox_SCM.setEnabled(config["scm_enabled"])
             if config["scm_enabled"]:
@@ -687,3 +708,14 @@ class RegularConcrete(QWidget):
                 if not retained_enabled
                 else item_retained.flags() | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
             )
+
+    def handle_groupBox_air_clicked(self):
+        """Clear the entrained air value when this option is not checked by the user"""
+
+        is_checked = self.ui.groupBox_air.isChecked()
+        if not is_checked:
+            self.ui.doubleSpinBox_user_defined.setMinimum(0.0)
+            self.ui.doubleSpinBox_user_defined.setValue(0.0)
+            self.ui.doubleSpinBox_user_defined.clear()
+        else:
+            self.ui.doubleSpinBox_user_defined.setMinimum(3.5)

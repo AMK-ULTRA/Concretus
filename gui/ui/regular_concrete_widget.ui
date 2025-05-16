@@ -343,7 +343,7 @@
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButton_user_defined">
             <property name="text">
-             <string>Definido por el usuario (%)</string>
+             <string>Contenido de aire objetivo (%)</string>
             </property>
            </widget>
           </item>
@@ -352,21 +352,18 @@
             <property name="decimals">
              <number>1</number>
             </property>
-            <property name="minimum">
-             <double>3.500000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QRadioButton" name="radioButton_exposure_defined">
             <property name="text">
-             <string>Estimado debido a la exposición</string>
+             <string>Contenido de aire estimado según exposición</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -709,87 +706,82 @@
      <widget class="QWidget" name="cementitious_materials">
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,1">
        <item>
-        <layout class="QFormLayout" name="formLayout_cement">
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_cement_type">
-           <property name="text">
-            <string>Tipo de cemento</string>
-           </property>
-           <property name="buddy">
-            <cstring>comboBox_cement_type</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QComboBox" name="comboBox_cement_type"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_cement_class">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Clase de resistencia</string>
-           </property>
-           <property name="buddy">
-            <cstring>comboBox_cement_class</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="comboBox_cement_class">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <item>
+        <widget class="QGroupBox" name="groupBox_cement">
+         <property name="title">
+          <string>Cemento Portland</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_9">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_cement_seller">
             <property name="text">
-             <string>42.5 [Cemento ordinario (CEM 1) o resistente a los sulfatos (SRPC)]</string>
+             <string>Marca</string>
             </property>
-           </item>
-           <item>
+            <property name="buddy">
+             <cstring>lineEdit_cement_seller</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="lineEdit_cement_seller"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_cement_type">
             <property name="text">
-             <string>52.5 [Cemento portland de endurecimiento rápido]</string>
+             <string>Tipo</string>
             </property>
-           </item>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_cement_relative_density">
-           <property name="text">
-            <string>Densidad relativa</string>
-           </property>
-           <property name="buddy">
-            <cstring>doubleSpinBox_cement_relative_density</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_cement_relative_density">
-           <property name="maximum">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.010000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_cement_seller">
-           <property name="text">
-            <string>Marca de cemento</string>
-           </property>
-           <property name="buddy">
-            <cstring>lineEdit_cement_seller</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit_cement_seller"/>
-         </item>
-        </layout>
+            <property name="buddy">
+             <cstring>comboBox_cement_type</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBox_cement_type"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_cement_class">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Clase de resistencia</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboBox_cement_class</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboBox_cement_class">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_cement_relative_density">
+            <property name="text">
+             <string>Densidad relativa</string>
+            </property>
+            <property name="buddy">
+             <cstring>doubleSpinBox_cement_relative_density</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_cement_relative_density">
+            <property name="maximum">
+             <double>100.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_SCM">
@@ -803,7 +795,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Material cementante suplementario (SCM)</string>
+          <string>Material cementante suplementario</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1584,7 +1576,7 @@
        <item>
         <widget class="QGroupBox" name="groupBox_WRA">
          <property name="title">
-          <string>Reductores de agua</string>
+          <string>Reductor de agua</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1627,6 +1619,9 @@
            <layout class="QFormLayout" name="formLayout_5">
             <item row="0" column="0">
              <widget class="QLabel" name="label_WRA_type">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;De acuerdo con la norma ASTM C494.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Tipo</string>
               </property>
@@ -1764,7 +1759,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Incorporadores de aire</string>
+          <string>Incorporador de aire</string>
          </property>
          <property name="checkable">
           <bool>true</bool>

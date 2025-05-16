@@ -12,7 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_ConversionDialog(object):
     def setupUi(self, ConversionDialog):
         ConversionDialog.setObjectName("ConversionDialog")
-        ConversionDialog.resize(360, 240)
+        ConversionDialog.resize(360, 230)
+        ConversionDialog.setMinimumSize(QtCore.QSize(360, 230))
+        ConversionDialog.setMaximumSize(QtCore.QSize(360, 230))
         ConversionDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         ConversionDialog.setSizeGripEnabled(False)
         self.verticalLayout = QtWidgets.QVBoxLayout(ConversionDialog)
@@ -96,6 +98,6 @@ class Ui_ConversionDialog(object):
         self.radioButton_2.setText(_translate("ConversionDialog", "ml (o cm³) / kg de cemento (o material cementante)"))
         self.label_dosage.setText(_translate("ConversionDialog", "Dosis (ml o cm³)"))
         self.label_dosage_relative_density.setText(_translate("ConversionDialog", "Densidad relativa"))
-        self.label_bag_weight.setText(_translate("ConversionDialog", "Peso del saco (kg)"))
+        self.label_bag_weight.setText(_translate("ConversionDialog", "Peso del saco (kgf)"))
         self.pushButton_convert.setText(_translate("ConversionDialog", "Convetir"))
         self.pushButton_cancel.setText(_translate("ConversionDialog", "Cancelar"))

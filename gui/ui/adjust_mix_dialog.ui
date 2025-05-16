@@ -273,7 +273,7 @@
          <item>
           <widget class="QRadioButton" name="radioButton_keep_corase_agg">
            <property name="text">
-            <string>Mantener proporción de agreagado grueso</string>
+            <string>Mantener proporción de agregado grueso</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -283,7 +283,7 @@
          <item>
           <widget class="QRadioButton" name="radioButton_keep_fine_agg">
            <property name="text">
-            <string>Mantener proporción de agreagado fino</string>
+            <string>Mantener proporción de agregado fino</string>
            </property>
           </widget>
          </item>
@@ -320,7 +320,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_cementitious_used">
              <property name="text">
-              <string>Nueva cantidad (kg)</string>
+              <string>Nueva cantidad (kgf)</string>
              </property>
              <property name="buddy">
               <cstring>doubleSpinBox_cementitious_used</cstring>
@@ -381,7 +381,7 @@
          <item>
           <widget class="QRadioButton" name="radioButton_keep_corase_agg_2">
            <property name="text">
-            <string>Mantener proporción de agreagado grueso</string>
+            <string>Mantener proporción de agregado grueso</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -391,7 +391,7 @@
          <item>
           <widget class="QRadioButton" name="radioButton_keep_fine_agg_2">
            <property name="text">
-            <string>Mantener proporción de agreagado fino</string>
+            <string>Mantener proporción de agregado fino</string>
            </property>
           </widget>
          </item>

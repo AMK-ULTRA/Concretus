@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>360</width>
-    <height>240</height>
+    <height>230</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>360</width>
+    <height>230</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>360</width>
+    <height>230</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Conversión</string>
@@ -106,7 +118,7 @@
         <locale language="Spanish" country="Venezuela"/>
        </property>
        <property name="text">
-        <string>Peso del saco (kg)</string>
+        <string>Peso del saco (kgf)</string>
        </property>
        <property name="buddy">
         <cstring>doubleSpinBox_bag_weight</cstring>

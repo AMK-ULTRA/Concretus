@@ -13,6 +13,7 @@ class Ui_ConfigDialog(object):
     def setupUi(self, ConfigDialog):
         ConfigDialog.setObjectName("ConfigDialog")
         ConfigDialog.resize(300, 144)
+        ConfigDialog.setMinimumSize(QtCore.QSize(300, 144))
         ConfigDialog.setMaximumSize(QtCore.QSize(300, 144))
         ConfigDialog.setAutoFillBackground(False)
         ConfigDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))

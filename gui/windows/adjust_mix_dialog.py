@@ -47,6 +47,9 @@ class AdjustTrialMixDialog(QDialog):
         # Set up local signal/slot connections
         self.setup_connections()
 
+        # Perform a unit system update
+        self.handle_AdjustTrialMixDialog_units_changed(self.data_model.units)
+
         # Initialization complete
         self.logger.info('Adjust trial mix dialog initialized')
 
@@ -274,8 +277,7 @@ class AdjustTrialMixDialog(QDialog):
         trial_mix_waste = dm.get_design_value('trial_mix_waste')
 
         # Calculate water adjustment
-        water_added_l = water_added_liters # convert water added from L to kg
-        water_added_kg = water_added_l * water_density  # convert m³ to kg
+        water_added_kg = water_added_liters * water_density  # convert water added from L to kg
 
         # Scale up the added water to account for the trial mix volume and waste
         water_added_scaled = water_added_kg / (trial_mix_volume * trial_mix_waste)
@@ -313,6 +315,16 @@ class AdjustTrialMixDialog(QDialog):
 
         # Store adjustment results and capture the success status
         stored_successfully = self._store_adjustment_results(mix_proportions)
+        if stored_successfully:
+            # Record the adjustments made
+            adjustments_made = {
+                "water_used": water_added_scaled / water_density,
+                "air_measured": air_percentage,
+                "w_cm": new_w_cm,
+                "keep_coarse_agg": keep_coarse_prop,
+                "keep_fine_agg": not keep_coarse_prop,
+            }
+            self._record_adjustments_made("water", adjustments_made)
 
         return stored_successfully
 
@@ -378,6 +390,16 @@ class AdjustTrialMixDialog(QDialog):
 
         # Store adjustment results and capture the success status
         stored_successfully = self._store_adjustment_results(mix_proportions)
+        if stored_successfully:
+            # Record the adjustments made
+            adjustments_made = {
+                "cementitious_used": new_cementitious_content_scaled,
+                "air_measured": air_percentage,
+                "w_cm": new_w_cm,
+                "keep_coarse_agg": keep_coarse_prop,
+                "keep_fine_agg": not keep_coarse_prop,
+            }
+            self._record_adjustments_made("cementitious_material", adjustments_made)
 
         return stored_successfully
 
@@ -464,6 +486,13 @@ class AdjustTrialMixDialog(QDialog):
         # Update all values at once
         for key, value in update_items.items():
             dm.update_design_data(key, value)
+
+        # Record the adjustments made
+        adjustments_made = {
+            "new_coarse_proportion": coarse_pct,
+            "new_fine_proportion": fine_pct,
+        }
+        self._record_adjustments_made("aggregate_proportion", adjustments_made)
 
         return True
 
@@ -691,6 +720,7 @@ class AdjustTrialMixDialog(QDialog):
         try:
             # Check if air is entrained or entrapped
             entrained_air_flag = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
+            scm_flag = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
 
             # Get necessary values from mix_proportions with safer dictionary access
             abs_volumes = mix_proportions.get('abs_volumes', {})
@@ -706,11 +736,10 @@ class AdjustTrialMixDialog(QDialog):
                 ('trial_mix.adjustments.water.water_abs_volume', abs_volumes.get('water_abs_volume')),
                 ('trial_mix.adjustments.cementitious_material.cement.cement_abs_volume',
                  abs_volumes.get('cement_abs_volume')),
-                ('trial_mix.adjustments.cementitious_material.scm.scm_abs_volume', abs_volumes.get('scm_abs_volume')),
+                ('trial_mix.adjustments.cementitious_material.scm.scm_abs_volume',
+                 abs_volumes.get('scm_abs_volume') if scm_flag else None),
                 ('trial_mix.adjustments.fine_aggregate.fine_abs_volume', abs_volumes.get('fine_abs_volume')),
                 ('trial_mix.adjustments.coarse_aggregate.coarse_abs_volume', abs_volumes.get('coarse_abs_volume')),
-
-                # Air content handling based on entrained_air_flag
                 ('trial_mix.adjustments.air.entrapped_air_content',
                  abs_volumes.get('air_volume') if not entrained_air_flag else None),
                 ('trial_mix.adjustments.air.entrained_air_content',
@@ -720,7 +749,8 @@ class AdjustTrialMixDialog(QDialog):
                 # Contents
                 ('trial_mix.adjustments.water.water_content_correction', contents.get('water_content_correction')),
                 ('trial_mix.adjustments.cementitious_material.cement.cement_content', contents.get('cement_content')),
-                ('trial_mix.adjustments.cementitious_material.scm.scm_content', contents.get('scm_content')),
+                ('trial_mix.adjustments.cementitious_material.scm.scm_content',
+                 contents.get('scm_content') if scm_flag else None),
                 ('trial_mix.adjustments.fine_aggregate.fine_content_ssd', contents.get('fine_content_ssd')),
                 ('trial_mix.adjustments.fine_aggregate.fine_content_wet', contents.get('fine_content_wet')),
                 ('trial_mix.adjustments.coarse_aggregate.coarse_content_ssd', contents.get('coarse_content_ssd')),
@@ -760,6 +790,57 @@ class AdjustTrialMixDialog(QDialog):
         except Exception as e:
             self.logger.error(f"Failed to store adjustment results: {str(e)}")
             return False
+
+    def _record_adjustments_made(self, adjust_type, adjustments):
+        """
+        Record all the trial-mix adjustments made by the user into the data model.
+        Previous values are preserved by storing them as a list along with the new value.
+
+        :param str adjust_type: Category of adjustment (e.g. "water", "cementitious_material", "aggregate_proportion").
+        :param dict[str, any] adjustments: A mapping of field names to values. Values set to None will be skipped.
+        """
+
+        # Validate inputs
+        valid_types = {
+            "water",
+            "cementitious_material",
+            "aggregate_proportion"
+        }
+        if adjust_type not in valid_types:
+            raise ValueError(
+                f"Invalid adjust_type {adjust_type!r}; "
+                f"must be one of {sorted(valid_types)}"
+            )
+
+        if not isinstance(adjustments, dict):
+            raise ValueError("Adjustments must be store in a dict-like mapping of field names to values")
+
+        # Write each non-None value into the data model
+        base_path = "adjustments_trial_mix"
+        for field_name, value in adjustments.items():
+            if value is None:
+                # Skip placeholders or missing values
+                continue
+
+            # Build the full key path
+            key_path = f"{base_path}.{adjust_type}.{field_name}"
+
+            # Get previous value from the data model
+            previous_value = self.data_model.get_design_value(key_path)
+
+            # Prepare the new value to store
+            if previous_value is None:
+                # If no previous value exists, start a new list with the current value
+                new_value = [value]
+            elif isinstance(previous_value, list):
+                # If previous value is already a list, append the new value
+                new_value = previous_value + [value]
+            else:
+                # If previous value exists but is not a list, convert to list with both values
+                new_value = [previous_value, value]
+
+            # Record the updated list to the data model
+            self.data_model.update_design_data(key_path, new_value)
 
     def handle_groupBoxes_toggled(self, toggled_box, checked):
         """
@@ -891,3 +972,23 @@ class AdjustTrialMixDialog(QDialog):
                 "Verifique los valores ingresados y vuelva a intentar el ajuste."
             )
             self.logger.info("An error occurred, adjustments were not applied successfully. Try again")
+
+    def handle_AdjustTrialMixDialog_units_changed(self, units):
+        """
+        Update fields that depend on the selected unit system.
+
+        :param str units: The system of units to update the fields.
+        """
+
+        # Initialize the variables
+        unit_suffix = None
+
+        if units == 'SI':
+            unit_suffix = 'kg'
+        elif units == 'MKS':
+            unit_suffix = 'kgf'
+
+        # Update the labels
+        self.ui.label_cementitious_used.setText(f"Nueva cantidad ({unit_suffix})")
+
+        self.logger.info(f'A complete update of the unit system to {units} has been made')

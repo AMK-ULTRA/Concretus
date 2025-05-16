@@ -14,7 +14,7 @@ class ACIDataModel:
         # Initialization complete
         self.logger.info("Data model for ACI method initialized")
 
-    # -------------------------------------------- Design MCE data --------------------------------------------
+    # -------------------------------------------- Design ACI data --------------------------------------------
     @staticmethod
     def create_empty_aci_data():
         """Create the empty design data for ACI method."""
@@ -23,6 +23,7 @@ class ACIDataModel:
             'cementitious_material': {
                 'base_content': None,
                 'min_content': None,
+                'final_content': None,
                 'cement': {
                     'cement_content': None,
                     'cement_abs_volume': None,
@@ -41,6 +42,7 @@ class ACIDataModel:
                     'fine_aggregate_correction': None,
                     'scm_correction': None,
                     'wra_correction': None,
+                    'without_wra_correction': None,
                     'final_content': None
                 },
                 'water_content_correction': None,
@@ -77,6 +79,7 @@ class ACIDataModel:
             },
             'water_cementitious_materials_ratio': {
                 'w_cm': None,
+                'w_cm_previous': None,
                 'w_cm_by_strength': None,
                 'w_cm_by_durability': None
             },

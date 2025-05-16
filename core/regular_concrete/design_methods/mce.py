@@ -52,7 +52,7 @@ class Cement(CementitiousMaterial):
         If a WRA is used as a cement economizer, there will be a reduction in the cement content according to
         the effectiveness of the admixture. For this purpose, a fictitious alpha (water-cement ratio) is used.
 
-        If a WRA is used as a pure water reducer, the actual water-cement ratio (reduced alpha) will be lower.
+        If a WRA is used as a pure water reducer, the actual water-cement ratio will be lower (reduced alpha).
         However, for cement content calculations within this scope, the original water-cement ratio (original alpha),
         unaffected by the WRA, is used. To obtain original alpha, divide reduced alpha by (1−WRA_effectiveness).
 
@@ -84,11 +84,14 @@ class Cement(CementitiousMaterial):
         # Use a fictitious alpha if a WRA is used as a cement economizer
         if wra_checked and wra_action_cement_economizer:
             alpha = alpha / (1 - effectiveness / 100)
-            self.mce_data_model.update_data('cementitious_material.cement.fictitious_alpha', alpha)
+            self.mce_data_model.update_data(
+                'cementitious_material.cement.fictitious_alpha_wra_action_cement_economizer', alpha)
 
         # Use the original alpha if a WRA is used as a pure water reducer
         elif wra_checked and wra_action_water_reducer:
             alpha = alpha / (1 - effectiveness / 100)
+            self.mce_data_model.update_data('cementitious_material.cement.fictitious_alpha_wra_action_water_reducer',
+                                            alpha)
 
         if theta is None or theta <= 0:
             # Calculate the design cement content
@@ -569,7 +572,7 @@ class Beta:
     mce_data_model: MCEDataModel = field(init=False, repr=False)
 
     @staticmethod
-    def remove_unused_sieves(coarse_grading, fine_grading):
+    def _remove_unused_sieves(coarse_grading, fine_grading):
         """
         Remove keys with a None value from both coarse_grading and fine_grading.
         If a key has a None value in either dictionary, it will be removed from both.
@@ -627,7 +630,7 @@ class Beta:
             raise ValueError(error_msg)
 
         # Clean any unused sieves from the grading
-        coarse_grading, fine_grading = self.remove_unused_sieves(coarse_data, fine_data)
+        coarse_grading, fine_grading = self._remove_unused_sieves(coarse_data, fine_data)
 
         beta_mins = []
         beta_maxs = []

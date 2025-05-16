@@ -16,6 +16,9 @@ from gui.windows.trial_mix_widget import TrialMix
 from gui.windows.adjust_mix_dialog import AdjustTrialMixDialog
 from gui.windows.about_dialog import AboutDialog
 from gui.windows.config_dialog import ConfigDialog
+from gui.windows.report_dialog import ReportDialog
+from reports.report_data_model import MCEReportModel, DOEReportModel, ACIReportModel
+from reports.pdf_report_generator import PDFReportGenerator
 from core.regular_concrete.plots.grading_curve_plot_dialog import PlotDialog
 from logger import Logger
 from settings import (ICON_SETTINGS, ICON_PRINT, ICON_EXIT, ICON_ABOUT, ICON_CHECK_DESIGN, ICON_TRIAL_MIX, ICON_RESTART,
@@ -205,6 +208,7 @@ class MainWindow(QMainWindow):
         self.ui.action_trial_mix.setEnabled(False)
         self.ui.menu_adjust_trial_mix.setEnabled(False)
         self.ui.action_get_back_design.setEnabled(False)
+        self.ui.action_report.setEnabled(False)
 
     def _handle_step_2_actions(self):
         """Configure the actions for step 2."""
@@ -293,6 +297,7 @@ class MainWindow(QMainWindow):
 
         self.ui.menu_adjust_trial_mix.setEnabled(True)
         self.ui.action_get_back_design.setEnabled(True)
+        self.ui.action_report.setEnabled(True)
 
     def handle_MainWindow_units_changed(self, new_units):
         """
@@ -346,6 +351,63 @@ class MainWindow(QMainWindow):
         """Launch the Report dialog."""
 
         self.logger.info('The report dialog has been selected')
+
+        report_dialog = ReportDialog(self)
+        if report_dialog.exec() == QDialog.DialogCode.Accepted:
+
+            # Prompt the user where to save the file
+            file_name, _ = QFileDialog.getSaveFileName(self, "Guardar Reporte", "", "PDF Files (*.pdf)")
+
+            if not file_name:
+                return  # The user canceled the operation
+
+            # Make sure the file has a .pdf extension
+            if not file_name.endswith('.pdf'):
+                file_name += '.pdf'
+
+            # Get the type of report the number of decimal places to use
+            report_type, decimals = report_dialog.get_options()
+
+            # Generate all the data for the report
+            if self.data_model.method == "MCE":
+                data_model_report = MCEReportModel(self.data_model, self.mce_data_model, self.aci_data_model,
+                                            self.doe_data_model)
+            elif self.data_model.method == "ACI":
+                data_model_report = ACIReportModel(self.data_model, self.mce_data_model, self.aci_data_model,
+                                            self.doe_data_model)
+            elif self.data_model.method == "DoE":
+                data_model_report = DOEReportModel(self.data_model, self.mce_data_model, self.aci_data_model,
+                                            self.doe_data_model)
+            else:
+                self.logger.warning(f"The current method ({self.data_model.method}) is not valid")
+                return
+
+            # Create the report generator
+            pdf_generator = PDFReportGenerator(
+                file_name,
+                data_model_report,
+                self.data_model.method,
+                report_type,
+                decimals
+            )
+
+            # Generate the report
+            try:
+                pdf_generator.generate()
+                self.logger.info(f"Report generated successfully: {file_name}")
+                QMessageBox.information(
+                    self,
+                    "Reporte Generado",
+                    "La generación del reporte se completó sin problemas."
+                )
+            except Exception as e:
+                self.logger.error(f"Error generating report: {e}")
+                QMessageBox.warning(
+                    self,
+                    "Error al Generar Reporte",
+                    "Ocurrió un error al generar el reporte. "
+                    "Por favor, inténtelo de nuevo o revise los datos ingresados."
+                )
 
     def handle_action_about_triggered(self):
         """Launch the About dialog."""

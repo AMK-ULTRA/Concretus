@@ -280,6 +280,26 @@ class RegularConcreteDataModel(QObject):
                 'trial_mix_volume': None,
                 'trial_mix_waste': None
             },
+            'adjustments_trial_mix': {
+                "water": {
+                    "water_used": None,
+                    "air_measured": None,
+                    "w_cm": None,
+                    "keep_coarse_agg": None,
+                    "keep_fine_agg": None,
+                },
+                "cementitious_material": {
+                    "cementitious_used": None,
+                    "air_measured": None,
+                    "w_cm": None,
+                    "keep_coarse_agg": None,
+                    "keep_fine_agg": None,
+                },
+                "aggregate_proportion": {
+                    "new_coarse_proportion": None,
+                    "new_fine_proportion": None,
+                },
+            }
         }
 
     def update_design_data(self, key_path, value):

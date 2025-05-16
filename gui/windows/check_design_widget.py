@@ -196,6 +196,9 @@ class CheckDesign(QWidget):
         coarse_compacted_bulk_density = self.data_model.get_design_value('coarse_aggregate.physical_prop.PUC')
         entrained_air = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
         entrained_air_exposure_defined = self.data_model.get_design_value('field_requirements.entrained_air_content.exposure_defined')
+        std_dev_known = self.data_model.get_design_value('field_requirements.strength.std_dev_known.std_dev_known_enabled')
+        std_dev_value = self.data_model.get_design_value('field_requirements.strength.std_dev_known.std_dev_value')
+        doe_margin = self.data_model.get_design_value('field_requirements.strength.std_dev_unknown.margin')
         aea_checked = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
         aea_relative_density = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_relative_density')
         aea_dosage = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_dosage')
@@ -233,6 +236,12 @@ class CheckDesign(QWidget):
             warnings.append("La densidad relativa del aditivo reductor de agua no puede ser cero.")
         if aea_relative_density == 0 and aea_checked:
             warnings.append("La densidad relativa del aditivo incorporador de aire no puede ser cero.")
+
+        # Check standard deviation values
+        if std_dev_known and std_dev_value == 0.0:
+            warnings.append("La desviación estándar a usar no puede ser cero.")
+        if method == "DoE" and doe_margin == 0:
+            warnings.append("El margen de seguridad a usar no puede ser cero.")
 
         # Check bulk density with method-specific messages
         if fine_loose_bulk_density == 0:

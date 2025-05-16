@@ -21,6 +21,9 @@ class ConversionDialog(QDialog):
         # Save the admixture type
         self.admixture_type = admixture_type
 
+        # Perform a unit system update
+        self.handle_ConversionDialog_units_changed(self.data_model.units)
+
         # Initialization complete
         self.logger.info('Conversion dialog initialized')
 
@@ -80,3 +83,23 @@ class ConversionDialog(QDialog):
             self.logger.info('Conversion process for AEA completed successfully')
         else:
             self.logger.warning(f'Unsupported admixture type: {self.admixture_type}. No conversion performed')
+
+    def handle_ConversionDialog_units_changed(self, units):
+        """
+        Update fields that depend on the selected unit system.
+
+        :param str units: The system of units to update the fields.
+        """
+
+        # Initialize the variables
+        unit_suffix = None
+
+        if units == 'SI':
+            unit_suffix = 'kg'
+        elif units == 'MKS':
+            unit_suffix = 'kgf'
+
+        # Update the labels
+        self.ui.label_bag_weight.setText(f"Peso del saco ({unit_suffix})")
+
+        self.logger.info(f'A complete update of the unit system to {units} has been made')

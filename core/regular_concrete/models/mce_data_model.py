@@ -27,7 +27,8 @@ class MCEDataModel:
                     'correction_factor_2': None,
                     'corrected_cement_content': None,
                     'min_cement_content': None,
-                    'fictitious_alpha': None,
+                    'fictitious_alpha_wra_action_cement_economizer': None,
+                    'fictitious_alpha_wra_action_water_reducer': None,
                     'cement_content': None,
                     'cement_abs_volume': None,
                     'cement_volume': None

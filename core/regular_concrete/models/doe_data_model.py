@@ -14,7 +14,7 @@ class DOEDataModel:
         # Initialization complete
         self.logger.info("Data model for DoE method initialized")
 
-    # -------------------------------------------- Design MCE data --------------------------------------------
+    # -------------------------------------------- Design DoE data --------------------------------------------
     @staticmethod
     def create_empty_doe_data():
         """Create the empty design data for DoE method."""
