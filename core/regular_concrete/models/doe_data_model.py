@@ -23,25 +23,35 @@ class DOEDataModel:
             'cementitious_material': {
                 'base_content': None,
                 'min_content': None,
+                'final_content': None,
                 'cement': {
                     'cement_content': None,
+                    'cement_content_temp': None,
                     'cement_abs_volume': None,
+                    'cement_abs_volume_temp': None,
                     'cement_volume': None
                 },
                 'scm': {
                     'scm_content': None,
+                    'scm_content_temp': None,
                     'scm_abs_volume': None,
+                    'scm_abs_volume_temp': None,
                     'scm_volume': None,
                 }
             },
             'concrete': {
-                'wet_density': None
+                'wet_density': None,
+                'combined_relative_density': None,
+                'total_aggregate_content': None,
             },
             'water': {
                 'water_content': {
+                    'base_agg_fine': None,
+                    'base_agg_coarse': None,
                     'base': None,
                     'scm_correction': None,
                     'wra_correction': None,
+                    'without_wra_correction': None,
                     'final_content': None
                 },
                 'water_content_correction': None,
@@ -68,6 +78,8 @@ class DOEDataModel:
             'spec_strength': {
                 'target_strength': {
                     'target_strength_value': None,
+                    'std_dev_value_1': None,
+                    'std_dev_value_2': None,
                     'std_dev_used': None,
                     'z_value': None,
                     'margin': None
@@ -75,6 +87,7 @@ class DOEDataModel:
             },
             'water_cementitious_materials_ratio': {
                 'w_cm': None,
+                'w_cm_previous': None,
                 'w_cm_curve': None,
                 'w_cm_by_strength': None,
                 'w_cm_by_durability': None

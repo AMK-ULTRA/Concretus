@@ -855,7 +855,7 @@ class ACIReportModel(ReportDataModel):
             "3. Relación agua-material cementante (a/cm)": {
                 "Relación a/cm por resistencia": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_by_strength',
                 "Relación a/cm por durabilidad": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_by_durability',
-                "Relación a/cm utilizado": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm',
+                "Relación a/cm utilizado": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_previous',
             },
             "4. Contenido y volumen absoluto del material cementante": {
                 "Contenido ficticio de agua (Reductor de agua)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.without_wra_correction',
@@ -868,7 +868,7 @@ class ACIReportModel(ReportDataModel):
                 f"Volumen absoluto de {scm_type.lower()} (L)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_abs_volume',
             },
             "5. Revisión de la relación agua-material cementante (a/cm)": {
-                "Relación a/cm recalculada (real)": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_previous',
+                "Relación a/cm recalculada (real)": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm',
             },
             "6. Volumen de aire atrapado": {
                 "Volumen (absoluto) de aire atrapado (L)": ReportDataModel.KEY_PATH_MARKER + 'air.entrapped_air_content',
@@ -898,4 +898,366 @@ class ACIReportModel(ReportDataModel):
 
 class DOEReportModel(ReportDataModel):
     """Report model for the DoE method"""
-    pass
+
+    def __init__(self, data_model, mce_data_model, aci_data_model, doe_data_model):
+        super().__init__(data_model, mce_data_model, aci_data_model, doe_data_model)
+        # Stress units
+        if self.data_model.units == "MKS":
+            stress_units = "kgf/cm²"
+        elif self.data_model.units == "SI":
+            stress_units = "MPa"
+        else:
+            stress_units = None
+
+        # Type of air content in use
+        if self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked'):
+            air_type = "Aire incorporado"
+        else:
+            air_type = "Aire atrapado"
+
+        # SCM in use
+        is_scm_used = self.data_model.get_design_value('cementitious_materials.SCM.SCM_checked')
+        scm_type = self.data_model.get_design_value('cementitious_materials.SCM.SCM_type')
+
+        # Defines ACI-specific dictionaries
+        self._initialize_dictionaries(stress_units=stress_units, scm_type=scm_type)
+
+        # Conditionally delete keys
+        if not is_scm_used and scm_type in self.dosage_data:
+            del self.dosage_data[scm_type]
+        if not is_scm_used and scm_type in self.adjusted_dosage_data:
+            del self.adjusted_dosage_data[scm_type]
+        if not is_scm_used:
+            del self.calculation_details["5. Contenido y volumen absoluto del material cementante"][
+                f"Contenido utilizado de {scm_type.lower()} (kg)"]
+            del self.calculation_details["5. Contenido y volumen absoluto del material cementante"][
+                f"Volumen absoluto de {scm_type.lower()} (L)"]
+            del self.calculation_details["6. Revisión de la relación agua-material cementante (a/cm)"][
+                f"Contenido recalculado de {scm_type.lower()} (kg)"]
+            del self.calculation_details["6. Revisión de la relación agua-material cementante (a/cm)"][
+                f"Volumen absoluto recalculado de {scm_type.lower()} (L)"]
+        if air_type == "Aire incorporado" and "Aire atrapado" in self.dosage_data:
+            del self.dosage_data["Aire atrapado"]
+        if air_type == "Aire incorporado" and "Aire atrapado" in self.adjusted_dosage_data:
+            del self.adjusted_dosage_data["Aire atrapado"]
+        if air_type == "Aire incorporado" and "1. Volumen de aire atrapado" in self.calculation_details:
+            del self.calculation_details["1. Volumen de aire atrapado"]
+        if air_type == "Aire atrapado" and "Aire incorporado" in self.dosage_data:
+            del self.dosage_data["Aire incorporado"]
+        if air_type == "Aire atrapado" and "Aire incorporado" in self.adjusted_dosage_data:
+            del self.adjusted_dosage_data["Aire incorporado"]
+        if air_type == "Aire atrapado" and "1. Volumen de aire incorporado" in self.calculation_details:
+            del self.calculation_details["1. Volumen de aire incorporado"]
+
+        # Legacy common processing logic
+        self.process_data_values()
+
+    def _initialize_dictionaries(self, stress_units, scm_type=None):
+        """
+        Initializes all the data dictionaries with their key_paths or literal values.
+
+        :param str stress_units: Stress unit (e.g. "kgf/cm²" or "MPa") according to the unit system used.
+        :param str | None scm_type: Type of supplementary cementitious material used if any.
+        """
+
+        # Basic input data (method to access data -> self.data_model.get_design_value())
+        self.input_data = {
+            "Información general": {
+                "Nombre del proyecto": ReportDataModel.KEY_PATH_MARKER + 'general_info.project_name',
+                "Ubicación": ReportDataModel.KEY_PATH_MARKER + 'general_info.location',
+                "Solicitante": ReportDataModel.KEY_PATH_MARKER + 'general_info.purchaser',
+                "Fecha": ReportDataModel.KEY_PATH_MARKER + 'general_info.date',
+            },
+            "Condiciones de la obra": {
+                "Asentamiento": {
+                    "Rango (mm)": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.slump_range',
+                },
+                "Clase de exposición": {
+                    "Corrosión inducida por carbonatación": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.exposure_class.items_1',
+                    "Corrosión inducida por cloruros": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.exposure_class.items_2',
+                    "Ataque por congelación y deshielo": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.exposure_class.items_3',
+                    "Exposición a ambientes químicos agresivos": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.exposure_class.items_4',
+                },
+                "Contenido de aire incorporado": {
+                    "Diseño con aire incorporado": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.entrained_air_content.is_checked',
+                    "Contenido de aire objetivo (%)": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.entrained_air_content.user_defined',
+                    "Contenido de aire estimado según exposición": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.entrained_air_content.exposure_defined',
+                },
+                "Resistencia promedio a la compresión requerida": {
+                    f"Resistencia de cálculo especificada ({stress_units})": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.spec_strength',
+                    "Días esperados para alcanzar la resistencia": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.spec_strength_time',
+                },
+                "Desviación estándar conocida": {
+                    "La desviación estándar es conocida": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_known.std_dev_known_enabled',
+                    f"Valor ({stress_units})": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_known.std_dev_value',
+                    "Número de ensayos": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_known.test_nro',
+                    "Fracción defectiva (%)": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_known.defective_level',
+                },
+                "Desviación estándar desconocida": {
+                    "La desviación estándar no es conocida": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled',
+                    f"Margen ({stress_units})": ReportDataModel.KEY_PATH_MARKER + 'field_requirements.strength.std_dev_unknown.margin',
+                },
+            },
+            "Materiales cementantes": {
+                "Cemento Portland": {
+                    "Marca": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.cement_seller',
+                    "Tipo": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.cement_type',
+                    "Densidad relativa": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.cement_relative_density',
+                },
+                "Material cementante suplementario": {
+                    "Uso de material cementante suplementario": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.SCM.SCM_checked',
+                    "Tipo": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.SCM.SCM_type',
+                    "Contenido (%)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.SCM.SCM_content',
+                    "Densidad relativa": ReportDataModel.KEY_PATH_MARKER + 'cementitious_materials.SCM.SCM_relative_density',
+                },
+            },
+            "Agregado fino": {
+                "Información general": {
+                    "Nombre": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.info.name',
+                    "Lugar": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.info.source',
+                    "Tipo": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.info.type',
+                },
+                "Propiedades físicas": {
+                    "Densidad relativa (SSS)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.physical_prop.relative_density_SSD',
+                    "Masa unitaria suelta (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.physical_prop.PUS',
+                    "Masa unitaria compactada (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.physical_prop.PUC',
+                },
+                "Humedad": {
+                    "Contenido de humedad (%)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.moisture.moisture_content',
+                    "Capacidad de absorción (%)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.moisture.absorption_content',
+                },
+                "Granulometría": {
+                    "Porcentaje acumulado pasante": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.gradation.passing',
+                    # This will be replaced by a dict
+                    "Módulo de finura": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fineness_modulus'
+                },
+            },
+            "Agregado grueso": {
+                "Información general": {
+                    "Nombre": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.info.name',
+                    "Lugar": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.info.source',
+                    "Tipo": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.info.type',
+                },
+                "Propiedades físicas": {
+                    "Densidad relativa (SSS)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.physical_prop.relative_density_SSD',
+                    "Masa unitaria suelta (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.physical_prop.PUS',
+                    "Masa unitaria compactada (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.physical_prop.PUC',
+                },
+                "Humedad": {
+                    "Contenido de humedad (%)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.moisture.moisture_content',
+                    "Capacidad de absorción (%)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.moisture.absorption_content',
+                },
+                "Granulometría": {
+                    "Porcentaje acumulado pasante": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.gradation.passing',
+                    "Tamaño máximo nominal (mm)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.NMS'
+                },
+            },
+            "Agua": {
+                "Tipo": ReportDataModel.KEY_PATH_MARKER + 'water.water_type',
+                "Lugar": ReportDataModel.KEY_PATH_MARKER + 'water.water_source',
+                "Densidad (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'water.water_density',
+            },
+            "Aditivos": {
+                "Reductor de agua": {
+                    "Uso de reductor de agua": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_checked',
+                    "¿Actúa como plastificante?": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_action.plasticizer',
+                    "¿Actúa como reductor de agua?": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_action.water_reducer',
+                    "¿Actúa como economizador de cemento?": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_action.cement_economizer',
+                    "Tipo": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_type',
+                    "Nombre": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_name',
+                    "Densidad relativa": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_relative_density',
+                    "Dosis (%)": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_dosage',
+                    "Efectividad (%)": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_effectiveness',
+                },
+                "Incorporador de aire": {
+                    "Uso de incorporador de aire": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_checked',
+                    "Nombre": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_name',
+                    "Densidad relativa": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_relative_density',
+                    "Dosis (%)": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_dosage',
+                }
+            },
+        }
+        # Dosage data per cubic meter (method to access data -> self.doe_data_model.get_data())
+        self.dosage_data = {
+            "Agua": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'water.water_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'water.water_content_correction',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'water.water_volume'
+            },
+            "Cemento": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_volume'
+            },
+            f"{scm_type}": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_volume'
+            },
+            "Agregado fino": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_content_wet',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_volume'
+            },
+            "Agregado grueso": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_content_wet',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_volume'
+            },
+            "Aire atrapado": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'air.entrapped_air_content',
+                "content": '-',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'air.entrapped_air_content'
+            },
+            "Aire incorporado": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'air.entrained_air_content',
+                "content": '-',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'air.entrained_air_content'
+            },
+            "Reductor de agua": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.WRA.WRA_volume'
+            },
+            "Incorporador de aire": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'chemical_admixtures.AEA.AEA_volume'
+            },
+        }
+        # Adjusted dosage data (after testing) (method to access data -> self.data_model.get_design_value())
+        self.adjusted_dosage_data = {
+            "Agua": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.water.water_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.water.water_content_correction',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.water.water_volume'
+            },
+            "Cemento": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.cement.cement_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.cement.cement_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.cement.cement_volume'
+            },
+            f"{scm_type}": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.scm.scm_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.scm.scm_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.cementitious_material.scm.scm_volume'
+            },
+            "Agregado fino": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.fine_aggregate.fine_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.fine_aggregate.fine_content_wet',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.fine_aggregate.fine_volume'
+            },
+            "Agregado grueso": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.coarse_aggregate.coarse_abs_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.coarse_aggregate.coarse_content_wet',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.coarse_aggregate.coarse_volume'
+            },
+            "Aire atrapado": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.air.entrapped_air_content',
+                "content": '-',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.air.entrapped_air_content'
+            },
+            "Aire incorporado": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.air.entrained_air_content',
+                "content": '-',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.air.entrained_air_content'
+            },
+            "Reductor de agua": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.WRA.WRA_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.WRA.WRA_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.WRA.WRA_volume'
+            },
+            "Incorporador de aire": {
+                "abs_vol": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.AEA.AEA_volume',
+                "content": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.AEA.AEA_content',
+                "volume": ReportDataModel.KEY_PATH_MARKER + 'trial_mix.adjustments.chemical_admixtures.AEA.AEA_volume'
+            },
+        }
+        # Notes on adjustments made (method to access data -> self.data_model.get_design_value())
+        self.adjustment_notes = {
+            "Agua": {
+                "Cantidad de agua utilizada (L)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.water.water_used',
+                "Cantidad de aire medido (%)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.water.air_measured',
+                "Relación agua-material cementante final": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.water.w_cm',
+                "Mantener proporción de agregado grueso": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.water.keep_coarse_agg',
+                "Mantener proporción de agregado fino": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.water.keep_fine_agg',
+            },
+            "Material cementante": {
+                "Cantidad de material cementante utilizado (kg)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.cementitious_material.cementitious_used',
+                "Cantidad de aire medido (%)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.cementitious_material.air_measured',
+                "Relación agua-material cementante final": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.cementitious_material.w_cm',
+                "Mantener proporción de agregado grueso": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.cementitious_material.keep_coarse_agg',
+                "Mantener proporción de agregado fino": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.cementitious_material.keep_fine_agg',
+            },
+            "Proporción entre los agregados": {
+                "Nueva proporción de agregado grueso (%)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.aggregate_proportion.new_coarse_proportion',
+                "Nueva proporción de agregado fino (%)": ReportDataModel.KEY_PATH_MARKER + 'adjustments_trial_mix.aggregate_proportion.new_fine_proportion',
+            },
+        }
+        # Details of calculations by stages (for full report) (method to access data -> self.aci_data_model.get_data())
+        self.calculation_details = {
+            "1. Volumen de aire atrapado": {
+                "Volumen (absoluto) de aire atrapado (L)": ReportDataModel.KEY_PATH_MARKER + 'air.entrapped_air_content',
+            },
+            "1. Volumen de aire incorporado": {
+                "Volumen (absoluto) de aire incorporado (L)": ReportDataModel.KEY_PATH_MARKER + 'air.entrained_air_content',
+            },
+            "2. Resistencia promedio requerida (f_cr)": {
+                "Valor de z": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.z_value',
+                "Desviación estándar - 1 (MPa)": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.std_dev_value_1',
+                "Desviación estándar - 2 (MPa)": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.std_dev_value_2',
+                "Desviación estándar utilizada (MPa)": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.std_dev_used',
+                "Margen (MPa)": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.margin',
+                "f_cr (MPa)": ReportDataModel.KEY_PATH_MARKER + 'spec_strength.target_strength.target_strength_value',
+            },
+            "3. Relación agua-material cementante (a/cm)": {
+                "Relación a/cm por resistencia": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_by_strength',
+                "Relación a/cm por durabilidad": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_by_durability',
+                "Relación a/cm utilizado": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm_previous',
+            },
+            "4. Contenido y volumen de agua (SSS)": {
+                "Contenido base de agua por agregado fino (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.base_agg_fine',
+                "Contenido base de agua por agregado grueso (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.base_agg_coarse',
+                "Contenido base de agua (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.base',
+                "Corrección por material cementante suplementario (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.scm_correction',
+                "Corrección por aditivo reductor de agua (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.wra_correction',
+                "Contenido utilizado de agua (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.final_content',
+                "Volumen (absoluto) de agua (L)": ReportDataModel.KEY_PATH_MARKER + 'water.water_abs_volume',
+            },
+            "5. Contenido y volumen absoluto del material cementante": {
+                "Contenido ficticio de agua (Reductor de agua)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content.without_wra_correction',
+                "Contenido base de material cementante (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.base_content',
+                "Contenido mínimo de material cementante (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.min_content',
+                "Contenido utilizado de material cementante (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.final_content',
+                "Contenido utilizado de cemento (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_content_temp',
+                f"Contenido utilizado de {scm_type.lower()} (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_content_temp',
+                "Volumen absoluto de cemento (L)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_abs_volume_temp',
+                f"Volumen absoluto de {scm_type.lower()} (L)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_abs_volume_temp',
+            },
+            "6. Revisión de la relación agua-material cementante (a/cm)": {
+                "Relación a/cm recalculada (real)": ReportDataModel.KEY_PATH_MARKER + 'water_cementitious_materials_ratio.w_cm',
+                "Contenido recalculado de cemento (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_content',
+                f"Contenido recalculado de {scm_type.lower()} (kg)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_content',
+                "Volumen absoluto recalculado de cemento (L)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.cement.cement_abs_volume',
+                f"Volumen absoluto recalculado de {scm_type.lower()} (L)": ReportDataModel.KEY_PATH_MARKER + 'cementitious_material.scm.scm_abs_volume',
+            },
+            "7. Contenido y volumen absoluto de los agregados (SSS)": {
+                "Densidad relativa del agregado combinado (SSS)": ReportDataModel.KEY_PATH_MARKER + 'concrete.combined_relative_density',
+                "Densidad húmeda del concreto normal (kg/m³)": ReportDataModel.KEY_PATH_MARKER + 'concrete.wet_density',
+                "Contenido total de los agregados (kg)": ReportDataModel.KEY_PATH_MARKER + 'concrete.total_aggregate_content',
+                "Proporción de agregado fino (%)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_proportion',
+                "Contenido de agregado fino (kg)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_content_ssd',
+                "Contenido de agregado grueso (kg)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_content_ssd',
+                "Volumen absoluto de agregado fino (L)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_abs_volume',
+                "Volumen absoluto de agregado grueso (L)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_abs_volume',
+            },
+            "8. Corrección por humedad": {
+                "Contenido de agregado fino (kg)": ReportDataModel.KEY_PATH_MARKER + 'fine_aggregate.fine_content_wet',
+                "Contenido de agregado grueso (kg)": ReportDataModel.KEY_PATH_MARKER + 'coarse_aggregate.coarse_content_wet',
+                "Contenido de agua (kg)": ReportDataModel.KEY_PATH_MARKER + 'water.water_content_correction',
+                "Volumen de agua (L)": ReportDataModel.KEY_PATH_MARKER + 'water.water_volume',
+            },
+        }
+
+    def _get_specific_data_retrieval_func(self):
+        return self.doe_data_model.get_data

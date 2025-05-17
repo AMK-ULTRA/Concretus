@@ -22,13 +22,16 @@ class CementitiousMaterial:
         Calculate the absolute volume of a cementitious material in cubic meters (m³).
 
         The cementitious material content and water density must use consistent units:
-        - If the cementitious material content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
-        - If the cementitious material content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+        - If the cementitious material content is in kilograms (kg),
+          water density must be in kilograms per cubic meter (kg/m³).
+        - If the cementitious material content is in kilogram-force (kgf),
+          water density must be in kilogram-force per cubic meter (kgf/m³).
 
         :param float content: Cementitious material content (kg or kgf).
         :param float water_density: Water density (kg/m³ or kgf/m³).
         :param float relative_density: Relative density of cementitious material.
-        :param str cementitious_type: Type of cementitious material (e.g., 'Cement', 'SCM').
+        :param str cementitious_type: Type of cementitious material (e.g., 'Cemento', 'Cenizas volantes',
+                                      'Cemento de escoria', 'Humo de sílice').
         :return: The absolute volume (in m³).
         :rtype: float
         """
@@ -38,7 +41,15 @@ class CementitiousMaterial:
                          f"The water density is {water_density}. None can be zero")
             self.doe_data_model.add_calculation_error('Cementitious volume', error_msg)
             raise ZeroDivisionError(error_msg)
-        return content / (relative_density * water_density)
+
+        # This value could change if there is a minimum cementitious content activated when using an SCM
+        abs_volume = content / (relative_density * water_density)
+        if cementitious_type != "Cemento":
+            self.doe_data_model.update_data('cementitious_material.scm.scm_abs_volume_temp', abs_volume * 1000)
+        else:
+            self.doe_data_model.update_data('cementitious_material.cement.cement_abs_volume_temp', abs_volume * 1000)
+
+        return abs_volume
 
     def cementitious_content(self, water_content, w_cm, exposure_classes, scm_checked, scm_percentage=None,
                              wra_checked=False, wra_action_water_reducer=False):
@@ -68,13 +79,15 @@ class CementitiousMaterial:
         if wra_checked and wra_action_water_reducer:
             water_correction_wra = self.doe_data_model.get_data('water.water_content.wra_correction')
             water_content = water_content + (-water_correction_wra)
+            self.doe_data_model.update_data('water.water_content.without_wra_correction', water_content)
 
         # Determine minimum required cementitious content based on exposure classes
         min_cementitious_content = max(
             MIN_CEMENTITIOUS_CONTENT_DOE.get(exposure_class, 0) for exposure_class in exposure_classes)
 
-        # Initialize cement and SCM content
+        # Initialize variables
         initial_cementitious_content = 0
+        final_cementitious_content = 0
         cement_content = 0
         scm_content = 0
 
@@ -112,6 +125,10 @@ class CementitiousMaterial:
         # Store intermediate values in the data model
         self.doe_data_model.update_data('cementitious_material.base_content', initial_cementitious_content)
         self.doe_data_model.update_data('cementitious_material.min_content', min_cementitious_content)
+        self.doe_data_model.update_data('cementitious_material.final_content', final_cementitious_content)
+        # This value could change if there is a minimum cementitious content activated when using an SCM
+        self.doe_data_model.update_data('cementitious_material.cement.cement_content_temp', cement_content)
+        self.doe_data_model.update_data('cementitious_material.scm.scm_content_temp', scm_content)
 
         return cement_content, scm_content
 
@@ -237,6 +254,8 @@ class Water:
             water_correction_wra = -(effectiveness / 100) * water_content
 
         # Store intermediate values in data model
+        self.doe_data_model.update_data('water.water_content.base_agg_fine', water_content_for_fine)
+        self.doe_data_model.update_data('water.water_content.base_agg_coarse', water_content_for_coarse)
         self.doe_data_model.update_data('water.water_content.base', water_content)
         self.doe_data_model.update_data('water.water_content.scm_correction', water_correction_scm)
         self.doe_data_model.update_data('water.water_content.wra_correction', water_correction_wra)
@@ -331,7 +350,8 @@ class Aggregate:
     grading: dict
     doe_data_model: DOEDataModel = field(init=False, repr=False)
 
-    def total_agg_content(self, cement_content, scm_content, water_content, entrained_air_content, combined_relative_density):
+    def total_agg_content(self, cement_content, scm_content, water_content, entrained_air_content,
+                          combined_relative_density):
         """
         Calculate the total aggregate content based on cement content, SCM, water and
         the wet density of fully compacted concrete.
@@ -385,13 +405,15 @@ class Aggregate:
         if entrained_air_content:
             concrete_density = concrete_density - 10 * (entrained_air_content * 100) * combined_relative_density
 
-        # Store intermediate values in the data model
-        self.doe_data_model.update_data('concrete.wet_density', concrete_density)
-
         # Calculate the total aggregate content
-        total_aggregates = concrete_density - (cement_content + scm_content) - water_content
+        total_aggregate_content = concrete_density - (cement_content + scm_content) - water_content
 
-        return total_aggregates
+        # Store intermediate values in the data model
+        self.doe_data_model.update_data('concrete.combined_relative_density', combined_relative_density)
+        self.doe_data_model.update_data('concrete.wet_density', concrete_density)
+        self.doe_data_model.update_data('concrete.total_aggregate_content', total_aggregate_content)
+
+        return total_aggregate_content
 
     def apparent_volume(self, content, loose_bulk_density, aggregate_type="aggregate"):
         """
@@ -592,6 +614,8 @@ class StandardDeviation:
 
         # Initialize the variable
         f_cr = 0
+        std_dev_value_1 = 0
+        std_dev_value_2 = 0
 
         # Case 1: The margin is specified by the user (the standard deviation is unknown)
         if user_defined_margin >= 0 and std_dev_unknown:
@@ -603,22 +627,32 @@ class StandardDeviation:
 
             if sample_size < 20:  # Curve A
                 if design_strength <= 20:
-                    std_dev_value = max(std_dev_value, 0.4 * design_strength)
+                    std_dev_value_1 = std_dev_value
+                    std_dev_value_2 = 0.4 * design_strength
+                    std_dev_value = max(std_dev_value_1, std_dev_value_2)
                     f_cr = design_strength - z * std_dev_value
                 else:
-                    std_dev_value = max(std_dev_value, 8)
+                    std_dev_value_1 = std_dev_value
+                    std_dev_value_2 = 8
+                    std_dev_value = max(std_dev_value_1, std_dev_value_2)
                     f_cr = design_strength - z * std_dev_value
             elif sample_size >= 20:  # Curve B
                 if design_strength <= 20:
-                    std_dev_value = max(std_dev_value, 0.2 * design_strength)
+                    std_dev_value_1 = std_dev_value
+                    std_dev_value_2 = 0.2 * design_strength
+                    std_dev_value = max(std_dev_value_1, std_dev_value_2)
                     f_cr = design_strength - z * std_dev_value
                 else:
-                    std_dev_value = max(std_dev_value, 4)
+                    std_dev_value_1 = std_dev_value
+                    std_dev_value_2 = 4
+                    std_dev_value = max(std_dev_value_1, std_dev_value_2)
                     f_cr = design_strength - z * std_dev_value
 
             # Update the DoE data model with intermediate values
-            self.doe_data_model.update_data('spec_strength.target_strength.std_dev_used', std_dev_value)
             self.doe_data_model.update_data('spec_strength.target_strength.z_value', z)
+            self.doe_data_model.update_data('spec_strength.target_strength.std_dev_value_1', std_dev_value_1)
+            self.doe_data_model.update_data('spec_strength.target_strength.std_dev_value_2', std_dev_value_2)
+            self.doe_data_model.update_data('spec_strength.target_strength.std_dev_used', std_dev_value)
             self.doe_data_model.update_data('spec_strength.target_strength.margin', user_defined_margin)
 
         else:
@@ -725,6 +759,7 @@ class AbramsLaw:
         self.doe_data_model.update_data('water_cementitious_materials_ratio.w_cm_curve', p_star)
         self.doe_data_model.update_data('water_cementitious_materials_ratio.w_cm_by_strength', w_cm_by_strength)
         self.doe_data_model.update_data('water_cementitious_materials_ratio.w_cm_by_durability', w_cm_by_durability)
+        self.doe_data_model.update_data('water_cementitious_materials_ratio.w_cm_previous', min(w_cm_by_strength, w_cm_by_durability))
 
         # Return the more restrictive (lower) w/cm ratio to satisfy both strength and durability
         return min(w_cm_by_strength, w_cm_by_durability)
@@ -1025,7 +1060,7 @@ class DOE:
                                                             "Cemento")
 
             if scm_checked:
-                scm_abs_volume = self.cement.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
+                scm_abs_volume = self.scm.absolute_volume(scm_content, water_density, scm_relative_density, scm_type)
             else:
                 scm_abs_volume = 0
 
@@ -1038,6 +1073,12 @@ class DOE:
                     cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm_by_durability,
                                                                                    exposure_classes, scm_checked,
                                                                                    scm_percentage)
+                    # If there is a change in the cementing materials, then their respective absolute volumes change
+                    cement_abs_volume = self.cement.absolute_volume(cement_content, water_density,
+                                                                    cement_relative_density,
+                                                                    "Cemento")
+                    scm_abs_volume = self.scm.absolute_volume(scm_content, water_density, scm_relative_density,
+                                                              scm_type)
                     w_cm = w_cm_by_durability
                 else:
                     w_cm = w_cm_recalculated
@@ -1147,7 +1188,7 @@ class DOE:
             self.calculation_results = {
                 "target_strength_value": target_strength,
                 "w_cm": w_cm,
-                "entrapped_air_content": 0 if not entrained_air else None,
+                "entrapped_air_content": entrapped_air_content if not entrained_air else None,
                 "entrained_air_content": entrained_air_content if entrained_air else None,
                 "final_content": water_content,
                 "water_content_correction": water_content_correction,

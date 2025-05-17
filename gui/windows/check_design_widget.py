@@ -197,6 +197,7 @@ class CheckDesign(QWidget):
         entrained_air = self.data_model.get_design_value('field_requirements.entrained_air_content.is_checked')
         entrained_air_exposure_defined = self.data_model.get_design_value('field_requirements.entrained_air_content.exposure_defined')
         std_dev_known = self.data_model.get_design_value('field_requirements.strength.std_dev_known.std_dev_known_enabled')
+        std_dev_unknown = self.data_model.get_design_value('field_requirements.strength.std_dev_unknown.std_dev_unknown_enabled')
         std_dev_value = self.data_model.get_design_value('field_requirements.strength.std_dev_known.std_dev_value')
         doe_margin = self.data_model.get_design_value('field_requirements.strength.std_dev_unknown.margin')
         aea_checked = self.data_model.get_design_value('chemical_admixtures.AEA.AEA_checked')
@@ -240,7 +241,7 @@ class CheckDesign(QWidget):
         # Check standard deviation values
         if std_dev_known and std_dev_value == 0.0:
             warnings.append("La desviación estándar a usar no puede ser cero.")
-        if method == "DoE" and doe_margin == 0:
+        if method == "DoE" and std_dev_unknown and doe_margin == 0:
             warnings.append("El margen de seguridad a usar no puede ser cero.")
 
         # Check bulk density with method-specific messages

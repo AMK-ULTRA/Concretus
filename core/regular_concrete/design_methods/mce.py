@@ -20,13 +20,16 @@ class CementitiousMaterial:
         Calculate the absolute volume of a cementitious material in cubic meters (m³).
 
         The cementitious material content and water density must use consistent units:
-        - If the cementitious material content is in kilograms (kg), water density must be in kilograms per cubic meter (kg/m³).
-        - If the cementitious material content is in kilogram-force (kgf), water density must be in kilogram-force per cubic meter (kgf/m³).
+        - If the cementitious material content is in kilograms (kg),
+          water density must be in kilograms per cubic meter (kg/m³).
+        - If the cementitious material content is in kilogram-force (kgf),
+          water density must be in kilogram-force per cubic meter (kgf/m³).
 
         :param float content: Cementitious material content (kg or kgf).
         :param float water_density: Water density (kg/m³ or kgf/m³).
         :param float relative_density: Relative density of cementitious material.
-        :param str cementitious_type: Type of cementitious material (e.g., 'Cement', 'SCM').
+        :param str cementitious_type: Type of cementitious material (e.g., 'Cemento', 'Cenizas volantes',
+                                      'Cemento de escoria', 'Humo de sílice').
         :return: The absolute volume (in m³).
         :rtype: float
         """
