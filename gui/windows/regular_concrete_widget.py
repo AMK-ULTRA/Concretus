@@ -1,6 +1,6 @@
 from functools import partial
 
-from PyQt6.QtCore import QObject, QEvent, Qt, QRegularExpression
+from PyQt6.QtCore import QObject, QEvent, Qt, QRegularExpression, QDate
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableWidgetItem, QItemDelegate, QLineEdit, QDialog
 
@@ -78,6 +78,9 @@ class RegularConcrete(QWidget):
         # Run a method update before completing initialization
         self.handle_RegularConcrete_units_changed(self.data_model.units)
 
+        # Set the actual date in the QDateEdit
+        self.ui.dateEdit_date.setDate(QDate.currentDate())
+
         # Initialization complete
         self.logger.info('Regular concrete widget initialized')
 
@@ -120,6 +123,76 @@ class RegularConcrete(QWidget):
             lambda checked: self.handle_retained_column_toggled(self.ui.tableWidget_coarse, checked))
         # Clear the entrained air value when this option is not checked by the user
         self.ui.groupBox_air.clicked.connect(self.handle_groupBox_air_clicked)
+
+    def clear_fields(self):
+        """Clear all the fields."""
+
+        # QLineEdit
+        self.ui.lineEdit_name.clear()
+        self.ui.lineEdit_location.clear()
+        self.ui.lineEdit_purchaser.clear()
+        self.ui.lineEdit_cement_seller.clear()
+        self.ui.lineEdit_fine_name.clear()
+        self.ui.lineEdit_fine_source.clear()
+        self.ui.lineEdit_coarse_name.clear()
+        self.ui.lineEdit_coarse_source.clear()
+        self.ui.lineEdit_water_source.clear()
+        self.ui.lineEdit_WRA_name.clear()
+        self.ui.lineEdit_AEA_name.clear()
+
+        # QDateEdit
+        self.ui.dateEdit_date.setDate(QDate.currentDate())
+
+        # QSpinBox & QDoubleSpinBox
+        self.ui.spinBox_slump_value.setValue(0)
+        self.ui.doubleSpinBox_user_defined.setValue(0.0)
+        self.ui.spinBox_spec_strength.setValue(0)
+        self.ui.doubleSpinBox_std_dev_value.setValue(0.00)
+        self.ui.spinBox_test_nro.setValue(0)
+        self.ui.spinBox_margin.setValue(0)
+        self.ui.doubleSpinBox_cement_relative_density.setValue(0.00)
+        self.ui.spinBox_SCM_content.setValue(0)
+        self.ui.doubleSpinBox_SCM_relative_density.setValue(0.00)
+        self.ui.doubleSpinBox_fine_relative_density.setValue(0.00)
+        self.ui.doubleSpinBox_fine_pus.setValue(0)
+        self.ui.doubleSpinBox_fine_puc.setValue(0)
+        self.ui.doubleSpinBox_fine_mc.setValue(0.0)
+        self.ui.doubleSpinBox_fine_abs.setValue(0.0)
+        self.ui.doubleSpinBox_coarse_relative_density.setValue(0.00)
+        self.ui.doubleSpinBox_coarse_pus.setValue(0)
+        self.ui.doubleSpinBox_coarse_puc.setValue(0)
+        self.ui.doubleSpinBox_coarse_mc.setValue(0.0)
+        self.ui.doubleSpinBox_coarse_abs.setValue(0.0)
+        self.ui.doubleSpinBox_water_density.setValue(1000.00)
+        self.ui.doubleSpinBox_WRA_relative_density.setValue(0.000)
+        self.ui.doubleSpinBox_WRA_effectiveness.setValue(0.000)
+        self.ui.doubleSpinBox_WRA_dosage.setValue(0.00)
+        self.ui.doubleSpinBox_AEA_relative_density.setValue(0.000)
+        self.ui.doubleSpinBox_AEA_dosage.setValue(0.00)
+
+        # QComboBox
+        self.ui.comboBox_slump_range.setCurrentIndex(0)
+        self.ui.comboBox_1.setCurrentIndex(0)
+        self.ui.comboBox_2.setCurrentIndex(0)
+        self.ui.comboBox_3.setCurrentIndex(0)
+        self.ui.comboBox_4.setCurrentIndex(0)
+        self.ui.comboBox_defective_level.setCurrentIndex(-1)
+        self.ui.comboBox_spec_strength_time.setCurrentIndex(-1)
+        self.ui.comboBox_qual_control.setCurrentIndex(0)
+        self.ui.comboBox_cement_type.setCurrentIndex(0)
+        self.ui.comboBox_cement_class.setCurrentIndex(0)
+        self.ui.comboBox_SCM_type.setCurrentIndex(0)
+        self.ui.comboBox_fine_type.setCurrentIndex(0)
+        self.ui.comboBox_coarse_type.setCurrentIndex(0)
+        self.ui.comboBox_water_type.setCurrentIndex(0)
+        self.ui.comboBox_WRA_type.setCurrentIndex(0)
+
+        # QGroupBox
+        self.ui.groupBox_std_dev_known.setChecked(False)
+        self.ui.groupBox_SCM.setChecked(False)
+        self.ui.groupBox_WRA.setChecked(False)
+        self.ui.groupBox_AEA.setChecked(False)
+        self.ui.groupBox_air.setChecked(False)
 
     def set_index(self, index):
         """

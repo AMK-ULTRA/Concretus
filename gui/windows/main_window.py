@@ -488,6 +488,24 @@ class MainWindow(QMainWindow):
 
         self.logger.info('The restart action has been selected')
 
+        # Go to the welcome widget
+        self.navigate_to(self.welcome)
+
+        # Clean the data models
+        self.mce_data_model.reset()
+        self.aci_data_model.reset()
+        self.doe_data_model.reset()
+        self.data_model.reset()
+
+        # Reset the fields in the regular concrete widget
+        self.regular_concrete.clear_fields()
+
+        # Trigger a method update in the regular concrete widget
+        last_method_used = self.data_model.method
+        last_unit_used = self.data_model.units
+        self.regular_concrete.handle_RegularConcrete_method_changed(last_method_used)
+        self.regular_concrete.handle_RegularConcrete_units_changed(last_unit_used)
+
     def handle_show_welcome_triggered(self):
         """Display the Welcome widget."""
 

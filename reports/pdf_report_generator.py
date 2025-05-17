@@ -1,11 +1,10 @@
-import os
 from datetime import datetime
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm, inch
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image)
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak)
 
 from logger import Logger
 from reports.report_data_model import ReportDataModel
@@ -126,11 +125,11 @@ class PDFReportGenerator:
         elements.append(Paragraph(report_type_name, self.styles['Heading2']))
         elements.append(Spacer(width=0, height=0.5*cm))
         
-        # Add logo if it exists
-        if os.path.exists(IMAGE_LOGO):
-            logo = Image(IMAGE_LOGO, width=3*cm, height=3*cm)
-            elements.append(logo)
-            elements.append(Spacer(width=0, height=0.1*cm))
+        # # Add logo if it exists
+        # if os.path.exists(IMAGE_LOGO):
+        #     logo = Image(IMAGE_LOGO, width=3*cm, height=3*cm)
+        #     elements.append(logo)
+        #     elements.append(Spacer(width=0, height=0.1*cm))
         
         # Add general information
         if "Información general" in self.input_data:
@@ -415,21 +414,66 @@ class PDFReportGenerator:
                 elements.append(table)
                 elements.append(Spacer(width=0, height=0.5*cm))
 
+        # # Header function
+        # def draw_header(canvas, doc):
+        #     """Add header to each page."""
+        #
+        #     canvas.saveState()
+        #     canvas.setFont('Helvetica-Bold', 10)
+        #     width, height = letter  # already imported
+        #
+        #     # Text centered 0.5" from the top edge
+        #     canvas.drawCentredString(width / 2.0, height - 0.5 * inch,
+        #                              "Concretus - Diseño y Dosificación de Mezclas de Concreto")
+        #
+        #     # Separator line, just below the text
+        #     canvas.setLineWidth(0.5)
+        #     canvas.line(72, height - 0.55*inch, width - 72, height - 0.55*inch)
+        #
+        #     canvas.restoreState()
+
         # Header function
         def draw_header(canvas, doc):
-            """Add header to each page."""
-
+            """Add header (logo + title) to each page, both aligned at the same vertical position."""
             canvas.saveState()
-            canvas.setFont('Helvetica-Bold', 10)
-            width, height = letter  # already imported
+            width, height = letter  # page size
 
-            # Text centered 0.5" from the top edge
-            canvas.drawCentredString(width / 2.0, height - 0.5 * inch,
-                                     "Concretus - Diseño y Dosificación de Mezclas de Concreto")
+            # Common configuration
+            canvas.setFont('Helvetica-Bold', 12)
+            title_text = "Concretus - Diseño y Dosificación de Mezclas de Concreto"
 
-            # Separator line, just below the text
+            # 1) Calculate the reference height (baseline of the text)
+            y_text = height - 0.4 * inch
+
+            # 2) Draw the title centered on that line
+            canvas.drawCentredString(width / 2.0, y_text, title_text)
+
+            # 3) Draw the logo on the right, adjusting its Y so that it is centered with the text
+            logo_path = IMAGE_LOGO
+            logo_width = 0.6 * inch
+            logo_height = logo_width
+            x_logo = width - doc.rightMargin - logo_width
+            # To center vertically: we place the bottom of the logo a little below y_text
+            y_logo = y_text - (logo_height - 10) / 2
+
+            canvas.drawImage(
+                logo_path,
+                x_logo, y_logo,
+                width=logo_width,
+                height=logo_height,
+                preserveAspectRatio=True,
+                mask='auto'
+            )
+
+            # 4) Separator line just below y_text
+            line_y = y_text - 0.2 * inch
             canvas.setLineWidth(0.5)
-            canvas.line(72, height - 0.55*inch, width - 72, height - 0.55*inch)
+            canvas.line(
+                doc.leftMargin,
+                line_y,
+                width - doc.rightMargin,
+                line_y
+            )
 
             canvas.restoreState()
 

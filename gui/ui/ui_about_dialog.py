@@ -13,235 +13,79 @@ class Ui_AboutDialog(object):
     def setupUi(self, AboutDialog):
         AboutDialog.setObjectName("AboutDialog")
         AboutDialog.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
-        AboutDialog.resize(655, 570)
+        AboutDialog.resize(720, 500)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(AboutDialog.sizePolicy().hasHeightForWidth())
         AboutDialog.setSizePolicy(sizePolicy)
-        AboutDialog.setMinimumSize(QtCore.QSize(655, 570))
-        AboutDialog.setMaximumSize(QtCore.QSize(655, 570))
         AboutDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.Spanish, QtCore.QLocale.Country.Venezuela))
         self.verticalLayout = QtWidgets.QVBoxLayout(AboutDialog)
-        self.verticalLayout.setContentsMargins(-1, -1, -1, 0)
-        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.scrollArea = QtWidgets.QScrollArea(parent=AboutDialog)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 683, 814))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setSpacing(6)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.title = QtWidgets.QLabel(parent=AboutDialog)
-        self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignBottom|QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft)
-        self.title.setObjectName("title")
-        self.horizontalLayout.addWidget(self.title)
-        self.label_logo = QtWidgets.QLabel(parent=AboutDialog)
+        self.label_title = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_title.setWordWrap(True)
+        self.label_title.setObjectName("label_title")
+        self.horizontalLayout.addWidget(self.label_title)
+        self.label_logo = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
         self.label_logo.setMinimumSize(QtCore.QSize(100, 100))
         self.label_logo.setMaximumSize(QtCore.QSize(100, 100))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../../assets/images/about_logo.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout.addWidget(self.label_logo)
-        self.horizontalLayout.setStretch(0, 1)
-        self.verticalLayout.addLayout(self.horizontalLayout)
-        self.body = QtWidgets.QLabel(parent=AboutDialog)
-        self.body.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
-        self.body.setWordWrap(True)
-        self.body.setObjectName("body")
-        self.verticalLayout.addWidget(self.body)
-        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
+        self.label_general_info = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_general_info.setWordWrap(True)
+        self.label_general_info.setObjectName("label_general_info")
+        self.verticalLayout_2.addWidget(self.label_general_info)
+        self.label_description = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_description.setWordWrap(True)
+        self.label_description.setObjectName("label_description")
+        self.verticalLayout_2.addWidget(self.label_description)
+        self.label_specs = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_specs.setWordWrap(True)
+        self.label_specs.setObjectName("label_specs")
+        self.verticalLayout_2.addWidget(self.label_specs)
+        self.label_methods = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_methods.setWordWrap(True)
+        self.label_methods.setObjectName("label_methods")
+        self.verticalLayout_2.addWidget(self.label_methods)
+        self.label_license = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_license.setWordWrap(True)
+        self.label_license.setObjectName("label_license")
+        self.verticalLayout_2.addWidget(self.label_license)
+        self.label_contact = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_contact.setWordWrap(True)
+        self.label_contact.setObjectName("label_contact")
+        self.verticalLayout_2.addWidget(self.label_contact)
+        self.label_footer = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
+        self.label_footer.setWordWrap(True)
+        self.label_footer.setObjectName("label_footer")
+        self.verticalLayout_2.addWidget(self.label_footer)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(self.scrollArea)
 
         self.retranslateUi(AboutDialog)
         QtCore.QMetaObject.connectSlotsByName(AboutDialog)
 
     def retranslateUi(self, AboutDialog):
         _translate = QtCore.QCoreApplication.translate
-        AboutDialog.setWindowTitle(_translate("AboutDialog", "Info"))
-        self.title.setText(_translate("AboutDialog", "<html>\n"
-"\n"
-"<head>\n"
-"<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
-"<meta name=Generator content=\"Microsoft Word 15 (filtered)\">\n"
-"<style>\n"
-"<!--\n"
-" /* Font Definitions */\n"
-" @font-face\n"
-"    {font-family:Wingdings;\n"
-"    panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
-"@font-face\n"
-"    {font-family:\"Cambria Math\";\n"
-"    panose-1:2 4 5 3 5 4 6 3 2 4;}\n"
-"@font-face\n"
-"    {font-family:Calibri;\n"
-"    panose-1:2 15 5 2 2 2 4 3 2 4;}\n"
-"@font-face\n"
-"    {font-family:Aptos;}\n"
-" /* Style Definitions */\n"
-" p.MsoNormal, li.MsoNormal, div.MsoNormal\n"
-"    {margin-top:0in;\n"
-"    margin-right:0in;\n"
-"    margin-bottom:8.0pt;\n"
-"    margin-left:0in;\n"
-"    line-height:107%;\n"
-"    font-size:11.0pt;\n"
-"    font-family:\"Aptos\",sans-serif;}\n"
-".MsoChpDefault\n"
-"    {font-family:\"Aptos\",sans-serif;}\n"
-".MsoPapDefault\n"
-"    {margin-bottom:8.0pt;\n"
-"    line-height:107%;}\n"
-"@page WordSection1\n"
-"    {size:8.5in 11.0in;\n"
-"    margin:1.0in 1.0in 1.0in 1.0in;}\n"
-"div.WordSection1\n"
-"    {page:WordSection1;}\n"
-" /* List Definitions */\n"
-" ol\n"
-"    {margin-bottom:0in;}\n"
-"ul\n"
-"    {margin-bottom:0in;}\n"
-"-->\n"
-"</style>\n"
-"\n"
-"</head>\n"
-"\n"
-"<body lang=ES-VE link=\"#467886\" vlink=\"#96607D\" style=\'word-wrap:break-word\'>\n"
-"\n"
-"<div class=WordSection1>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-size:14.0pt;line-height:107%;\n"
-"font-family:\"Calibri\",sans-serif\'>Acerca de <i>Concretus</i></span></b></p>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Versión:</span></b><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'>&nbsp;1.0.0 (March 2025)<br>\n"
-"<b>Licencia:</b>&nbsp;GNU General Public License (GPL v3)</span></p>\n"
-"\n"
-"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'>\n"
-"\n"
-"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
-"\n"
-"</span></div>\n"
-"\n"
-"</div>\n"
-"\n"
-"</body>\n"
-"\n"
-"</html>"))
-        self.body.setText(_translate("AboutDialog", "<html>\n"
-"\n"
-"<head>\n"
-"<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
-"<meta name=Generator content=\"Microsoft Word 15 (filtered)\">\n"
-"<style>\n"
-"<!--\n"
-" /* Font Definitions */\n"
-" @font-face\n"
-"    {font-family:Wingdings;\n"
-"    panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
-"@font-face\n"
-"    {font-family:\"Cambria Math\";\n"
-"    panose-1:2 4 5 3 5 4 6 3 2 4;}\n"
-"@font-face\n"
-"    {font-family:Calibri;\n"
-"    panose-1:2 15 5 2 2 2 4 3 2 4;}\n"
-"@font-face\n"
-"    {font-family:Aptos;}\n"
-"@font-face\n"
-"    {font-family:\"Segoe UI Emoji\";\n"
-"    panose-1:2 11 5 2 4 2 4 2 2 3;}\n"
-" /* Style Definitions */\n"
-" p.MsoNormal, li.MsoNormal, div.MsoNormal\n"
-"    {margin-top:0in;\n"
-"    margin-right:0in;\n"
-"    margin-bottom:8.0pt;\n"
-"    margin-left:0in;\n"
-"    line-height:107%;\n"
-"    font-size:11.0pt;\n"
-"    font-family:\"Aptos\",sans-serif;}\n"
-"a:link, span.MsoHyperlink\n"
-"    {color:#467886;\n"
-"    text-decoration:underline;}\n"
-".MsoChpDefault\n"
-"    {font-family:\"Aptos\",sans-serif;}\n"
-".MsoPapDefault\n"
-"    {margin-bottom:8.0pt;\n"
-"    line-height:107%;}\n"
-"@page WordSection1\n"
-"    {size:8.5in 11.0in;\n"
-"    margin:1.0in 1.0in 1.0in 1.0in;}\n"
-"div.WordSection1\n"
-"    {page:WordSection1;}\n"
-" /* List Definitions */\n"
-" ol\n"
-"    {margin-bottom:0in;}\n"
-"ul\n"
-"    {margin-bottom:0in;}\n"
-"-->\n"
-"</style>\n"
-"\n"
-"</head>\n"
-"\n"
-"<body lang=ES-VE link=\"#467886\" vlink=\"#96607D\" style=\'word-wrap:break-word\'>\n"
-"\n"
-"<div class=WordSection1>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>© 2025\n"
-"Jesús Alejandro Rivas Simancas</span></b></p>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Descripción:</span></b><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
-"Software especializado en diseño y dosificación de mezclas de concreto.\n"
-"Actualmente soporta solo el diseño de concreto normal mediante 3 métodos:</span></p>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Métodos\n"
-"implementados:</span></b></p>\n"
-"\n"
-"<ol style=\'margin-top:0in\' start=1 type=1>\n"
-" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
-"     MCE</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
-"     Basado en:<br>\n"
-"     <i>&quot;Manual del Concreto Estructural&quot;</i><br>\n"
-"     Porrero, Ramos, Grases y Velazco (2009)</span></li>\n"
-" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
-"     ACI PRC-211.1</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
-"     Basado en:<br>\n"
-"     <i>&quot;ACI PRC-211.1-22 - Selecting Proportions for Normal-Density and\n"
-"     High-Density Concrete – Guide&quot;</i><br>\n"
-"     Comité 211 del American Concrete Institute (2022)</span></li>\n"
-" <li class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Método\n"
-"     DoE</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
-"     Basado en:<br>\n"
-"     <i>&quot;Design of Normal Concrete Mixes&quot;</i><br>\n"
-"     Teychenné, Franklin y Erntroy (1997)</span></li>\n"
-"</ol>\n"
-"\n"
-"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'>\n"
-"\n"
-"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
-"\n"
-"</span></div>\n"
-"\n"
-"<p class=MsoNormal><b><span style=\'font-family:\"Calibri\",sans-serif\'>Desarrollo\n"
-"y contacto:</span></b><span style=\'font-family:\"Calibri\",sans-serif\'><br>\n"
-"</span><span style=\'font-family:\"Segoe UI Emoji\",sans-serif\'>&#9993;&#65039;</span><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'>&nbsp;</span><a\n"
-"href=\"mailto:rivas601@gmail.com\" target=\"_blank\"><span style=\'font-family:\"Calibri\",sans-serif\'>rivas601@gmail.com</span></a></p>\n"
-"\n"
-"<div class=MsoNormal align=center style=\'text-align:center\'><span\n"
-"style=\'font-family:\"Calibri\",sans-serif\'>\n"
-"\n"
-"<hr size=1 width=\"100%\" noshade style=\'color:black\' align=center>\n"
-"\n"
-"</span></div>\n"
-"\n"
-"<p class=MsoNormal><i><span style=\'font-family:\"Calibri\",sans-serif\'>Este\n"
-"programa es software libre: puede redistribuirlo y/o modificarlo bajo los\n"
-"términos de la Licencia Pública General GNU publicada por la Free Software\n"
-"Foundation (versión 3 de la Licencia o cualquier versión posterior).</span></i></p>\n"
-"\n"
-"</div>\n"
-"\n"
-"</body>\n"
-"\n"
-"</html>"))
+        AboutDialog.setWindowTitle(_translate("AboutDialog", "Información"))
+        self.label_title.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:18pt; font-weight:700;\">Acerca de </span><span style=\" font-size:18pt; font-weight:700; font-style:italic;\">Concretus _____________________________</span></p></body></html>"))
+        self.label_general_info.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Información general</span></p><p><span style=\" font-weight:700;\">Versión</span>: 1.0.0 (Mayo 2025)<br/><span style=\" font-weight:700;\">Licencia</span>: GNU General Public License v3 (GPL-3.0)<br/><span style=\" font-weight:700;\">© 2025 Jesús Alejandro Rivas Simancas</span></p></body></html>"))
+        self.label_description.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Descripción</span></p><p>Software especializado para el diseño y la dosificación de mezclas de concreto. Facilita el proceso de cálculo mediante la aplicación de metodologías reconocidas, permitiendo obtener diseños eficientes y precisos.</p></body></html>"))
+        self.label_specs.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Características principales</span></p><p>• Interfaz gráfica intuitiva y amigable para una experiencia de usuario óptima.<br/>• Ejecución de cálculos precisos para diseños confiables.<br/>• Verificación de diseños ingresados según las normativas más recientes de cada metodología, asegurando su cumplimiento.<br/>• Diseño avanzado con aditivos incorporadores de aire y reductores de agua para mezclas especializadas.<br/>• Corrección de diseños finales basado en resultados de mezclas de prueba, permitiendo ajustes precisos.<br/>• Generación de reportes personalizables, desde resúmenes concisos hasta informes detallados con cálculos.</p></body></html>"))
+        self.label_methods.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Métodos de diseño implementados</span></p><p>1. <span style=\" font-weight:700;\">Método MCE (Venezuela)<br/></span>Basado en: &quot;Manual del Concreto Estructural&quot; de Porrero, Ramos, Grases y Velazco (2009)</p><p>2. <span style=\" font-weight:700;\">Método ACI PRC-211.1 (Estados Unidos de América)<br/></span>Basado en: &quot;ACI PRC-211.1-22 - <span style=\" font-style:italic;\">Selecting Proportions for Normal-Density and High-Density Concrete – Guide</span>&quot; del Comité 211 del Instituto Americano del Concreto (2022) </p><p>3. <span style=\" font-weight:700;\">Método DoE (Reino Unido)<br/></span>Basado en: &quot;<span style=\" font-style:italic;\">Design of Normal Concrete Mixes</span>&quot; de Teychenné, Franklin y Erntroy (1997)</p></body></html>"))
+        self.label_license.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Aviso de licencia</span></p><p>Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Free Software Foundation, ya sea la versión 3 de la Licencia, o cualquier versión posterior.</p><p>Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; sin siquiera la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Vea la Licencia Pública General GNU para más detalles.</p></body></html>"))
+        self.label_contact.setText(_translate("AboutDialog", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Contacto y soporte</span></p><p>• Correo electrónico: <span style=\" font-family:\'Courier New\',\'monospace\'; font-size:9.8pt; color:#6aab73;\">✉️</span><a href=\"mailto:rivas601@gmail.com\"><span style=\" text-decoration: underline; color:#004275;\">rivas601@gmail.com</span></a></p></body></html>"))
+        self.label_footer.setText(_translate("AboutDialog", "<html><head/><body><p>_________________________________________________________________________________________________________________________________<br/><span style=\" font-style:italic;\">Concretus es una aplicación construida con Python y PyQt6</span></p></body></html>"))
