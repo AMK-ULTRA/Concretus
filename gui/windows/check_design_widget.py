@@ -207,9 +207,7 @@ class CheckDesign(QWidget):
         exposure_class_doe = self.data_model.get_design_value('field_requirements.exposure_class.items_3')
         nominal_max_size = self.data_model.get_design_value('coarse_aggregate.NMS')
         passing_600 = self.data_model.get_design_value('fine_aggregate.gradation.passing')
-        coarse_moisture = self.data_model.get_design_value('coarse_aggregate.moisture.moisture_content')
         coarse_absorption = self.data_model.get_design_value('coarse_aggregate.moisture.absorption_content')
-        fine_moisture = self.data_model.get_design_value('fine_aggregate.moisture.moisture_content')
         fine_absorption = self.data_model.get_design_value('fine_aggregate.moisture.absorption_content')
         wra_checked = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_checked')
         wra_plasticizer = self.data_model.get_design_value('chemical_admixtures.WRA.WRA_action.plasticizer')
@@ -300,13 +298,9 @@ class CheckDesign(QWidget):
         if method == "DoE" and passing_600.get("No. 30 (0,600 mm)", 1) is None:
             warnings.append("El celda para el cedazo No. 30 (0,600 mm) no puede estar vacía.")
 
-        # Validate the absorption and moisture percentage
-        if coarse_moisture == 0:
-            warnings.append("El porcentaje de humedad del agregado grueso no pueden ser cero.")
+        # Validate the absorption percentage
         if coarse_absorption == 0:
             warnings.append("El porcentaje de absorción del agregado grueso no pueden ser cero.")
-        if fine_moisture == 0:
-            warnings.append("El porcentaje de humedad del agregado fino no pueden ser cero.")
         if fine_absorption == 0:
             warnings.append("El porcentaje de absorción del agregado fino no pueden ser cero.")
 

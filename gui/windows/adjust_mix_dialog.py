@@ -443,9 +443,11 @@ class AdjustTrialMixDialog(QDialog):
         if self.ui.groupBox_coarse.isChecked() and agg_type == "coarse":
             new_coarse_abs_vol = agg_abs_vol * (coarse_pct / 100)
             new_fine_abs_vol = agg_abs_vol - new_coarse_abs_vol
+            fine_pct = 100 - coarse_pct
         elif self.ui.groupBox_fine.isChecked() and agg_type == "fine":
             new_fine_abs_vol = agg_abs_vol * (fine_pct / 100)
             new_coarse_abs_vol = agg_abs_vol - new_fine_abs_vol
+            coarse_pct = 100 - fine_pct
         else:
             # No changes if the corresponding group box isn't checked
             new_fine_abs_vol = fine_abs_vol
@@ -674,11 +676,13 @@ class AdjustTrialMixDialog(QDialog):
         # Calculate apparent volumes
         coarse_volume = coarse_content_wet / (agg_params['coarse_loose_bulk_density'] / 1000) # Convert loose bulk densities
         fine_volume = fine_content_wet / (agg_params['fine_loose_bulk_density'] / 1000)       # from kg/m³ to L/m³
+        water_volume = water_content_correction
         
         # Store apparent volumes
         volumes = {
             'coarse_volume': coarse_volume,
             'fine_volume': fine_volume,
+            'water_volume': water_volume,
         }
 
         # Calculate totals
@@ -758,7 +762,7 @@ class AdjustTrialMixDialog(QDialog):
                 ('trial_mix.adjustments.summation.total_content', mix_proportions.get('total_content')),
 
                 # Volumes
-                ('trial_mix.adjustments.water.water_volume', abs_volumes.get('water_abs_volume')),
+                ('trial_mix.adjustments.water.water_volume', abs_volumes.get('water_volume')),
                 ('trial_mix.adjustments.cementitious_material.cement.cement_volume', '-'),
                 ('trial_mix.adjustments.cementitious_material.scm.scm_volume', '-'),
                 ('trial_mix.adjustments.fine_aggregate.fine_volume', volumes.get('fine_volume')),

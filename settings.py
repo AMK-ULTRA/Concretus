@@ -1,10 +1,23 @@
+import sys
 from pathlib import Path
+
+def get_base_path():
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        # If we are running in an environment packaged by PyInstaller
+        return Path(sys._MEIPASS)
+    else:
+        # If we are in development mode
+        return Path(__file__).resolve().parent
+
+# Create the base_path object only once
+base_path = get_base_path()
 
 # -----------------------------------------------------------------------------
 # Base Directory
 # -----------------------------------------------------------------------------
 # Get the project base path (where settings.py file is located)
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = base_path
 
 # -----------------------------------------------------------------------------
 # Log Settings
