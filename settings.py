@@ -37,7 +37,7 @@ ICON_TRIAL_MIX = IMAGES_DIR / "trial_mix.png"
 ICON_ADJUST_TRIAL_MIX = IMAGES_DIR / "adjust_trial_mix.png"
 ICON_ADJUST_MATERIALS = IMAGES_DIR / "adjust_materials.png"
 ICON_ADJUST_ADMIXTURES = IMAGES_DIR / "adjust_admixtures.png"
-ICON_GET_BACK_DESIGN = IMAGES_DIR / "get_back_design"
+ICON_GET_BACK_DESIGN = IMAGES_DIR / "get_back_design.png"
 ICON_HELP_MANUAL = IMAGES_DIR / "help_manual.png"
 ICON_ABOUT = IMAGES_DIR / "about.png"
 
