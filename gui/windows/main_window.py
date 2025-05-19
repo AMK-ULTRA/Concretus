@@ -503,8 +503,9 @@ class MainWindow(QMainWindow):
         # Trigger a method update in the regular concrete widget
         last_method_used = self.data_model.method
         last_unit_used = self.data_model.units
-        self.regular_concrete.handle_RegularConcrete_method_changed(last_method_used)
-        self.regular_concrete.handle_RegularConcrete_units_changed(last_unit_used)
+        if last_method_used is not None:
+            self.regular_concrete.handle_RegularConcrete_method_changed(last_method_used)
+            self.regular_concrete.handle_RegularConcrete_units_changed(last_unit_used)
 
     def handle_show_welcome_triggered(self):
         """Display the Welcome widget."""
