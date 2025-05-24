@@ -45,6 +45,30 @@ class TestCementitiousMaterial(unittest.TestCase):
                 self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.0001)
                 self.assertAlmostEqual(scm_content, scm_content_expected, delta=0.0001)
 
+    def test_cementitious_content_with_WRA(self):
+        exposure_classes = ['N/A', 'N/A', 'N/A', 'N/A']
+        scm_checked = False
+        scm_percentage = 0
+        wra_checked = True
+        wra_action_water_reducer = True
+        test_cases = [
+            (150, 50, 0.65, 153.8462),
+            (300, 10, 0.60, 483.3333),
+            (100, 0, 0.60, 166.6667),
+            (125, 25, 0.40, 250),
+            (200, 80, 0.40, 300),
+        ]
+
+        for water_content, water_correction_wra, w_cm, cement_content_expected in test_cases:
+            with self.subTest(water_content=water_content, water_correction_wra=water_correction_wra, w_cm=w_cm):
+                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm,
+                                                                                     exposure_classes, scm_checked,
+                                                                                     scm_percentage, wra_checked,
+                                                                                     wra_action_water_reducer,
+                                                                                     water_correction_wra)
+                self.assertAlmostEqual(cement_content, cement_content_expected, delta=0.0001)
+                self.assertEqual(scm_content, 0)
+
 class TestWater(unittest.TestCase):
     def setUp(self):
         self.doe_data_model = DOEDataModel()
@@ -53,10 +77,6 @@ class TestWater(unittest.TestCase):
 
     def test_water_content_without_corrections(self):
         air_entrained = False
-        scm_checked = False
-        scm_percentage = 0
-        wra_checked = False
-        effectiveness = 0
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("No triturada", "No triturada"), 150),
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
@@ -94,15 +114,12 @@ class TestWater(unittest.TestCase):
 
         for slump_range, nms, agg_types, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage, wra_checked, effectiveness)
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained)
                 self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_corrections_for_SCM(self):
         air_entrained = False
         scm_checked = True
-        wra_checked = False
-        effectiveness = 0
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 5, 180),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 10, 130),
@@ -117,7 +134,7 @@ class TestWater(unittest.TestCase):
         for slump_range, nms, agg_types, scm_percentage, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
                 water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage, wra_checked, effectiveness)
+                                                         scm_percentage)
                 self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_corrections_for_WRA(self):
@@ -125,6 +142,8 @@ class TestWater(unittest.TestCase):
         scm_checked = False
         scm_percentage = 0
         wra_checked = True
+        wra_action_water_reducer = True
+        wra_action_cement_economizer = False
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 5, 171),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 10, 121.5),
@@ -139,15 +158,12 @@ class TestWater(unittest.TestCase):
         for slump_range, nms, agg_types, effectiveness, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
                 water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage, wra_checked, effectiveness)
+                                                         scm_percentage, wra_checked, wra_action_cement_economizer,
+                                                         wra_action_water_reducer, effectiveness)
                 self.assertEqual(water_content, water_content_expected)
 
     def test_water_content_with_corrections_for_air_entrained(self):
         air_entrained = True
-        scm_checked = False
-        scm_percentage = 0
-        wra_checked = False
-        effectiveness = 0
         test_cases = [
             ("0 mm - 10 mm", "N/A (10 mm)", ("Triturada", "Triturada"), 180),
             ("0 mm - 10 mm", "N/A (20 mm)", ("No triturada", "No triturada"), 135),
@@ -161,8 +177,7 @@ class TestWater(unittest.TestCase):
 
         for slump_range, nms, agg_types, water_content_expected in test_cases:
             with self.subTest(slump_range=slump_range, nms=nms, agg_types=agg_types):
-                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage, wra_checked, effectiveness)
+                water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
     def test_water_content_with_multiple_corrections(self):
@@ -172,6 +187,8 @@ class TestWater(unittest.TestCase):
         air_entrained = True
         scm_checked = True
         wra_checked = True
+        wra_action_cement_economizer = False
+        wra_action_water_reducer = True
         test_cases = [
             (5, 10, 121.5),
             (10, 5, 123.25),
@@ -183,7 +200,8 @@ class TestWater(unittest.TestCase):
         for scm_percentage, effectiveness, water_content_expected in test_cases:
             with self.subTest(scm_percentage=scm_percentage, effectiveness=effectiveness):
                 water_content = self.water.water_content(slump_range, nms, agg_types, air_entrained, scm_checked,
-                                                         scm_percentage, wra_checked, effectiveness)
+                                                         scm_percentage, wra_checked, wra_action_cement_economizer,
+                                                         wra_action_water_reducer, effectiveness)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
 class TestAir(unittest.TestCase):

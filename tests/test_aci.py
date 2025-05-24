@@ -51,6 +51,32 @@ class TestCementitiousMaterial(unittest.TestCase):
                 self.assertEqual(cement_content, cement_content_expected)
                 self.assertEqual(scm_content, scm_content_expected)
 
+    def test_cementitious_content_with_WRA(self):
+        water_content = 200
+        w_cm = 0.5
+        nms = '2" (50 mm)' # Do not have minimum cementitious content
+        scm_checked = True
+        scm_percentage = 50
+        wra_checked = True
+        wra_action_water_reducer = True
+        test_cases = [
+            (5, 195, 195),
+            (10, 190, 190),
+            (25, 175, 175),
+            (30, 170, 170),
+            (45, 155, 155),
+        ]
+
+        for water_correction_wra, scm_content_expected, cement_content_expected in test_cases:
+            with self.subTest(water_correction_wra=water_correction_wra):
+                cement_content, scm_content = self.cementitious.cementitious_content(water_content, w_cm, nms,
+                                                                                     scm_checked, scm_percentage,
+                                                                                     wra_checked,
+                                                                                     wra_action_water_reducer,
+                                                                                     water_correction_wra)
+                self.assertEqual(cement_content, cement_content_expected)
+                self.assertEqual(scm_content, scm_content_expected)
+
 class TestWater(unittest.TestCase):
     def setUp(self):
         self.aci_data_model = ACIDataModel()
@@ -175,6 +201,8 @@ class TestWater(unittest.TestCase):
         scm_type = "Cenizas volantes"
         scm_percentage = 0
         wra_checked = True
+        wra_action_water_reducer = True
+        wra_action_cement_economizer = False
         test_cases = [
             (0, 145),
             (25, 108.75),
@@ -186,7 +214,9 @@ class TestWater(unittest.TestCase):
         for effectiveness, water_content_expected in test_cases:
             with self.subTest(effectiveness=effectiveness):
                 water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm_checked,
-                                                         scm_type, scm_percentage, wra_checked, effectiveness)
+                                                         scm_type, scm_percentage, wra_checked,
+                                                         wra_action_cement_economizer,
+                                                         wra_action_water_reducer, effectiveness)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
     def test_water_content_with_multiple_corrections(self):
@@ -195,6 +225,8 @@ class TestWater(unittest.TestCase):
         entrained_air = False
         scm_checked = True
         wra_checked = True
+        wra_action_water_reducer = False
+        wra_action_cement_economizer = True
         test_cases = [
             (("Redondeada", "Natural"), "Cenizas volantes", 25, 10, 184.68),
             (("Angular", "Manufacturada"), "Cemento de escoria", 35, 50, 97.2),
@@ -204,7 +236,8 @@ class TestWater(unittest.TestCase):
         for agg_types, scm_type, scm_percentage, effectiveness, water_content_expected in test_cases:
             with self.subTest(agg_types=agg_types, scm_type=scm_type):
                 water_content = self.water.water_content(slump_range, nms, entrained_air, agg_types, scm_checked,
-                                                         scm_type, scm_percentage, wra_checked, effectiveness)
+                                                         scm_type, scm_percentage, wra_checked, wra_action_water_reducer,
+                                                         wra_action_cement_economizer, effectiveness)
                 self.assertAlmostEqual(water_content, water_content_expected)
 
 class TestAir(unittest.TestCase):
