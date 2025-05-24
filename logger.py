@@ -1,8 +1,24 @@
 import logging
 import sys
+import os
 from pathlib import Path
 
-from settings import LOG_FILE, LOG_FORMAT, LOG_LEVEL
+from settings import LOG_FORMAT, LOG_LEVEL
+
+# Modify the log file location to use AppData
+def get_log_file_path():
+    """Gets a log file path with appropriate write permissions."""
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        # If we are running in an environment packaged by PyInstaller
+        app_data = os.environ.get('APPDATA', '')
+        log_dir = Path(app_data) / 'Concretus'
+        return log_dir / 'concretus.log'
+    else:
+        # If we are in development mode
+        return "concretus.log"
+
+# Use the new function to set LOG_FILE
+LOG_FILE = get_log_file_path()
 
 class Logger:
     _initialized = False  # Class variable to control initialization
