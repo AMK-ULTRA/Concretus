@@ -52,16 +52,15 @@ class CementitiousMaterial:
         return abs_volume
 
     def cementitious_content(self, water_content, w_cm, exposure_classes, scm_checked, scm_percentage=None,
-                             wra_checked=False, wra_action_water_reducer=False):
+                             wra_checked=False, wra_action_water_reducer=False, water_correction_wra=None):
         """
         Calculate the cementitious material content based on water content and water-to-cementitious
         materials ratio (w/cm). If supplementary cementitious materials (SCM) are used,
         this method also calculates the cement and SCM contents separately.
 
         If a WRA is used as a pure water reducer, the actual water-cement ratio will be lower.
-        However, for cementitious content calculations within this scope, the original water content,
-        unaffected by the WRA, is used. To do this, the water content received is added to
-        the amount that was reduced when using the WRA, this amount will be retrieved from the data model.
+        However, for cementitious content calculations within this scope, the water content without WRA correction
+        is used. To do this, the water content received is added to the amount that was reduced when using the WRA.
 
         :param float water_content: The water content in kg/m³ for the concrete mix.
         :param float w_cm: The water-to-cementitious materials ratio.
@@ -72,12 +71,12 @@ class CementitiousMaterial:
         :param bool wra_checked: True if a water-reducing admixture is used, otherwise False.
         :param bool wra_action_water_reducer: True if a water-reducing admixture is used as a pure water reducer,
                                               otherwise False.
+        :param float water_correction_wra: The water content without the WRA correction.
         :return: A tuple containing the cement content and SCM content, respectively (in kg/m³).
         :rtype: tuple[float, float]
         """
 
         if wra_checked and wra_action_water_reducer:
-            water_correction_wra = self.doe_data_model.get_data('water.water_content.wra_correction')
             water_content = water_content + (-water_correction_wra)
             self.doe_data_model.update_data('water.water_content.without_wra_correction', water_content)
 
@@ -1052,10 +1051,11 @@ class DOE:
             cement_relative_density = self.cement.relative_density
             scm_relative_density = self.scm.relative_density
             scm_type = self.scm.scm_type
+            water_correction_wra = self.doe_data_model.get_data('water.water_content.wra_correction')
 
             cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm, exposure_classes,
                                                                            scm_checked, scm_percentage, wra_checked,
-                                                                           wra_action_water_reducer)
+                                                                           wra_action_water_reducer, water_correction_wra)
             cement_abs_volume = self.cement.absolute_volume(cement_content, water_density, cement_relative_density,
                                                             "Cemento")
 
@@ -1072,7 +1072,9 @@ class DOE:
                 if w_cm_by_durability < w_cm_recalculated:
                     cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm_by_durability,
                                                                                    exposure_classes, scm_checked,
-                                                                                   scm_percentage)
+                                                                                   scm_percentage, wra_checked,
+                                                                                   wra_action_water_reducer,
+                                                                                   water_correction_wra)
                     # If there is a change in the cementing materials, then their respective absolute volumes change
                     cement_abs_volume = self.cement.absolute_volume(cement_content, water_density,
                                                                     cement_relative_density,
