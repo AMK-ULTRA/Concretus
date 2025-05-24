@@ -250,9 +250,9 @@ class CheckDesign(QWidget):
                 warnings.append("La masa unitaria suelta del agregado fino no puede ser cero.")
         if coarse_loose_bulk_density == 0:
             if method == "MCE":
-                warnings.append("El peso unitario compactado del agregado fino no puede ser cero.")
+                warnings.append("El peso unitario suelto del agregado grueso no puede ser cero.")
             else:
-                warnings.append("La masa unitaria compactada del agregado fino no puede ser cero.")
+                warnings.append("La masa unitaria suelta del agregado grueso no puede ser cero.")
         if coarse_compacted_bulk_density == 0 and method == "ACI":
             warnings.append("La masa unitaria compactada del agregado grueso no puede ser cero.")
 
@@ -296,7 +296,7 @@ class CheckDesign(QWidget):
 
         # Validate grading limits
         if method == "DoE" and passing_600.get("No. 30 (0,600 mm)", 1) is None:
-            warnings.append("El celda para el cedazo No. 30 (0,600 mm) no puede estar vacía.")
+                warnings.append("El celda para el cedazo No. 30 (0,600 mm) no puede estar vacía.")
 
         # Validate the absorption percentage
         if coarse_absorption == 0:

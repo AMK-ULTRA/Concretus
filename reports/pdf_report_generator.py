@@ -118,7 +118,7 @@ class PDFReportGenerator:
             "DoE": "Método del Departamento de Medio Ambiente británico (1997)"
         }
         method_full_name = method_names.get(self.method_name, self.method_name)
-        title = f"Diseño de Mezcla de Concreto: {method_full_name}"
+        title = f"Diseño de Mezcla de Concreto Normal: {method_full_name}"
         report_type_name = "Reporte Completo" if self.report_type == "full" else "Reporte Básico"
         
         elements.append(Paragraph(title, self.styles['Title']))

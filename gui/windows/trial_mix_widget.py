@@ -282,8 +282,8 @@ class TrialMix(QWidget):
             # Show modal critical box
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Icon.Critical)
-            msg_box.setWindowTitle("Calculation Error")
-            msg_box.setText(f"Errors occurred during calculations:\n{message}")
+            msg_box.setWindowTitle("Error de cálculo")
+            msg_box.setText(f"Se produjeron errores durante los cálculos:\n{message}")
             msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg_box.finished.connect(self.handle_TrialMix_regular_concrete_requested_MainWindow)
             msg_box.exec()
