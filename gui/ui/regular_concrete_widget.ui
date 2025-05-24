@@ -770,7 +770,7 @@
           <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_cement_relative_density">
             <property name="maximum">
-             <double>100.000000000000000</double>
+             <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.010000000000000</double>
@@ -853,7 +853,7 @@
           <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_SCM_relative_density">
             <property name="maximum">
-             <double>100.000000000000000</double>
+             <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.010000000000000</double>
@@ -976,7 +976,7 @@
             <item row="0" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_relative_density">
               <property name="maximum">
-               <double>100.000000000000000</double>
+               <double>10.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>0.010000000000000</double>
@@ -1066,7 +1066,7 @@
                <bool>false</bool>
               </property>
               <property name="decimals">
-               <number>1</number>
+               <number>2</number>
               </property>
               <property name="maximum">
                <double>100.000000000000000</double>
@@ -1092,7 +1092,7 @@
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_fine_abs">
               <property name="decimals">
-               <number>1</number>
+               <number>2</number>
               </property>
               <property name="maximum">
                <double>100.000000000000000</double>
@@ -1275,7 +1275,7 @@
             <item row="0" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_relative_density">
               <property name="maximum">
-               <double>100.000000000000000</double>
+               <double>10.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>0.010000000000000</double>
@@ -1371,7 +1371,7 @@
                <bool>false</bool>
               </property>
               <property name="decimals">
-               <number>1</number>
+               <number>2</number>
               </property>
               <property name="maximum">
                <double>100.000000000000000</double>
@@ -1397,7 +1397,7 @@
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_coarse_abs">
               <property name="decimals">
-               <number>1</number>
+               <number>2</number>
               </property>
               <property name="maximum">
                <double>100.000000000000000</double>
@@ -1687,6 +1687,9 @@
               <property name="decimals">
                <number>3</number>
               </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="3" column="0">
@@ -1708,7 +1711,7 @@
                <number>3</number>
               </property>
               <property name="maximum">
-               <double>100.000000000000000</double>
+               <double>50.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>0.100000000000000</double>
@@ -1731,7 +1734,7 @@
             <item row="4" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBox_WRA_dosage">
               <property name="maximum">
-               <double>1000.000000000000000</double>
+               <double>100.000000000000000</double>
               </property>
               <property name="value">
                <double>0.000000000000000</double>
@@ -1797,7 +1800,7 @@
              <number>3</number>
             </property>
             <property name="maximum">
-             <double>100.000000000000000</double>
+             <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
@@ -1820,7 +1823,7 @@
           <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBox_AEA_dosage">
             <property name="maximum">
-             <double>1000.000000000000000</double>
+             <double>100.000000000000000</double>
             </property>
             <property name="value">
              <double>0.000000000000000</double>

@@ -27,7 +27,7 @@ class Ui_WelcomeWidget(object):
         self.label_logo = QtWidgets.QLabel(parent=self.gridLayout_logo)
         self.label_logo.setMaximumSize(QtCore.QSize(250, 250))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../../assets/images/about_logo.png"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../../assets/images/logo.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.gridLayout_2.addWidget(self.label_logo, 0, 0, 1, 1)

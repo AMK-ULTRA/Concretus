@@ -40,6 +40,7 @@ class Ui_AboutDialog(object):
         self.label_logo.setMinimumSize(QtCore.QSize(100, 100))
         self.label_logo.setMaximumSize(QtCore.QSize(100, 100))
         self.label_logo.setText("")
+        self.label_logo.setPixmap(QtGui.QPixmap("../../assets/images/logo.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout.addWidget(self.label_logo)
