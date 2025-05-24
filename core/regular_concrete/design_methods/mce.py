@@ -637,13 +637,15 @@ class Beta:
 
         beta_mins = []
         beta_maxs = []
+        beta_min = 0
+        beta_max = 0
 
         for sieve, limits in grading_limits.items():
-            # if a limit for a sieve is empty or exists but the measured data does not use that sieve, skip it.
+            # If a limit for a sieve is empty or exists but the measured data does not use that sieve, skip it
             if limits is None or fine_grading.get(sieve) is None or coarse_grading.get(sieve) is None:
                 continue
 
-            # Unpack recommended percentages (expected format -> (maximum value, minimum value))
+            # Unpack recommended percentages, expected format -> (maximum value, minimum value)
             percentage_max, percentage_min = limits
 
             fine_value = fine_grading.get(sieve)
@@ -651,23 +653,41 @@ class Beta:
 
             # If fine and coarse values are equal
             if fine_value == coarse_value:
+                # We use fine_value or coarse_value in this scope because their values are equal
                 if fine_value in (0, 100):
                     # Skip if values are at the boundary
                     continue
-                elif fine_value not in (percentage_max, percentage_min):
-                    # If value does not match expected limits, raises a value error exception
-                    error_msg = "La granulometría dada no coincide con ninguno de los límites recomendados."
+                # elif fine_value not in (percentage_max, percentage_min):
+                elif not (percentage_min <= fine_value <= percentage_max):
+                    # If this value is not within the expected limits, raises a value error exception
+                    error_msg = (f"El porcentaje de material fino ({fine_value}%) y/o grueso ({coarse_value}%) "
+                                 f"que pasa por el cedazo {sieve} esta fuera de los límites granulométricos para el "
+                                 f"tamaño máximo nominal {nms}. "
+                                 f"El rango recomendado es de {percentage_min}% a {percentage_max}%.")
                     self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
                     raise ValueError(error_msg)
+            # If fine and coarse values are within the limits of the granulometric range
+            elif (percentage_min <= fine_value <= percentage_max) and (percentage_min <= coarse_value <= percentage_max):
+                beta_min = 0
+                beta_max = 100
             else:
                 # Calculate the slope of a two-point linear equation
-                slope = 100 / (fine_value - coarse_value)
-                beta_min = (percentage_min - fine_value) * slope + 100
-                beta_max = (percentage_max - fine_value) * slope + 100
+                slope = (coarse_value - fine_value) / (0 - 100)
+                if slope > 0:
+                    beta_min = (percentage_min - coarse_value) / slope
+                    beta_max = (percentage_max - coarse_value) / slope
+                elif slope < 0:
+                    beta_min = (percentage_max - coarse_value) / slope
+                    beta_max = (percentage_min - coarse_value) / slope
 
-                # Clamp the beta values between 0 and 100
-                beta_min = max(0, beta_min)
-                beta_max = min(100, beta_max)
+                # If beta values are greater than 100 or less than 0, they are outside the limits of the granulometric range
+                if (beta_min > 100 and beta_max > 100) or (beta_min < 0 and beta_max < 0):
+                    error_msg = (f"El porcentaje de material fino ({fine_value}%) y/o grueso ({coarse_value}%) "
+                                 f"que pasa por el cedazo {sieve} esta fuera de los límites granulométricos para el "
+                                 f"tamaño máximo nominal {nms}. "
+                                 f"El rango recomendado es de {percentage_min}% a {percentage_max}%.")
+                    self.mce_data_model.add_calculation_error('Cálculo de Beta', error_msg)
+                    raise ValueError(error_msg)
 
                 beta_mins.append(beta_min)
                 beta_maxs.append(beta_max)
