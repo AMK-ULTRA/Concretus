@@ -24,7 +24,7 @@ BASE_DIR = base_path
 # -----------------------------------------------------------------------------
 LOG_LEVEL = "DEBUG"  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"  # Format of log messages
-LOG_FILE = "concretus.log"  # Log file
+# LOG_FILE = "concretus.log"  # Log file # Search in looger.py
 
 # -----------------------------------------------------------------------------
 # File and Path Settings
@@ -106,6 +106,10 @@ MAX_SPEC_STRENGTH = {
 SIEVES = {
     "MCE": {
         "fine_sieves": [
+            '1-1/2" (37,5 mm)',
+            '1" (25 mm)',
+            '3/4" (19 mm)',
+            '1/2" (12,5 mm)',
             '3/8" (9,5 mm)',
             '1/4" (6,3 mm)',
             "No. 4 (4,75 mm)",
