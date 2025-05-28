@@ -1068,6 +1068,8 @@ class DOE:
             if scm_checked:
                 w_cm_recalculated = water_content / (cement_content + scm_content)
                 w_cm_by_durability = min([MAX_W_CM_DOE.get(exposure_class, 1.0) for exposure_class in exposure_classes])
+                self.doe_data_model.update_data('water_cementitious_materials_ratio.w_cm_by_durability',
+                                                w_cm_by_durability)
 
                 if w_cm_by_durability < w_cm_recalculated:
                     cement_content, scm_content = self.cement.cementitious_content(water_content, w_cm_by_durability,
