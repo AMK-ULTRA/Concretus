@@ -409,6 +409,7 @@ class CheckDesign(QWidget):
         # Retrieve design parameters from the data model
         method = self.data_model.method
         current_spec_strength = self.data_model.get_design_value('field_requirements.strength.spec_strength')
+        spec_strength_time = self.data_model.get_design_value('field_requirements.strength.spec_strength_time')
 
         # Get exposure classes
         exposure_classes = {}
@@ -422,7 +423,11 @@ class CheckDesign(QWidget):
         self.data_model.update_design_data('validation.exposure_classes', exposure_classes)
 
         # Check if the given specified compressive strength is sufficient
-        valid, minimum_value, exposure_class = self.validation.required_spec_strength(method, current_spec_strength, list(exposure_classes.values()))
+        # only if the compressive strength time is equal to 28, 90 or 91 days
+        if spec_strength_time in ("28 días", "90 días", "91 días"):
+            valid, minimum_value, exposure_class = self.validation.required_spec_strength(method, current_spec_strength, list(exposure_classes.values()))
+        else:
+            valid, minimum_value, exposure_class = None, "N/A", "N/A"
 
         # Update the fields in the GUI
         for groups, items in exposure_classes.items():
