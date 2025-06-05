@@ -762,7 +762,7 @@ class AdjustTrialMixDialog(QDialog):
                 ('trial_mix.adjustments.summation.total_content', mix_proportions.get('total_content')),
 
                 # Volumes
-                ('trial_mix.adjustments.water.water_volume', abs_volumes.get('water_volume')),
+                ('trial_mix.adjustments.water.water_volume', volumes.get('water_volume')),
                 ('trial_mix.adjustments.cementitious_material.cement.cement_volume', '-'),
                 ('trial_mix.adjustments.cementitious_material.scm.scm_volume', '-'),
                 ('trial_mix.adjustments.fine_aggregate.fine_volume', volumes.get('fine_volume')),
