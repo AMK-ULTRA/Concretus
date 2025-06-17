@@ -670,6 +670,8 @@ class Beta:
             elif (percentage_min <= fine_value <= percentage_max) and (percentage_min <= coarse_value <= percentage_max):
                 beta_min = 0
                 beta_max = 100
+                beta_mins.append(beta_min)
+                beta_maxs.append(beta_max)
             else:
                 # Calculate the slope of a two-point linear equation
                 slope = (coarse_value - fine_value) / (0 - 100)

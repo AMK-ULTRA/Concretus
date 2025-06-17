@@ -165,6 +165,7 @@ class Ui_RegularConcreteWidget(object):
         self.radioButton_user_defined.setObjectName("radioButton_user_defined")
         self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.radioButton_user_defined)
         self.doubleSpinBox_user_defined = QtWidgets.QDoubleSpinBox(parent=self.groupBox_air)
+        self.doubleSpinBox_user_defined.setEnabled(False)
         self.doubleSpinBox_user_defined.setDecimals(1)
         self.doubleSpinBox_user_defined.setSingleStep(0.1)
         self.doubleSpinBox_user_defined.setProperty("value", 0.0)
